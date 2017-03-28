@@ -14,7 +14,6 @@ lychee.define('lychee.net.protocol.WS').requires([
 	/*
 	 * WebSocket Framing Protocol
 	 *
-	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 	 * +-+-+-+-+-------+-+-------------+-------------------------------+
 	 * |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
 	 * |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
@@ -42,7 +41,7 @@ lychee.define('lychee.net.protocol.WS').requires([
 			let buffer = new Buffer(2);
 
 			// FIN, Pong
-			// Unmasked, 0 payload
+			// Unmasked, 0 Payload
 
 			buffer[0] = 128 + 0x0a;
 			buffer[1] =   0 + 0x00;
@@ -65,7 +64,7 @@ lychee.define('lychee.net.protocol.WS').requires([
 			let buffer = new Buffer(6);
 
 			// FIN, Ping
-			// Masked, 0 payload
+			// Masked, 0 Payload
 
 			buffer[0] = 128 + 0x09;
 			buffer[1] = 128 + 0x00;
@@ -353,7 +352,7 @@ lychee.define('lychee.net.protocol.WS').requires([
 			}
 
 
-		// 8: Connection Close
+		// 8: Close Frame
 		} else if (operator === 0x08) {
 
 			chunk.payload = this.close(Composite.STATUS.normal_closure);

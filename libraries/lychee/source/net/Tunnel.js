@@ -1,7 +1,7 @@
 
 lychee.define('lychee.net.Tunnel').requires([
 	'lychee.net.socket.HTTP',
-//	'lychee.net.socket.TCP',
+	'lychee.net.socket.MQTT',
 	'lychee.net.socket.WS',
 	'lychee.codec.BENCODE',
 	'lychee.codec.BITON',
@@ -193,7 +193,7 @@ lychee.define('lychee.net.Tunnel').requires([
 	Composite.TYPE = {
 		WS:   0,
 		HTTP: 1,
-		TCP:  2
+		MQTT: 2
 	};
 
 
@@ -281,8 +281,8 @@ lychee.define('lychee.net.Tunnel').requires([
 					this.__socket = new _socket.WS();
 				} else if (type === Composite.TYPE.HTTP) {
 					this.__socket = new _socket.HTTP();
-				} else if (type === Composite.TYPE.TCP) {
-					this.__socket = new _socket.TCP();
+				} else if (type === Composite.TYPE.MQTT) {
+					this.__socket = new _socket.MQTT();
 				}
 
 

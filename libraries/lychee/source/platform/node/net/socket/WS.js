@@ -163,9 +163,9 @@ lychee.define('lychee.net.socket.WS').tags({
 
 		if (connection === 'upgrade' && upgrade === 'websocket' && protocol === 'lycheejs') {
 
-			let host   = headers['host']   || null;
+			let host   = headers['host']              || null;
 			let nonce  = headers['sec-websocket-key'] || null;
-			let origin = headers['origin'] || null;
+			let origin = headers['origin']            || null;
 
 			if (host !== null && nonce !== null && origin !== null) {
 
