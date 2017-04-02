@@ -107,12 +107,18 @@
 					"codec": {
 						"FONT": [
 							"js"
+						],
+						"SPRITE": [
+							"js"
 						]
 					}
 				},
 				"node": {
 					"codec": {
 						"FONT": [
+							"js"
+						],
+						"SPRITE": [
 							"js"
 						]
 					}

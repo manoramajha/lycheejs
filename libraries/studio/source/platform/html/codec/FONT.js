@@ -9,7 +9,6 @@ lychee.define('studio.codec.FONT').tags({
 	 * > object in Safari, Safari Mobile
 	 */
 
-
 	if (
 		typeof global.document !== 'undefined'
 		&& typeof global.document.createElement === 'function'
@@ -301,7 +300,7 @@ lychee.define('studio.codec.FONT').tags({
 
 	const _decode = function(font, data) {
 
-		let settings = Object.assign({});
+		let settings = {};
 		let tmp      = font.__font;
 
 

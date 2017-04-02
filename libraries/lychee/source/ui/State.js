@@ -439,16 +439,31 @@ lychee.define('lychee.ui.State').requires([
 
 		enter: function(oncomplete, data) {
 
-			data = typeof data === 'string' ? data : 'welcome';
+			data = typeof data === 'string' ? data : 'settings';
 
 
-			_on_fade.call(this, data);
+			let id_layer = data.toLowerCase();
+			if (id_layer.length > 0) {
+
+				_on_fade.call(this, id_layer);
 
 
-			let focus = this.queryLayer('ui', data);
-			if (focus !== null && focus !== _MENU) {
-				focus.trigger('focus');
-				this.__focus = focus;
+				let focus = this.queryLayer('ui', id_layer);
+				if (focus !== null && focus !== _MENU) {
+					focus.trigger('focus');
+					this.__focus = focus;
+				}
+
+
+				if (_MENU !== null) {
+
+					let id_menu = data.charAt(0).toUpperCase() + data.substr(1);
+					if (id_menu !== _MENU.value) {
+						_MENU.setValue(id_menu);
+					}
+
+				}
+
 			}
 
 

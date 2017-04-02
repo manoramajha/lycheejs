@@ -13,6 +13,7 @@ lychee.define('studio.state.Project').includes([
 	const _Project = lychee.import('studio.data.Project');
 	const _State   = lychee.import('lychee.ui.State');
 	const _BLOB    = attachments["json"].buffer;
+	const _CACHE   = {};
 
 
 
@@ -54,12 +55,19 @@ lychee.define('studio.state.Project').includes([
 			_State.prototype.deserialize.call(this, blob);
 
 
-			this.queryLayer('ui', 'menu').setHelpers([
-				'refresh'
-			]);
+			let menu = this.queryLayer('ui', 'menu');
+			if (menu !== null) {
 
-			this.queryLayer('ui', 'notice').setOptions([
-			]);
+				menu.setHelpers([
+					'refresh'
+				]);
+
+			}
+
+			let notice = this.queryLayer('ui', 'notice');
+			if (notice !== null) {
+				notice.setOptions([]);
+			}
 
 
 			let api = this.api;
@@ -173,10 +181,6 @@ lychee.define('studio.state.Project').includes([
 
 				}
 
-			}, this);
-
-			this.queryLayer('ui', 'notice').bind('change', function(action) {
-				console.log('whatever', action);
 			}, this);
 
 		},
