@@ -70,6 +70,8 @@ lychee.define('studio.data.Project').exports(function(lychee, global, attachment
 
 	const _set_platform = function(platform, value) {
 
+		console.log(platform, value);
+
 		let id           = /^\/libraries\//g.test(this.identifier) ? 'dist' : 'main';
 		let environments = this.config.buffer.build.environments;
 
@@ -159,7 +161,7 @@ lychee.define('studio.data.Project').exports(function(lychee, global, attachment
 		for (let p = 0, pl = platforms.length; p < pl; p++) {
 
 			let platform = platforms[p];
-            let settings = environments[platform + '/' + id];
+			let settings = environments[platform + '/' + id];
 
 			if (settings instanceof Object) {
 

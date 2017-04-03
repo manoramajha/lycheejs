@@ -32,15 +32,11 @@ lychee.define('studio.net.Server').requires([
 
 		this.bind('connect', function(remote) {
 
-			console.log('studio.net.Server: Remote connected (' + remote.host + ':' + remote.port + ')');
-
 			remote.addService(new _Stash(remote));
 
 		}, this);
 
 		this.bind('disconnect', function(remote) {
-
-			console.log('studio.net.Server: Remote disconnected (' + remote.host + ':' + remote.port + ')');
 
 		}, this);
 
