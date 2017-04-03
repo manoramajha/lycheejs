@@ -29,6 +29,7 @@ lychee.define('harvester.mod.Server').tags({
 	const _child_process = global.require('child_process');
 	const _net           = global.require('net');
 	const _Server        = lychee.import('harvester.data.Server');
+	const _BINARY        = process.execPath;
 	const _MIN_PORT      = 49152;
 	let   _CUR_PORT      = _MIN_PORT;
 	const _MAX_PORT      = 65534;
@@ -143,8 +144,8 @@ lychee.define('harvester.mod.Server').tags({
 
 		try {
 
-			server = _child_process.execFile(_ROOT + '/bin/helper.sh', [
-				'env:node',
+			// XXX: Alternative is (_ROOT + '/bin/helper.sh', [ 'env:node', file, port, host ])
+			server = _child_process.execFile(_BINARY, [
 				_ROOT + project + '/harvester.js',
 				port,
 				host
