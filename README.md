@@ -40,8 +40,9 @@ Thank you for your understanding.
 
 These are the things that we are currently working on:
 
-- lychee.ai.neat (ES/HyperNEAT AI) is being refactored and unstable.
-- lychee.js Studio is being refactored and unstable.
+- lychee.ai.neat (ES/HyperNEAT AI) is being refactored and unstable (`feature/neat` branch).
+- lychee.js Studio is being refactored and unstable (`feature/studio` branch).
+- lychee.net.protocol.MQTT is being implemented to support SCADA systems (`feature/mqtt` branch).
 - lychee.js Guide is subject to change (to integrate new AI stack).
 
 
