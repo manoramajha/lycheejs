@@ -1,8 +1,7 @@
 
 (function(lychee, global) {
 
-	let   _filename = null;
-	const _Buffer   = require('buffer').Buffer;
+	let _filename = null;
 
 
 
@@ -47,18 +46,6 @@
 			}
 
 
-			if (typeof process !== 'undefined') {
-				cwd      = process.cwd() || '';
-				selfpath = cwd.split('/').slice(0, -1).join('/');
-			}
-
-
-			let tmp3 = selfpath.split('/').slice(0, 3).join('/');
-			if (tmp3.substr(0, 13) === '/opt/lycheejs') {
-				lychee.ROOT.lychee = tmp3;
-			}
-
-
 			if (cwd !== '') {
 				lychee.ROOT.project = cwd;
 			}
@@ -66,19 +53,6 @@
 		}
 
 	})(global.location || {}, (document.currentScript || {}).src || '');
-
-
-	Buffer.isBuffer = function(buffer) {
-
-		if (buffer instanceof Buffer) {
-			return true;
-		} else if (buffer instanceof _Buffer) {
-			return true;
-		}
-
-		return false;
-
-	};
 
 
 
@@ -89,20 +63,6 @@
 	// XXX: This is an incremental platform of 'html'
 
 	const _FEATURES = {
-
-		require: function(id) {
-
-			if (id === 'child_process') return {};
-			if (id === 'fs')            return {};
-			if (id === 'http')          return {};
-			if (id === 'https')         return {};
-			if (id === 'net')           return {};
-			if (id === 'path')          return {};
-
-
-			throw new Error('Cannot find module \'' + id + '\'');
-
-		}
 
 	};
 
