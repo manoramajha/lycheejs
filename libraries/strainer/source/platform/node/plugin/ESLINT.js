@@ -24,7 +24,7 @@ lychee.define('strainer.plugin.ESLINT').tags({
 
 }).exports(function(lychee, global, attachments) {
 
-	const _fs       = global.require('fs');
+	const _CONFIG   = new Config(lychee.ROOT.lychee + '/.eslintrc.json');
 	let   _eslint   = null;
 	let   _escli    = null;
 	const _auto_fix = function(line, err) {
@@ -237,6 +237,9 @@ lychee.define('strainer.plugin.ESLINT').tags({
 
 	(function() {
 
+		_CONFIG.load();
+
+
 		try {
 
 			_eslint = global.require('eslint');
@@ -253,27 +256,21 @@ lychee.define('strainer.plugin.ESLINT').tags({
 		}
 
 
-		let buffer = null;
 		let config = null;
 
-		try {
-			buffer = _fs.readFileSync(lychee.ROOT.lychee + '/.eslintrc.json');
-			config = JSON.parse(buffer.toString('utf8'));
-		} catch (err) {
-			buffer = null;
-			config = null;
+		if (_CONFIG.buffer instanceof Object) {
+
+			config         = {};
+			config.envs    = _CONFIG.buffer.env;
+			config.globals = Object.values(_CONFIG.buffer.globals).map(function(value) {
+				return value + ':true';
+			});
+
 		}
 
 
 		if (_eslint !== null && config !== null) {
-
-			config.envs    = Object.values(config.env);
-			config.globals = Object.values(config.globals).map(function(val, v) {
-				return val + ':true';
-			});
-
 			_escli = new _eslint.CLIEngine(config);
-
 		}
 
 	})();

@@ -75,9 +75,13 @@ lychee.define('strainer.api.Module').requires([
 	const _parse_value = function(str) {
 
 		let val = undefined;
-		try {
-			val = eval('(' + str + ')');
-		} catch (err) {
+		if (/^(this|global)$/g.test(str) === false) {
+
+			try {
+				val = eval('(' + str + ')');
+			} catch (err) {
+			}
+
 		}
 
 		return val;

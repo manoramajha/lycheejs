@@ -53,7 +53,11 @@
 	},
 	"source": {
 		"environments": {},
-		"tags": {},
+		"tags": {
+			"platform": {
+				"node": "platform/node"
+			}
+		},
 		"files": {
 			"Main": [
 				"js"
@@ -61,10 +65,14 @@
 			"Template": [
 				"js"
 			],
-			"data": {
-				"Shell": [
-					"js"
-				]
+			"platform": {
+				"node": {
+					"data": {
+						"Shell": [
+							"js"
+						]
+					}
+				}
 			},
 			"template": {
 				"html": {

@@ -8,9 +8,13 @@ lychee.define('strainer.api.Definition').exports(function(lychee, global, attach
 	const _parse_value = function(str) {
 
 		let val = undefined;
-		try {
-			val = eval('(' + str + ')');
-		} catch (err) {
+		if (/^(this|global)$/g.test(str) === false) {
+
+			try {
+				val = eval('(' + str + ')');
+			} catch (err) {
+			}
+
 		}
 
 		return val;
