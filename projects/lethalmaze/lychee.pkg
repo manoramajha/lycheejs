@@ -84,7 +84,8 @@
 				"variant": "application"
 			}
 		},
-		"files": {}
+		"files": {},
+		"tags": {}
 	},
 	"source": {
 		"environments": {},

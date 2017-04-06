@@ -48,7 +48,8 @@
 					]
 				}
 			}
-		}
+		},
+		"tags": {}
 	},
 	"source": {
 		"environments": {},

@@ -6,8 +6,8 @@ lychee.define('harvester.Watcher').requires([
 	'harvester.mod.Fertilizer',
 	'harvester.mod.Harvester',
 	'harvester.mod.Packager',
-	'harvester.mod.Server'
-//	'harvester.mod.Strainer'
+	'harvester.mod.Server',
+	'harvester.mod.Strainer'
 ]).exports(function(lychee, global, attachments) {
 
 	const _Filesystem = lychee.import('harvester.data.Filesystem');
@@ -141,13 +141,13 @@ lychee.define('harvester.Watcher').requires([
 
 		if (sandbox === true) {
 
+			Harvester  = null;
 			Fertilizer = null;
 			Strainer   = null;
 
 		} else {
 
-			// Fertilizer is disabled for now
-			// (Performance reasons)
+			// XXX: Fertilizer disabled for performance reasons
 			Fertilizer = null;
 
 		}

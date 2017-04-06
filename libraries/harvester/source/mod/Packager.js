@@ -53,6 +53,9 @@ lychee.define('harvester.mod.Packager').requires([
 		json.build.files  = _sort_recursive(json.build.files);
 		json.source.files = _sort_recursive(json.source.files);
 
+		json.build.tags   = _walk_tags(json.build.files);
+		json.source.tags  = _walk_tags(json.source.files);
+
 
 		return {
 			api:    json.api,
@@ -81,6 +84,24 @@ lychee.define('harvester.mod.Packager').requires([
 			return obj;
 
 		}
+
+	};
+
+	const _walk_tags = function(files) {
+
+		let tags = {};
+
+		if (files.platform instanceof Object) {
+
+			tags.platform = {};
+
+			for (let id in files.platform) {
+				tags.platform[id] = 'platform/' + id;
+			}
+
+		}
+
+		return tags;
 
 	};
 

@@ -243,7 +243,8 @@
 					]
 				}
 			}
-		}
+		},
+		"tags": {}
 	},
 	"source": {
 		"environments": {},
@@ -255,9 +256,6 @@
 				"js"
 			],
 			"data": {
-				"Filesystem": [
-					"js"
-				],
 				"Package": [
 					"js"
 				],
@@ -272,16 +270,10 @@
 				"Beautifier": [
 					"js"
 				],
-				"Fertilizer": [
-					"js"
-				],
 				"Harvester": [
 					"js"
 				],
 				"Packager": [
-					"js"
-				],
-				"Server": [
 					"js"
 				]
 			},
@@ -343,8 +335,32 @@
 						"js"
 					]
 				}
+			},
+			"platform": {
+				"node": {
+					"data": {
+						"Filesystem": [
+							"js"
+						]
+					},
+					"mod": {
+						"Fertilizer": [
+							"js"
+						],
+						"Server": [
+							"js"
+						],
+						"Strainer": [
+							"js"
+						]
+					}
+				}
 			}
 		},
-		"tags": {}
+		"tags": {
+			"platform": {
+				"node": "platform/node"
+			}
+		}
 	}
 }

@@ -56,6 +56,7 @@ const _print_help = function() {
 	console.log('    lycheejs-harvester status;                              ');
 	console.log('    lycheejs-harvester stop;                                ');
 	console.log('    lycheejs-harvester start development --sandbox;         ');
+	console.log('    lycheejs-harvester start --sandbox /libraries/studio; ');
 	console.log('                                                            ');
 
 };
