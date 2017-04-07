@@ -83,19 +83,19 @@ lychee.define('harvester.data.Package').includes([
 
 			node.forEach(function(ext) {
 
-				if (/msc|snd/.test(ext)) {
+				if (/(msc|snd)$/.test(ext)) {
 
 					if (files.indexOf(path + '.' + ext) === -1) {
 						files.push(path + '.' + ext);
 					}
 
-				} else if (/js|json|fnt|png/.test(ext)) {
+				} else if (/(js|json|fnt|png)$/.test(ext)) {
 
 					if (files.indexOf(path + '.' + ext) === -1) {
 						files.push(path + '.' + ext);
 					}
 
-				} else if (/md/.test(ext)) {
+				} else if (/(md|tpl)$/.test(ext)) {
 
 					if (files.indexOf(path + '.' + ext) === -1) {
 						files.push(path + '.' + ext);

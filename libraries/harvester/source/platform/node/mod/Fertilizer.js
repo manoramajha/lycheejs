@@ -27,7 +27,9 @@ lychee.define('harvester.mod.Fertilizer').tags({
 	const _child_process = global.require('child_process');
 	const _setInterval   = global.setInterval;
 	const _Filesystem    = lychee.import('harvester.data.Filesystem');
-	const _CACHE         = { active: false, queue: [] };
+	let   _ACTIVE        = false;
+	const _CACHE         = {};
+	const _QUEUE         = [];
 	const _ROOT          = new _Filesystem().root;
 
 
@@ -40,12 +42,12 @@ lychee.define('harvester.mod.Fertilizer').tags({
 
 		_setInterval(function() {
 
-			if (cache.active === false) {
+			if (_ACTIVE === false) {
 
-				let tmp = cache.queue.splice(0, 1);
+				let tmp = _QUEUE.splice(0, 1);
 				if (tmp.length === 1) {
 
-					cache.active = true;
+					_ACTIVE = true;
 					_fertilize(tmp[0].project, tmp[0].target);
 
 				}
@@ -62,11 +64,18 @@ lychee.define('harvester.mod.Fertilizer').tags({
 	 * HELPERS
 	 */
 
-	const _is_queue = function(project, target) {
+	const _is_cached = function(id, target, pkg) {
 
-		return _CACHE.queue.find(function(entry) {
-			return entry.project === project && entry.target === target;
-		}) !== undefined;
+		let cache = _CACHE[id] || null;
+		if (cache !== null) {
+
+			if (cache[target] === pkg) {
+				return true;
+			}
+
+		}
+
+		return false;
 
 	};
 
@@ -79,7 +88,7 @@ lychee.define('harvester.mod.Fertilizer').tags({
 			cwd: _ROOT
 		}, function(error, stdout, stderr) {
 
-			_CACHE.active = false;
+			_ACTIVE = false;
 
 			if (error || stdout.indexOf('SUCCESS') === -1) {
 				console.error('harvester.mod.Fertilizer: FAILURE ("' + project + ' | ' + target + '")');
@@ -122,16 +131,19 @@ lychee.define('harvester.mod.Fertilizer').tags({
 
 		can: function(project) {
 
-			if (project.identifier.indexOf('__') === -1 && project.package !== null) {
+			let id  = project.identifier;
+			let pkg = project.package;
 
-				let build = project.package.json.build || null;
+			if (id.indexOf('__') === -1 && pkg !== null) {
+
+				let build = pkg.json.build || null;
 				if (build !== null) {
 
 					let environments = build.environments || null;
 					if (environments !== null) {
 
 						let targets = Object.keys(environments).filter(function(target) {
-							return _is_queue(project.identifier, target) === false;
+							return _is_cached(id, target, pkg) === false;
 						});
 
 						if (targets.length > 0) {
@@ -151,20 +163,30 @@ lychee.define('harvester.mod.Fertilizer').tags({
 
 		process: function(project) {
 
-			if (project.filesystem !== null && project.package !== null) {
+			let id  = project.identifier;
+			let pkg = project.package;
 
-				let build = project.package.json.build || null;
+			if (project.filesystem !== null && pkg !== null) {
+
+				let build = pkg.json.build || null;
 				if (build !== null) {
 
 					let environments = build.environments || null;
 					if (environments !== null) {
 
 						Object.keys(environments).filter(function(target) {
-							return _is_queue(project.identifier, target) === false;
+							return _is_cached(id, target, pkg) === false;
 						}).forEach(function(target) {
 
-							_CACHE.queue.push({
-								project: project.identifier,
+							let cache = _CACHE[id] || null;
+							if (cache === null) {
+								cache = _CACHE[id] = {};
+							}
+
+							cache[target] = pkg;
+
+							_QUEUE.push({
+								project: id,
 								target:  target
 							});
 

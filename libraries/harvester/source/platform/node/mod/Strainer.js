@@ -2,7 +2,26 @@
 lychee.define('harvester.mod.Strainer').tags({
 	platform: 'node'
 }).requires([
-]).exports(function(lychee, global, attachments) {
+]).supports(function(lychee, global) {
+
+	if (typeof global.require === 'function') {
+
+		try {
+
+			global.require('child_process');
+
+			return true;
+
+		} catch (err) {
+
+		}
+
+	}
+
+
+	return false;
+
+}).exports(function(lychee, global, attachments) {
 
 
 
