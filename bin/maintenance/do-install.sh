@@ -112,7 +112,7 @@ else
 			# XXX: libicns package not available (only AUR)
 			REQUIRED_LIST="bash binutils arm-none-eabi-binutils coreutils sed zip unzip tar curl git";
 			REQUIRED_CMD="pacman -S --noconfirm --needed $REQUIRED_LIST";
-			OPTIONAL_LIST="lib32-glibc lib32-libstdc++5 lib32-ncurses lib32-zlib";
+			OPTIONAL_LIST="jdk8-openjdk lib32-glibc lib32-libstdc++5 lib32-ncurses lib32-zlib";
 			OPTIONAL_CMD="pacman -S --noconfirm --needed $OPTIONAL_LIST";
 
 		# Alpine
@@ -121,7 +121,7 @@ else
 			# XXX: libicns arm-none-eabi-binutils packages not available
 			REQUIRED_LIST="bash binutils coreutils sed zip unzip tar curl git";
 			REQUIRED_CMD="apk add --no-cache $REQUIRED_LIST";
-			# XXX: lib32-glibc lib32-libstdc++5 lib32-ncurses lib32-zlib packages not available
+			# XXX: openjdk8 lib32-glibc lib32-libstdc++5 lib32-ncurses lib32-zlib packages not available
 			OPTIONAL_LIST="";
 			OPTIONAL_CMD="apk add --no-cache $OPTIONAL_LIST";
 
@@ -150,7 +150,7 @@ else
 		elif [ -x "/usr/bin/zypper" ]; then
 			REQUIRED_LIST="bash binutils coreutils icns-utils sed zip unzip tar curl git";
 			REQUIRED_CMD="zypper --non-interactive install $REQUIRED_LIST";
-			OPTIONAL_LIST="glibc-32bit libstdc++6-32bit libncurses5-32bit libz1-32bit";
+			OPTIONAL_LIST="java-1_8_0-openjdk glibc-32bit libstdc++6-32bit libncurses5-32bit libz1-32bit";
 			OPTIONAL_CMD="zypper --non-interactive install $OPTIONAL_LIST";
 		fi;
 
