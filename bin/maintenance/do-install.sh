@@ -7,11 +7,7 @@ lowercase() {
 OS=`lowercase \`uname\``;
 USER_WHO=`whoami`;
 USER_LOG=`logname 2> /dev/null`;
-
-
-LYCHEEJS_NODE="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../../"; pwd);
-LYCHEEJS_VERSION=$(cd $LYCHEEJS_ROOT && cat ./libraries/lychee/source/core/lychee.js | grep VERSION | cut -d\" -f2);
 
 ALWAYS_YES="false";
 
@@ -24,8 +20,8 @@ fi;
 _install() {
 
 	cmd="$1";
-	echo -e "\t$cmd";
-	$cmd 2>&1 > /dev/null;
+	echo -e " (L)   $cmd";
+	$cmd 1> /dev/null 2> /dev/null;
 
 	if [ "$?" == "0" ]; then
 		return 0;
@@ -38,32 +34,30 @@ _install() {
 
 
 if [ "$OS" == "darwin" ]; then
-
 	OS="osx";
-
 elif [ "$OS" == "linux" ]; then
-
 	OS="linux";
-
 elif [ "$OS" == "freebsd" ] || [ "$OS" == "netbsd" ]; then
-
 	OS="bsd";
-
 fi;
 
 
 
 if [ "$USER_WHO" != "root" ]; then
 
-	echo "You are not root.";
-	echo "Use \"sudo $0\".";
+	echo -e "\e[37m\e[41m";
+	echo " (E) You are not root.                          ";
+	echo "     Use \"sudo ./bin/maintenance/do-install.sh\".";
+	echo -e "\e[0m";
 
 	exit 1;
 
 elif [ "$OS" == "osx" ] && [ "$USER_WHO" == "root" ] && [ "$USER_LOG" == "root" ]; then
 
-	echo "You are root.";
-	echo "Please exit su shell and use \"sudo $0\".";
+	echo -e "\e[37m\e[41m";
+	echo " (E) You are root. Exit su shell and            ";
+	echo "     Use \"sudo ./bin/maintenance/do-install.sh\".";
+	echo -e "\e[0m";
 
 	exit 1;
 
@@ -75,32 +69,35 @@ else
 
 	else
 
-		echo "";
-		echo -e "\e[37m\e[42m lychee.js Install Tool \e[0m";
-		echo "";
-		echo " All your data are belong to us.                           ";
-		echo " This tool integrates lychee.js with the operating system. ";
-		echo "                                                           ";
-		echo " No projects are harmed or modified by executing this      ";
-		echo " script. This will only update all software packages.      ";
-		echo "                                                           ";
-		echo " Please select the installation channel:                   ";
-		echo "                                                           ";
-		echo " 1) minimal + optional dependencies                        ";
-		echo "    Required for mobile device support.                    ";
-		echo "                                                           ";
-		echo " 2) minimal dependencies                                   ";
-		echo "    No mobile device support.                              ";
-		echo "                                                           ";
+		echo " (L) ";
+		echo -e "\e[37m\e[42m (I) lychee.js Install Tool \e[0m";
+		echo " (L) ";
+		echo " (L) All your data are belong to us.                      ";
+		echo " (L) This tool integrates lychee.js with your system.     ";
+		echo " (L) ";
+		echo " (L) No projects are harmed or modified by executing this ";
+		echo " (L) script. This will only update all software packages. ";
+		echo " (L) ";
+		echo " (L) ";
+		echo " (L) Please select the dependencies channel:              ";
+		echo " (L) ";
+		echo " (L) 1) minimal + optional dependencies                   ";
+		echo " (L)    Required for mobile device support.               ";
+		echo " (L) ";
+		echo " (L) 2) minimal dependencies                              ";
+		echo " (L)    No mobile device support.                         ";
+		echo " (L) ";
+		echo " (L) ";
 
 
-		read -p "Continue (1/2)? " -r
+		read -p " (L) Continue (1/2)? " -r
 
 		if [[ $REPLY =~ ^[1]$ ]]; then
 			SELECTION="optional";
 		elif [[ $REPLY =~ ^[2]$ ]]; then
 			SELECTION="required";
 		else
+			echo -e "\e[37m\e[41m (E) INVALID SELECTION \e[0m";
 			exit 1;
 		fi;
 
@@ -185,24 +182,29 @@ else
 
 	if [ "$REQUIRED_CMD" != "" ]; then
 
-		echo "> Installing required dependencies ...";
+		echo " (L) ";
+		echo " (L) > Installing required dependencies ...";
 
 		_install "$REQUIRED_CMD";
 
 		if [ $? -eq 0 ]; then
-			echo "> DONE";
+			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
 		else
-			echo "> FAIL";
+			echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
 		fi;
 
 	elif [ "$REQUIRED_CMD" == "" ]; then
 
-		echo "";
-		echo "Your system is not officially supported.";
-		echo "Feel free to modify this script to support your system!";
-		echo "";
-		echo "Also, please let us know about this at https://github.com/Artificial-Engineering/lycheejs/issues";
-		echo "";
+		echo " (L) ";
+		echo -e "\e[37m\e[41m";
+		echo " (E)                                                           ";
+		echo " (E) Your package manager is not supported.                    ";
+		echo " (E) Feel free to modify this script!                          ";
+		echo " (E)                                                           ";
+		echo " (E) Please let us know about this at                          ";
+		echo " (E) https://github.com/Artificial-Engineering/lycheejs/issues ";
+		echo " (E)                                                           ";
+		echo -e "\e[0m";
 
 		exit 1;
 
@@ -210,14 +212,15 @@ else
 
 	if [ "$OPTIONAL_CMD" != "" ] && [ "$SELECTION" == "optional" ]; then
 
-		echo "> Installing optional dependencies ...";
+		echo " (L) ";
+		echo " (L) > Installing optional dependencies ...";
 
 		_install "$OPTIONAL_CMD";
 
 		if [ $? -eq 0 ]; then
-			echo "> DONE";
+			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
 		else
-			echo "> FAIL";
+			echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
 		fi;
 
 	fi;
@@ -228,47 +231,44 @@ else
 
 		if [ -d /usr/share/applications ]; then
 
-			echo "";
-			echo "> Integrating GUI Applications";
-			echo "";
+			echo " (L) ";
+			echo " (L) > Integrating GUI applications ...";
 
 
-			cp ./bin/helper/linux/lycheejs.svg /usr/share/icons/lycheejs.svg;
-			cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
-			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-helper.desktop";
+			cp ./bin/helper/linux/lycheejs.svg /usr/share/icons/lycheejs.svg                                        2> /dev/null;
+			cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop                    2> /dev/null;
+			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-helper.desktop"                2> /dev/null;
 
-			cp "$LYCHEEJS_ROOT/libraries/ranger/bin/ranger.desktop" /usr/share/applications/lycheejs-ranger.desktop;
-			ranger_root="$LYCHEEJS_ROOT/libraries/ranger";
-			sed -i 's|__ROOT__|'$ranger_root'|g' /usr/share/applications/lycheejs-ranger.desktop;
+			cp "$LYCHEEJS_ROOT/libraries/ranger/bin/ranger.desktop" /usr/share/applications/lycheejs-ranger.desktop 2> /dev/null;
+			ranger_root="$LYCHEEJS_ROOT/libraries/ranger"                                                           2> /dev/null;
+			sed -i 's|__ROOT__|'$ranger_root'|g' /usr/share/applications/lycheejs-ranger.desktop                    2> /dev/null;
 
-			cp "$LYCHEEJS_ROOT/libraries/studio/bin/studio.desktop" /usr/share/applications/lycheejs-studio.desktop;
-			studio_root="$LYCHEEJS_ROOT/libraries/studio";
-			sed -i 's|__ROOT__|'$studio_root'|g' /usr/share/applications/lycheejs-studio.desktop;
+			cp "$LYCHEEJS_ROOT/libraries/studio/bin/studio.desktop" /usr/share/applications/lycheejs-studio.desktop 2> /dev/null;
+			studio_root="$LYCHEEJS_ROOT/libraries/studio"                                                           2> /dev/null;
+			sed -i 's|__ROOT__|'$studio_root'|g' /usr/share/applications/lycheejs-studio.desktop                    2> /dev/null;
 
 
 			update_desktop=`which update-desktop-database`;
-
 			if [ "$update_desktop" != "" ]; then
-				$update_desktop;
+				echo " (L)   update-desktop-database";
+				$update_desktop 1> /dev/null 2> /dev/null;
 			fi;
 
 			update_desktop=`which xdg-desktop-menu`;
-
 			if [ "$update_desktop" != "" ]; then
-				$update_desktop forceupdate;
+				echo " (L)   xdg-desktop-menu forceupdate";
+				$update_desktop forceupdate 1> /dev/null 2> /dev/null;
 			fi;
 
 
-			echo "> DONE";
-			echo "";
+			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
 
 		fi;
 
 		if [ -d /usr/local/bin ]; then
 
-			echo "";
-			echo "> Integrating CLI Applications";
-			echo "";
+			echo " (L) ";
+			echo " (L) > Integrating CLI applications ...";
 
 
 			rm /usr/local/bin/lycheejs-breeder    2> /dev/null;
@@ -288,30 +288,27 @@ else
 			ln -s "$LYCHEEJS_ROOT/libraries/studio/bin/studio.sh"         /usr/local/bin/lycheejs-studio;
 
 
-			echo "> DONE";
-			echo "";
+			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
 
 		fi;
 
 	elif [ "$OS" == "osx" ]; then
 
-		echo "";
-		echo "> Integrating GUI Applications";
-		echo "";
+		echo " (L) ";
+		echo " (L) > Integrating GUI applications ...";
 
 
-		open ./bin/helper/osx/helper.app;
+		echo " (L)   open ./bin/helper/osx/helper.app";
+		open ./bin/helper/osx/helper.app 2> /dev/null;
 
 
-		echo "> DONE";
-		echo "";
+		echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
 
 
 		if [ -d /usr/local/bin ]; then
 
-			echo "";
-			echo "> Integrating CLI Applications";
-			echo "";
+			echo " (L) ";
+			echo " (L) > Integrating CLI applications ...";
 
 
 			# Well, fuck you, Apple.
@@ -338,8 +335,7 @@ else
 			ln -s "$LYCHEEJS_ROOT/libraries/studio/bin/studio.sh"         /usr/local/bin/lycheejs-studio;
 
 
-			echo "> DONE";
-			echo "";
+			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
 
 		fi;
 
