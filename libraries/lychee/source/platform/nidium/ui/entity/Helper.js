@@ -1,22 +1,12 @@
 
 lychee.define('lychee.ui.entity.Helper').tags({
-	platform: 'node'
+	platform: 'nidium'
 }).includes([
 	'lychee.ui.entity.Button'
 ]).supports(function(lychee, global) {
 
-	if (typeof global.require === 'function') {
-
-		try {
-
-			global.require('child_process');
-
-			return true;
-
-		} catch (err) {
-
-		}
-
+	if (typeof global.exec === 'function') {
+		return true;
 	}
 
 
@@ -24,11 +14,11 @@ lychee.define('lychee.ui.entity.Helper').tags({
 
 }).exports(function(lychee, global, attachments) {
 
-	const _child_process = global.require('child_process');
-	const _Button        = lychee.import('lychee.ui.entity.Button');
-	const _CONFIG        = attachments["json"].buffer;
-	const _TEXTURE       = attachments["png"];
-	const _ROOT          = lychee.ROOT.lychee;
+	const _exec    = global['exec'] || null;
+	const _Button  = lychee.import('lychee.ui.entity.Button');
+	const _CONFIG  = attachments["json"].buffer;
+	const _TEXTURE = attachments["png"];
+	const _ROOT    = lychee.ROOT.lychee;
 
 
 
@@ -80,8 +70,6 @@ lychee.define('lychee.ui.entity.Helper').tags({
 	const _help = function(value) {
 
 		let action = value.split('=')[0];
-		let result = false;
-
 
 		if (action === 'refresh') {
 
@@ -90,51 +78,19 @@ lychee.define('lychee.ui.entity.Helper').tags({
 
 		} else {
 
-			try {
+			let result = _exec('/bin/bash ' + _ROOT + '/bin/helper.sh lycheejs://' + value);
+			if (/SUCCESS/g.test(result) === false) {
 
-				let helper = _child_process.execFile(_ROOT + '/bin/helper.sh', [
-					'lycheejs://' + value
-				], {
-					cwd: _ROOT
-				}, function(error, stdout, stderr) {
-
-					stderr = (stderr.trim() || '').toString();
-
-					if (stderr !== '') {
-
-						if (lychee.debug === true) {
-
-							stderr.trim().split('\n').forEach(function(line) {
-								console.error('lychee.ui.entity.Helper: "' + line.trim() + '"');
-							});
-
-						}
-
-					}
-
+				result.trim().split('\n').forEach(function(line) {
+					console.error('lychee.ui.entity.Helper: "' + line.trim() + '"');
 				});
-
-				helper.stdout.on('data', function(lines) {});
-				helper.stderr.on('data', function(lines) {});
-
-				helper.on('error', function() {
-					this.kill('SIGTERM');
-				});
-
-				helper.on('exit', function(code) {});
-
-				result = true;
-
-			} catch (err) {
-
-				result = false;
 
 			}
 
 		}
 
 
-		return result;
+		return true;
 
 	};
 
