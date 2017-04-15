@@ -150,7 +150,7 @@ lychee.define('fertilizer.Main').requires([
 								if (debug.blob !== null) {
 
 									(debug.blob.stderr || '').trim().split('\n').map(function(line) {
-										return (line.indexOf(':') !== -1 ? line.split(':')[1].trim() : '');
+										return (line.indexOf(':') !== -1 ? line.split(':')[1].trim() : line.trim());
 									}).forEach(function(line) {
 										console.error('fertilizer: ' + line);
 									});

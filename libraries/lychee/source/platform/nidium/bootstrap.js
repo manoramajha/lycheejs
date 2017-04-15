@@ -66,17 +66,17 @@
 	 * POLYFILLS
 	 */
 
-	let consol = 'console' in global && typeof console !== 'undefined';
-	if (consol === false) {
-		console = {};
-	}
+	const _console      = console;
+	const _write_stdout = function(str) {
+		_console.log(str);
+	};
+	const _write_stderr = function(str) {
+		_console.error(str);
+	};
 
-	const _log     = console.log   || function() {};
-	const _info    = console.info  || console.log;
-	const _warn    = console.warn  || console.log;
-	const _error   = console.error || console.log;
-	let   _std_out = '';
-	let   _std_err = '';
+
+	let _std_out = '';
+	let _std_err = '';
 
 	const _INDENT         = '    ';
 	const _WHITESPACE     = new Array(512).fill(' ').join('');
@@ -198,10 +198,10 @@
 		// process.stdout.write('\x1B[2J');
 
 		// clear screen and reset cursor
-		_log.call(console, '\x1B[2J\x1B[0f');
+		_write_stdout('\x1B[2J\x1B[0f');
 
 		// clear scroll buffer
-		_log.call(console, '\u001b[3J');
+		_write_stdout('\u001b[3J');
 
 	};
 
@@ -215,11 +215,7 @@
 
 		_std_out += args.join('\t') + '\n';
 
-		_log.call(console,
-			' ',
-			_args_to_string(args, 2),
-			' '
-		);
+		_write_stdout('\u001b[49m\u001b[97m ' + _args_to_string(args, 1) + ' \u001b[39m\u001b[49m\u001b[0m\n');
 
 	};
 
@@ -233,13 +229,7 @@
 
 		_std_out += args.join('\t') + '\n';
 
-		_info.call(console,
-			'\u001b[37m',
-			'\u001b[42m',
-			_args_to_string(args, 2),
-			'\u001b[49m',
-			'\u001b[39m'
-		);
+		_write_stdout('\u001b[42m\u001b[97m ' + _args_to_string(args, 1) + ' \u001b[39m\u001b[49m\u001b[0m\n');
 
 	};
 
@@ -253,13 +243,7 @@
 
 		_std_out += args.join('\t') + '\n';
 
-		_warn.call(console,
-			'\u001b[37m',
-			'\u001b[43m',
-			_args_to_string(args, 2),
-			'\u001b[49m',
-			'\u001b[39m'
-		);
+		_write_stdout('\u001b[43m\u001b[97m ' + _args_to_string(args, 1) + ' \u001b[39m\u001b[49m\u001b[0m\n');
 
 	};
 
@@ -273,13 +257,7 @@
 
 		_std_err += args.join('\t') + '\n';
 
-		_error.call(console,
-			'\u001b[37m',
-			'\u001b[41m',
-			_args_to_string(args, 2),
-			'\u001b[49m',
-			'\u001b[39m'
-		);
+		_write_stderr('\u001b[41m\u001b[97m ' + _args_to_string(args, 1) + ' \u001b[39m\u001b[49m\u001b[0m\n');
 
 	};
 
@@ -354,6 +332,7 @@
 
 		let audio  = 'Audio' in global && typeof Audio !== 'undefined';
 		let buffer = true;
+		let consol = 'console' in global;
 		let image  = 'Image' in global && typeof Image !== 'undefined';
 
 

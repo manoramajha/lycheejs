@@ -16,7 +16,6 @@ lychee.define('Storage').tags({
 
 	let   _id         = 0;
 	const _Emitter    = lychee.import('lychee.event.Emitter');
-	const _File       = global.File;
 	const _JSON       = {
 		encode: JSON.stringify,
 		decode: JSON.parse
@@ -24,76 +23,16 @@ lychee.define('Storage').tags({
 	const _PERSISTENT = {
 		data: {},
 		read: function() {
-
-			let url  = lychee.environment.resolve('./lychee.store');
-			let file = new _File(url, { encoding: 'utf8' });
-
-
-			let raw = null;
-			try {
-				file.openSync('r');
-				raw = file.readSync();
-				file.closeSync();
-			} catch (err) {
-				raw = null;
-			}
-
-
-			let buffer = null;
-			try {
-				buffer = JSON.parse(raw);
-			} catch (err) {
-				buffer = null;
-			}
-
-
-			if (buffer !== null) {
-
-				for (let id in buffer) {
-					_PERSISTENT.data[id] = buffer[id];
-				}
-
-
-				return true;
-
-			}
-
-
 			return false;
-
 		},
 		write: function() {
-
-			let buffer = _JSON.encode(_PERSISTENT.data);
-			let url    = lychee.environment.resolve('./lychee.store');
-			let file   = new _File(url, { encoding: 'utf8' });
-
-
-			let result = false;
-			try {
-				file.openSync('w+');
-				result = file.writeSync(buffer);
-				file.closeSync();
-			} catch (err) {
-				result = false;
-			}
-
-
-			return result;
-
+			return false;
 		}
 	};
 	const _TEMPORARY  = {
 		data: {},
 		read: function() {
-
-			if (Object.keys(this.data).length > 0) {
-				return this.data;
-			}
-
-
-			return null;
-
+			return true;
 		},
 		write: function() {
 			return true;
@@ -108,12 +47,83 @@ lychee.define('Storage').tags({
 
 	(function() {
 
+		const _File = global.File;
+
+
+		let file = 'File' in global;
+		if (file === true) {
+
+			_PERSISTENT.read = function() {
+
+				let url  = lychee.environment.resolve('./lychee.store');
+				let file = new _File(url, { encoding: 'utf8' });
+
+
+				let raw = null;
+				try {
+					file.openSync('r');
+					raw = file.readSync();
+					file.closeSync();
+				} catch (err) {
+					raw = null;
+				}
+
+
+				let buffer = null;
+				try {
+					buffer = JSON.parse(raw);
+				} catch (err) {
+					buffer = null;
+				}
+
+
+				if (buffer !== null) {
+
+					for (let id in buffer) {
+						_PERSISTENT.data[id] = buffer[id];
+					}
+
+
+					return true;
+
+				}
+
+
+				return false;
+
+			};
+
+
+			_PERSISTENT.write = function() {
+
+				let buffer = _JSON.encode(_PERSISTENT.data);
+				let url    = lychee.environment.resolve('./lychee.store');
+				let file   = new _File(url, { encoding: 'utf8' });
+
+
+				let result = false;
+				try {
+					file.openSync('w+');
+					result = file.writeSync(buffer);
+					file.closeSync();
+				} catch (err) {
+					result = false;
+				}
+
+
+				return result;
+
+			};
+
+		}
+
+
 		if (lychee.debug === true) {
 
 			let methods = [];
 
-			if (_PERSISTENT) methods.push('Persistent');
-			if (_TEMPORARY)  methods.push('Temporary');
+			if (file)       methods.push('Persistent');
+			if (_TEMPORARY) methods.push('Temporary');
 
 			if (methods.length === 0) {
 				console.error('lychee.Storage: Supported methods are NONE');

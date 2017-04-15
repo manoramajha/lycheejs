@@ -39,6 +39,17 @@
 				},
 				"variant": "library"
 			},
+			"nidium/dist": {
+				"build": "lychee.DIST",
+				"debug": false,
+				"sandbox": false,
+				"tags": {
+					"platform": [
+						"nidium"
+					]
+				},
+				"variant": "library"
+			},
 			"node/dist": {
 				"build": "lychee.DIST",
 				"debug": false,
@@ -94,6 +105,11 @@
 					]
 				}
 			},
+			"nidium": {
+				"core": [
+					"js"
+				]
+			},
 			"node": {
 				"core": [
 					"js"
@@ -118,6 +134,7 @@
 				"html": "platform/html",
 				"html-nwjs": "platform/html-nwjs",
 				"html-webview": "platform/html-webview",
+				"nidium": "platform/nidium",
 				"node": "platform/node",
 				"node-sdl": "platform/node-sdl"
 			}
@@ -487,6 +504,29 @@
 							"Download": [
 								"js"
 							],
+							"Helper": [
+								"js",
+								"json",
+								"png"
+							]
+						}
+					}
+				},
+				"nidium": {
+					"Renderer": [
+						"js"
+					],
+					"Storage": [
+						"js"
+					],
+					"Viewport": [
+						"js"
+					],
+					"bootstrap": [
+						"js"
+					],
+					"ui": {
+						"entity": {
 							"Helper": [
 								"js",
 								"json",
