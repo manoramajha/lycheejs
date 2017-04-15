@@ -1532,11 +1532,11 @@
 
 			_filename = stuff.url;
 
+
 			let cid = lychee.environment.resolve(stuff.url);
 			if (require.cache[cid] !== undefined) {
 				delete require.cache[cid];
 			}
-
 
 			try {
 				require(cid);

@@ -1,8 +1,8 @@
 
 (function(lychee, global) {
 
-	let _filename = null;
-	let _protocol = null;
+	let   _filename = null;
+	const _File     = global.File;
 
 
 
@@ -10,61 +10,27 @@
 	 * FEATURE DETECTION
 	 */
 
-	(function(location, selfpath) {
+	(function(process, selfpath) {
 
-		let origin = location.origin || '';
-		let cwd    = (location.pathname || '');
-		let proto  = origin.split(':')[0];
+		let cwd  = typeof process.cwd === 'function' ? process.cwd() : '';
+		let tmp1 = selfpath.indexOf('/libraries/lychee');
 
-
-		// Hint: CDNs might have no proper redirect to index.html
-		if (/\.(htm|html)$/g.test(cwd.split('/').pop()) === true) {
-			cwd = cwd.split('/').slice(0, -1).join('/');
+		if (tmp1 !== -1) {
+			lychee.ROOT.lychee = selfpath.substr(0, tmp1);
 		}
 
 
-		if (/^(http|https)$/g.test(proto)) {
-
-			// Hint: The harvester (HTTP server) understands
-			// /projects/* and /libraries/* requests.
-
-			lychee.ROOT.lychee = '';
-			_protocol = proto;
-
-
-			if (cwd !== '') {
-				lychee.ROOT.project = cwd === '/' ? '' : cwd;
-			}
-
-		} else if (/^(app|file|chrome-extension)$/g.test(proto)) {
-
-			let tmp1 = selfpath.indexOf('/libraries/lychee');
-			let tmp2 = selfpath.indexOf('://');
-
-			if (tmp1 !== -1 && tmp2 !== -1) {
-				lychee.ROOT.lychee = selfpath.substr(0, tmp1).substr(tmp2 + 3);
-			} else if (tmp1 !== -1) {
-				lychee.ROOT.lychee = selfpath.substr(0, tmp1);
-			}
-
-
-			let tmp3 = selfpath.split('/').slice(0, 3).join('/');
-			if (tmp3.substr(0, 13) === '/opt/lycheejs') {
-				lychee.ROOT.lychee = tmp3;
-			}
-
-			if (/^(file|chrome-extension)$/g.test(proto)) {
-				_protocol = 'file';
-			}
-
-
-			if (cwd !== '') {
-				lychee.ROOT.project = cwd;
-			}
-
+		let tmp2 = selfpath.split('/').slice(0, 3).join('/');
+		if (tmp2.substr(0, 13) === '/opt/lycheejs') {
+			lychee.ROOT.lychee = tmp2;
 		}
 
-	})(global.location || {}, (document.currentScript || {}).src || '');
+
+		if (cwd !== '') {
+			lychee.ROOT.project = cwd;
+		}
+
+	})(global.process || {}, typeof __filename === 'string' ? __filename : '');
 
 
 
@@ -74,52 +40,23 @@
 
 	const _load_asset = function(settings, callback, scope) {
 
-		let path = lychee.environment.resolve(settings.url);
-		let xhr  = new XMLHttpRequest();
+		let path     = lychee.environment.resolve(settings.url);
+		let encoding = settings.encoding === 'binary' ? 'binary' : 'utf8';
 
+		_File.read(path, { encoding: encoding }, function(error, buffer) {
 
-		if (path.substr(0, 13) === '/opt/lycheejs' && _protocol !== null) {
-			xhr.open('GET', _protocol + '://' + path, true);
-		} else {
-			xhr.open('GET', path, true);
-		}
-
-
-		if (settings.headers instanceof Object) {
-
-			for (let header in settings.headers) {
-				xhr.setRequestHeader(header, settings.headers[header]);
+			let raw = null;
+			if (!error) {
+				raw = buffer;
 			}
-
-		}
-
-
-		xhr.onload = function() {
 
 			try {
-				callback.call(scope, xhr.responseText || xhr.responseXML);
+				callback.call(scope, raw);
 			} catch (err) {
 				lychee.Debugger.report(lychee.environment, err, null);
-			} finally {
-				xhr = null;
 			}
 
-		};
-
-		xhr.onerror = xhr.ontimeout = function() {
-
-			try {
-				callback.call(scope, null);
-			} catch (err) {
-				lychee.Debugger.report(lychee.environment, err, null);
-			} finally {
-				xhr = null;
-			}
-
-		};
-
-
-		xhr.send(null);
+		});
 
 	};
 
@@ -134,17 +71,138 @@
 		console = {};
 	}
 
-	const  _clear   = console.clear || function() {};
-	const  _log     = console.log   || function() {};
-	const  _info    = console.info  || console.log;
-	const  _warn    = console.warn  || console.log;
-	const  _error   = console.error || console.log;
-	let    _std_out = '';
-	let    _std_err = '';
+	const _log     = console.log   || function() {};
+	const _info    = console.info  || console.log;
+	const _warn    = console.warn  || console.log;
+	const _error   = console.error || console.log;
+	let   _std_out = '';
+	let   _std_err = '';
 
+	const _INDENT         = '    ';
+	const _WHITESPACE     = new Array(512).fill(' ').join('');
+	const _args_to_string = function(args, offset) {
+
+		let output  = [];
+		let columns = process.stdout.columns;
+
+		for (let a = 0, al = args.length; a < al; a++) {
+
+			let value = args[a];
+			let o     = 0;
+
+			if (value instanceof Object) {
+
+				let tmp = [];
+
+				try {
+
+					let cache = [];
+
+					tmp = JSON.stringify(value, function(key, value) {
+
+						if (value instanceof Object) {
+
+							if (cache.indexOf(value) === -1) {
+								cache.push(value);
+								return value;
+							} else {
+								return undefined;
+							}
+
+						} else {
+							return value;
+						}
+
+					}, _INDENT).split('\n');
+
+				} catch (err) {
+				}
+
+				if (tmp.length > 1) {
+
+					for (let t = 0, tl = tmp.length; t < tl; t++) {
+						output.push(tmp[t]);
+					}
+
+					o = output.length - 1;
+
+				} else {
+
+					let chunk = output[o];
+					if (chunk === undefined) {
+						output[o] = tmp[0].trim();
+					} else {
+						output[o] = (chunk + ' ' + tmp[0]).trim();
+					}
+
+				}
+
+			} else if (typeof value === 'string' && value.includes('\n')) {
+
+				let tmp = value.split('\n');
+
+				for (let t = 0, tl = tmp.length; t < tl; t++) {
+					output.push(tmp[t]);
+				}
+
+				o = output.length - 1;
+
+			} else {
+
+				let chunk = output[o];
+				if (chunk === undefined) {
+					output[o] = ('' + value).replace(/\t/g, _INDENT).trim();
+				} else {
+					output[o] = (chunk + (' ' + value).replace(/\t/g, _INDENT)).trim();
+				}
+
+			}
+
+		}
+
+
+		let ol = output.length;
+		if (ol > 1) {
+
+			for (let o = 0; o < ol; o++) {
+
+				let line = output[o];
+				let maxl = (o === 0 || o === ol - 1) ? (columns - offset) : columns;
+				if (line.length > maxl) {
+					output[o] = line.substr(0, maxl);
+				} else {
+					output[o] = line + _WHITESPACE.substr(0, maxl - line.length);
+				}
+
+			}
+
+			return output.join('\n');
+
+		} else {
+
+			let line = output[0];
+			let maxl = columns - offset * 2;
+			if (line.length > maxl) {
+				return line.substr(0, maxl);
+			} else {
+				return line + _WHITESPACE.substr(0, maxl - line.length);
+			}
+
+		}
+
+	};
 
 	console.clear = function() {
-		_clear.call(console);
+
+		// clear screen
+		// process.stdout.write('\x1B[2J');
+
+		// clear screen and reset cursor
+		_log.call(console, '\x1B[2J\x1B[0f');
+
+		// clear scroll buffer
+		_log.call(console, '\u001b[3J');
+
 	};
 
 	console.log = function() {
@@ -156,7 +214,12 @@
 		}
 
 		_std_out += args.join('\t') + '\n';
-		_log.apply(console, args);
+
+		_log.call(console,
+			' ',
+			_args_to_string(args, 2),
+			' '
+		);
 
 	};
 
@@ -169,7 +232,14 @@
 		}
 
 		_std_out += args.join('\t') + '\n';
-		_info.apply(console, args);
+
+		_info.call(console,
+			'\u001b[37m',
+			'\u001b[42m',
+			_args_to_string(args, 2),
+			'\u001b[49m',
+			'\u001b[39m'
+		);
 
 	};
 
@@ -182,7 +252,14 @@
 		}
 
 		_std_out += args.join('\t') + '\n';
-		_warn.apply(console, args);
+
+		_warn.call(console,
+			'\u001b[37m',
+			'\u001b[43m',
+			_args_to_string(args, 2),
+			'\u001b[49m',
+			'\u001b[39m'
+		);
 
 	};
 
@@ -195,7 +272,14 @@
 		}
 
 		_std_err += args.join('\t') + '\n';
-		_error.apply(console, args);
+
+		_error.call(console,
+			'\u001b[37m',
+			'\u001b[41m',
+			_args_to_string(args, 2),
+			'\u001b[49m',
+			'\u001b[39m'
+		);
 
 	};
 
@@ -230,73 +314,8 @@
 
 
 	/*
-	 * EASTER EGG
-	 */
-
-	(function(log, console) {
-
-		let css = [
-			'font-family:monospace;font-size:16px;color:#ffffff;background:#405050',
-			'font-family:monospace;font-size:16px;color:#d0494b;background:#405050'
-		];
-
-		let is_chrome  = /Chrome/g.test(navigator.userAgent.split(' ').slice(-2, -1)[0] || '');
-		let is_opera   = /OPR/g.test(navigator.userAgent.split(' ').slice(-1) || '');
-		let is_safari  = /AppleWebKit/g.test(navigator.userAgent);
-		let is_firefox = !!(console.firebug || console.exception);
-
-
-		if (is_chrome || is_opera) {
-
-			log.call(console, '%c                                        ',                                         css[0]);
-			log.call(console, '%c      %c\u2597\u2584\u2596%c        lychee.%cjs%c ' + lychee.VERSION + '      ',   css[0], css[1], css[0], css[1], css[0]);
-			log.call(console, '%c    \u259c\u2584%c\u259d\u2580\u2598%c\u2584\u259b      Isomorphic Engine      ',  css[0], css[1], css[0]);
-			log.call(console, '%c    \u259f\u2580\u2580\u2580\u2580\u2580\u2599    https://lychee.js.org    ',      css[0]);
-			log.call(console, '%c                                        ',                                         css[0]);
-
-		} else if (is_firefox) {
-
-			log.call(console, '%c                                        ',                                         css[0]);
-			log.call(console, '%c      %c\u2597\u2584\u2596%c        lychee.%cjs%c ' + lychee.VERSION + '      ',   css[0], css[1], css[0], css[1], css[0]);
-			log.call(console, '%c    \u259c\u2584%c\u259d\u2580\u2598%c\u2584\u259b      Isomorphic Engine      ',  css[0], css[1], css[0]);
-			log.call(console, '%c   \u259f\u2580\u2580\u2580\u2580\u2580\u2599    https://lychee.js.org   ',        css[0]);
-			log.call(console, '%c                                        ',                                         css[0]);
-			log.call(console, '%c    Please use Chrome/Chromium/Opera    ',                                         css[0]);
-			log.call(console, '%c    We recommend the Blink Dev Tools    ',                                         css[0]);
-			log.call(console, '%c                                        ',                                         css[0]);
-
-		} else if (is_safari) {
-
-			log.call(console, '%c                                        ',                                         css[0]);
-			log.call(console, '%c      %c\u2597\u2584\u2596%c        lychee.%cjs%c ' + lychee.VERSION + '      ',   css[0], css[1], css[0], css[1], css[0]);
-			log.call(console, '%c    \u259c\u2584%c\u259d\u2580\u2598%c\u2584\u259b      Isomorphic Engine      ',  css[0], css[1], css[0]);
-			log.call(console, '%c    \u259f\u2580\u2580\u2580\u2580\u2580\u2599    https://lychee.js.org    ',      css[0]);
-			log.call(console, '%c                                        ',                                         css[0]);
-			log.call(console, '%c    Please use Chrome/Chromium/Opera    ',                                         css[0]);
-			log.call(console, '%c    We recommend the Blink Dev Tools    ',                                         css[0]);
-			log.call(console, '%c                                        ',                                         css[0]);
-
-		} else {
-
-			log.call(console, '    lychee.js ' + lychee.VERSION + '                   ');
-			log.call(console, '    Isomorphic Engine                   ');
-			log.call(console, '                                        ');
-			log.call(console, '    Please use Chrome/Chromium/Opera    ');
-			log.call(console, '    We recommend the Blink Dev Tools    ');
-			log.call(console, '                                        ');
-
-		}
-
-	})(_log, console);
-
-
-
-	/*
 	 * FEATURE DETECTION
 	 */
-
-	let _audio_supports_ogg = false;
-	let _audio_supports_mp3 = false;
 
 	(function() {
 
@@ -306,13 +325,12 @@
 			let cache = _buffer_cache[url] || null;
 			if (cache === null) {
 
-				let xhr = new XMLHttpRequest();
+				let path = lychee.environment.resolve(url);
+				let file = new _File(path, { encoding: 'binary' });
 
-				xhr.open('GET', url, true);
-				xhr.responseType = 'arraybuffer';
-				xhr.onload = function() {
+				try {
 
-					let bytes  = new Uint8Array(xhr.response);
+					let bytes  = new Uint8Array(file.readSync());
 					let buffer = new Buffer(bytes.length);
 
 					for (let b = 0, bl = bytes.length; b < bl; b++) {
@@ -321,11 +339,11 @@
 
 					cache = _buffer_cache[url] = buffer;
 
-				};
-				xhr.onerror = xhr.ontimeout = function() {
+				} catch (err) {
+
 					cache = _buffer_cache[url] = new Buffer(0);
-				};
-				xhr.send(null);
+
+				}
 
 			}
 
@@ -337,69 +355,6 @@
 		let audio  = 'Audio' in global && typeof Audio !== 'undefined';
 		let buffer = true;
 		let image  = 'Image' in global && typeof Image !== 'undefined';
-
-
-		if (audio) {
-
-			let audiotest = new Audio();
-
-			[ 'application/ogg', 'audio/ogg', 'audio/ogg; codecs=theora, vorbis' ].forEach(function(variant) {
-
-				if (audiotest.canPlayType(variant)) {
-					_audio_supports_ogg = true;
-				}
-
-			});
-
-			[ 'audio/mpeg' ].forEach(function(variant) {
-
-				if (audiotest.canPlayType(variant)) {
-					_audio_supports_mp3 = true;
-				}
-
-			});
-
-		} else {
-
-			Audio = function() {
-
-				this.src         = '';
-				this.currentTime = 0;
-				this.volume      = 0;
-				this.autobuffer  = false;
-				this.preload     = false;
-
-				this.onload  = null;
-				this.onerror = null;
-
-			};
-
-
-			Audio.prototype = {
-
-				load: function() {
-
-					if (this.onerror !== null) {
-						this.onerror.call(this);
-					}
-
-				},
-
-				play: function() {
-
-				},
-
-				pause: function() {
-
-				},
-
-				addEventListener: function() {
-
-				}
-
-			};
-
-		}
 
 
 		Audio.prototype.toString = function(encoding) {
@@ -436,35 +391,6 @@
 			return Object.prototype.toString.call(this);
 
 		};
-
-
-		if (!image) {
-
-			Image = function() {
-
-				this.src    = '';
-				this.width  = 0;
-				this.height = 0;
-
-				this.onload  = null;
-				this.onerror = null;
-
-			};
-
-
-			Image.prototype = {
-
-				load: function() {
-
-					if (this.onerror !== null) {
-						this.onerror.call(this);
-					}
-
-				}
-
-			};
-
-		}
 
 
 		Image.prototype.toString = function(encoding) {
@@ -1137,10 +1063,8 @@
 
 
 			_load_asset({
-				url:     this.url,
-				headers: {
-					'Content-Type': 'application/json; charset=utf8'
-				}
+				url:      this.url,
+				encoding: 'utf8'
 			}, function(raw) {
 
 				let data = null;
@@ -1429,10 +1353,8 @@
 
 
 			_load_asset({
-				url:     this.url,
-				headers: {
-					'Content-Type': 'application/json; charset=utf8'
-				}
+				url:      this.url,
+				encoding: 'utf8'
 			}, function(raw) {
 
 				let data = null;
@@ -1469,309 +1391,7 @@
 	 * MUSIC IMPLEMENTATION
 	 */
 
-	const _MUSIC_CACHE = {};
-
-	const _clone_music = function(origin, clone) {
-
-		if (origin.buffer !== null) {
-
-			clone.buffer            = new Audio();
-			clone.buffer.autobuffer = true;
-			clone.buffer.preload    = true;
-			clone.buffer.src        = origin.buffer.src;
-			clone.buffer.load();
-
-			clone.buffer.addEventListener('ended', function() {
-				clone.play();
-			}, true);
-
-			clone.__buffer.ogg = origin.__buffer.ogg;
-			clone.__buffer.mp3 = origin.__buffer.mp3;
-			clone.__load       = false;
-
-		}
-
-	};
-
-
-	const Music = function(url) {
-
-		url = typeof url === 'string' ? url : null;
-
-
-		this.url      = url;
-		this.onload   = null;
-		this.buffer   = null;
-		this.volume   = 1.0;
-		this.isIdle   = true;
-
-		this.__buffer = { ogg: null, mp3: null };
-		this.__load   = true;
-
-
-		if (url !== null) {
-
-			if (_MUSIC_CACHE[url] !== undefined) {
-				_clone_music(_MUSIC_CACHE[url], this);
-			} else {
-				_MUSIC_CACHE[url] = this;
-			}
-
-		}
-
-	};
-
-
-	Music.prototype = {
-
-		deserialize: function(blob) {
-
-			if (blob.buffer instanceof Object) {
-
-				let url  = null;
-				let type = null;
-
-				if (_audio_supports_ogg === true) {
-
-					if (typeof blob.buffer.ogg === 'string') {
-						url  = url  || blob.buffer.ogg;
-						type = type || 'ogg';
-					}
-
-				} else if (_audio_supports_mp3 === true) {
-
-					if (typeof blob.buffer.mp3 === 'string') {
-						url  = url  || blob.buffer.mp3;
-						type = type || 'mp3';
-					}
-
-				}
-
-
-				if (url !== null && type !== null) {
-
-					let that   = this;
-					let buffer = new Audio();
-
-					buffer.addEventListener('ended', function() {
-						that.play();
-					}, true);
-
-					buffer.autobuffer = true;
-					buffer.preload    = true;
-					buffer.src        = url;
-					buffer.load();
-
-					this.buffer         = buffer;
-					this.__buffer[type] = buffer;
-					this.__load         = false;
-
-				}
-
-			}
-
-		},
-
-		serialize: function() {
-
-			let blob = {};
-
-
-			if (this.__buffer.ogg !== null || this.__buffer.mp3 !== null) {
-
-				blob.buffer = {};
-
-				if (this.__buffer.ogg !== null) {
-					blob.buffer.ogg = 'data:application/ogg;base64,' + this.__buffer.ogg.toString('base64');
-				}
-
-				if (this.__buffer.mp3 !== null) {
-					blob.buffer.mp3 = 'data:audio/mp3;base64,' + this.__buffer.mp3.toString('base64');
-				}
-
-			}
-
-
-			return {
-				'constructor': 'Music',
-				'arguments':   [ this.url ],
-				'blob':        Object.keys(blob).length > 0 ? blob : null
-			};
-
-		},
-
-		load: function() {
-
-			if (this.__load === false) {
-
-				if (this.onload instanceof Function) {
-					this.onload(true);
-					this.onload = null;
-				}
-
-				return;
-
-			}
-
-
-			let url  = this.url;
-			let type = null;
-
-			if (_audio_supports_ogg === true) {
-				type = type || 'ogg';
-			} else if (_audio_supports_mp3 === true) {
-				type = type || 'mp3';
-			}
-
-
-			if (url !== null && type !== null) {
-
-				let that   = this;
-				let buffer = new Audio();
-
-				buffer.onload = function() {
-
-					that.buffer         = this;
-					that.__buffer[type] = this;
-
-					this.toString('base64');
-					this.__load = false;
-
-					if (that.onload instanceof Function) {
-						that.onload(true);
-						that.onload = null;
-					}
-
-				};
-
-				buffer.onerror = function() {
-
-					if (that.onload instanceof Function) {
-						that.onload(false);
-						that.onload = null;
-					}
-
-				};
-
-				buffer.addEventListener('ended', function() {
-					that.play();
-				}, true);
-
-				buffer.autobuffer = true;
-				buffer.preload    = true;
-
-
-				let path = lychee.environment.resolve(url + '.' + type);
-				if (path.substr(0, 13) === '/opt/lycheejs' && _protocol !== null) {
-					buffer.src = _protocol + '://' + path;
-				} else {
-					buffer.src = path;
-				}
-
-
-				buffer.load();
-				buffer.onload();
-
-			} else {
-
-				if (this.onload instanceof Function) {
-					this.onload(false);
-					this.onload = null;
-				}
-
-			}
-
-		},
-
-		clone: function() {
-			return new Music(this.url);
-		},
-
-		play: function() {
-
-			if (this.buffer !== null) {
-
-				try {
-					this.buffer.currentTime = 0;
-				} catch (err) {
-				}
-
-				if (this.buffer.currentTime === 0) {
-
-					let p = this.buffer.play();
-					if (typeof p === 'object' && typeof p.catch === 'function') {
-						p.catch(function(err) {});
-					}
-
-					this.isIdle = false;
-				}
-
-			}
-
-		},
-
-		pause: function() {
-
-			if (this.buffer !== null) {
-				this.buffer.pause();
-				this.isIdle = true;
-			}
-
-		},
-
-		resume: function() {
-
-			if (this.buffer !== null) {
-
-				let p = this.buffer.play();
-				if (typeof p === 'object' && typeof p.catch === 'function') {
-					p.catch(function(err) {});
-				}
-
-				this.isIdle = false;
-
-			}
-
-		},
-
-		stop: function() {
-
-			if (this.buffer !== null) {
-
-				this.buffer.pause();
-				this.isIdle = true;
-
-				try {
-					this.buffer.currentTime = 0;
-				} catch (err) {
-				}
-
-			}
-
-		},
-
-		setVolume: function(volume) {
-
-			volume = typeof volume === 'number' ? volume : null;
-
-
-			if (volume !== null && this.buffer !== null) {
-
-				volume = Math.min(Math.max(0, volume), 1);
-
-				this.buffer.volume = volume;
-				this.volume        = volume;
-
-				return true;
-
-			}
-
-
-			return false;
-
-		}
-
-	};
+	// TODO: Music implementation
 
 
 
@@ -1779,312 +1399,7 @@
 	 * SOUND IMPLEMENTATION
 	 */
 
-	const _SOUND_CACHE = {};
-
-	const _clone_sound = function(origin, clone) {
-
-		if (origin.buffer !== null) {
-
-			clone.buffer            = new Audio();
-			clone.buffer.autobuffer = true;
-			clone.buffer.preload    = true;
-			clone.buffer.src        = origin.buffer.src;
-			clone.buffer.load();
-
-			clone.buffer.addEventListener('ended', function() {
-				clone.isIdle = true;
-				clone.stop();
-			}, true);
-
-			clone.__buffer.ogg = origin.__buffer.ogg;
-			clone.__buffer.mp3 = origin.__buffer.mp3;
-			clone.__load       = false;
-
-		}
-
-	};
-
-
-	const Sound = function(url) {
-
-		url = typeof url === 'string' ? url : null;
-
-
-		this.url      = url;
-		this.onload   = null;
-		this.buffer   = null;
-		this.volume   = 1.0;
-		this.isIdle   = true;
-
-		this.__buffer = { ogg: null, mp3: null };
-		this.__load   = true;
-
-
-		if (url !== null) {
-
-			if (_SOUND_CACHE[url] !== undefined) {
-				_clone_sound(_SOUND_CACHE[url], this);
-			} else {
-				_SOUND_CACHE[url] = this;
-			}
-
-		}
-
-	};
-
-
-	Sound.prototype = {
-
-		deserialize: function(blob) {
-
-			if (blob.buffer instanceof Object) {
-
-				let url  = null;
-				let type = null;
-
-				if (_audio_supports_ogg === true) {
-
-					if (typeof blob.buffer.ogg === 'string') {
-						url  = url  || blob.buffer.ogg;
-						type = type || 'ogg';
-					}
-
-				} else if (_audio_supports_mp3 === true) {
-
-					if (typeof blob.buffer.mp3 === 'string') {
-						url  = url  || blob.buffer.mp3;
-						type = type || 'mp3';
-					}
-
-				}
-
-
-				if (url !== null && type !== null) {
-
-					let that   = this;
-					let buffer = new Audio();
-
-					buffer.addEventListener('ended', function() {
-						that.stop();
-					}, true);
-
-					buffer.autobuffer = true;
-					buffer.preload    = true;
-					buffer.src        = url;
-					buffer.load();
-
-					this.buffer         = buffer;
-					this.__buffer[type] = buffer;
-					this.__load         = false;
-
-				}
-
-			}
-
-		},
-
-		serialize: function() {
-
-			let blob = {};
-
-
-			if (this.__buffer.ogg !== null || this.__buffer.mp3 !== null) {
-
-				blob.buffer = {};
-
-				if (this.__buffer.ogg !== null) {
-					blob.buffer.ogg = 'data:application/ogg;base64,' + this.__buffer.ogg.toString('base64');
-				}
-
-				if (this.__buffer.mp3 !== null) {
-					blob.buffer.mp3 = 'data:audio/mp3;base64,' + this.__buffer.mp3.toString('base64');
-				}
-
-			}
-
-
-			return {
-				'constructor': 'Sound',
-				'arguments':   [ this.url ],
-				'blob':        Object.keys(blob).length > 0 ? blob : null
-			};
-
-		},
-
-		load: function() {
-
-			if (this.__load === false) {
-
-				if (this.onload instanceof Function) {
-					this.onload(true);
-					this.onload = null;
-				}
-
-				return;
-
-			}
-
-
-			let url  = this.url;
-			let type = null;
-
-			if (_audio_supports_ogg === true) {
-				type = type || 'ogg';
-			} else if (_audio_supports_mp3 === true) {
-				type = type || 'mp3';
-			}
-
-
-			if (url !== null && type !== null) {
-
-				let that   = this;
-				let buffer = new Audio();
-
-				buffer.onload = function() {
-
-					that.buffer         = this;
-					that.__buffer[type] = this;
-
-					this.toString('base64');
-					this.__load = false;
-
-					if (that.onload instanceof Function) {
-						that.onload(true);
-						that.onload = null;
-					}
-
-				};
-
-				buffer.onerror = function() {
-
-					if (that.onload instanceof Function) {
-						that.onload(false);
-						that.onload = null;
-					}
-
-				};
-
-				buffer.addEventListener('ended', function() {
-					that.isIdle = true;
-					that.stop();
-				}, true);
-
-				buffer.autobuffer = true;
-				buffer.preload    = true;
-
-
-				let path = lychee.environment.resolve(url + '.' + type);
-				if (path.substr(0, 13) === '/opt/lycheejs' && _protocol !== null) {
-					buffer.src = _protocol + '://' + path;
-				} else {
-					buffer.src = path;
-				}
-
-
-				buffer.load();
-				buffer.onload();
-
-			} else {
-
-				if (this.onload instanceof Function) {
-					this.onload(false);
-					this.onload = null;
-				}
-
-			}
-
-		},
-
-		clone: function() {
-			return new Sound(this.url);
-		},
-
-		play: function() {
-
-			if (this.buffer !== null) {
-
-				try {
-					this.buffer.currentTime = 0;
-				} catch (err) {
-				}
-
-				if (this.buffer.currentTime === 0) {
-
-					let p = this.buffer.play();
-					if (typeof p === 'object' && typeof p.catch === 'function') {
-						p.catch(function(err) {});
-					}
-
-					this.isIdle = false;
-
-				}
-
-			}
-
-		},
-
-		pause: function() {
-
-			if (this.buffer !== null) {
-				this.buffer.pause();
-				this.isIdle = true;
-			}
-
-		},
-
-		resume: function() {
-
-			if (this.buffer !== null) {
-
-				let p = this.buffer.play();
-				if (typeof p === 'object' && typeof p.catch === 'function') {
-					p.catch(function(err) {});
-				}
-
-				this.isIdle = false;
-
-			}
-
-		},
-
-		stop: function() {
-
-			if (this.buffer !== null) {
-
-				this.buffer.pause();
-				this.isIdle = true;
-
-				try {
-					this.buffer.currentTime = 0;
-				} catch (err) {
-				}
-
-			}
-
-		},
-
-		setVolume: function(volume) {
-
-			volume = typeof volume === 'number' ? volume : null;
-
-
-			if (volume !== null && this.buffer !== null) {
-
-				volume = Math.min(Math.max(0, volume), 1);
-
-				this.buffer.volume = volume;
-				this.volume        = volume;
-
-				return true;
-
-			}
-
-
-			return false;
-
-		}
-
-	};
+	// TODO: Sound implementation
 
 
 
@@ -2206,7 +1521,7 @@
 
 					buffer = new Image();
 
-					buffer.onload = function() {
+					buffer.addEventListener('load', function() {
 
 						that.buffer = this;
 						that.width  = this.width;
@@ -2227,16 +1542,16 @@
 							that.onload = null;
 						}
 
-					};
+					});
 
-					buffer.onerror = function() {
+					buffer.addEventListener('error', function() {
 
 						if (that.onload instanceof Function) {
 							that.onload(false);
 							that.onload = null;
 						}
 
-					};
+					});
 
 					buffer.src = url;
 
@@ -2258,7 +1573,7 @@
 
 					buffer = new Image();
 
-					buffer.onload = function() {
+					buffer.addEventListener('load', function() {
 
 						that.buffer = this;
 						that.width  = this.width;
@@ -2279,21 +1594,21 @@
 							that.onload = null;
 						}
 
-					};
+					});
 
-					buffer.onerror = function() {
+					buffer.addEventListener('error', function() {
 
 						if (that.onload instanceof Function) {
 							that.onload(false);
 							that.onload = null;
 						}
 
-					};
+					});
 
 
 					let path = lychee.environment.resolve(url);
-					if (path.substr(0, 13) === '/opt/lycheejs' && _protocol !== null) {
-						buffer.src = _protocol + '://' + path;
+					if (path.substr(0, 13) === '/opt/lycheejs') {
+						buffer.src = 'file://' + path;
 					} else {
 						buffer.src = path;
 					}
@@ -2344,46 +1659,25 @@
 			_filename = stuff.url;
 
 
-			let tmp = document.createElement('script');
+			let cid = lychee.environment.resolve(stuff.url);
 
-			tmp._filename = stuff.url;
-			tmp.async     = true;
-
-			tmp.onload = function() {
-
-				callback.call(stuff, true);
-
-				// XXX: Don't move, it's causing serious bugs in Blink
-				document.body.removeChild(this);
-
-			};
-			tmp.onerror = function() {
-
-				callback.call(stuff, false);
-
-				// XXX: Don't move, it's causing serious bugs in Blink
-				document.body.removeChild(this);
-
-			};
-
-
-			let path = lychee.environment.resolve(stuff.url);
-			if (path.substr(0, 13) === '/opt/lycheejs' && _protocol !== null) {
-				tmp.src = _protocol + '://' + path;
-			} else {
-				tmp.src = path;
+			try {
+				require(cid);
+			} catch (err) {
+				lychee.Debugger.report(lychee.environment, err, stuff);
 			}
 
-			document.body.appendChild(tmp);
+
+			_filename = null;
+
+
+			callback.call(stuff, true);
 
 		} else {
 
 			callback.call(stuff, true);
 
 		}
-
-
-		return false;
 
 	};
 
@@ -2471,11 +1765,12 @@
 
 
 			_load_asset({
-				url: this.url
+				url:      this.url,
+				encoding: 'utf8'
 			}, function(raw) {
 
 				if (raw !== null) {
-					this.buffer = raw;
+					this.buffer = raw.toString('utf8');
 				} else {
 					this.buffer = '';
 				}
@@ -2502,25 +1797,15 @@
 	 * FEATURES
 	 */
 
-	const _ELEMENT = {
-		id:    '',
-		style: {
-			transform: ''
-		}
-	};
-
 	const _FEATURES = {
 
 		innerWidth:  1337,
 		innerHeight: 1337,
 
-		CanvasRenderingContext2D: function() {},
-		FileReader:               function() {},
-		Storage:                  function() {},
-		WebSocket:                function() {},
-		XMLHttpRequest:           function() {},
+		exec:   function() {},
+		Canvas: function() {},
+		File:   function() {},
 
-		addEventListener:      function() {},
 		clearInterval:         function() {},
 		clearTimeout:          function() {},
 		requestAnimationFrame: function() {},
@@ -2528,30 +1813,12 @@
 		setTimeout:            function() {},
 
 		document: {
-			createElement: function() {
-				return _ELEMENT;
-			},
-			querySelectorAll: function() {
-				return _ELEMENT;
-			},
-			body: {
-				appendChild: function() {}
+			canvas: {
+				add: function() {}
 			}
-		},
-
-		location: {
-			href: 'file:///tmp/index.html'
-		},
-
-		localStorage: {
-		},
-
-		sessionStorage: {
 		}
 
 	};
-
-	_FEATURES.FileReader.prototype.readAsDataURL = function() {};
 
 
 	Object.defineProperty(lychee.Environment, '__FEATURES', {
@@ -2575,8 +1842,8 @@
 	global.Buffer  = Buffer;
 	global.Config  = Config;
 	global.Font    = Font;
-	global.Music   = Music;
-	global.Sound   = Sound;
+	// global.Music   = Music;
+	// global.Sound   = Sound;
 	global.Texture = Texture;
 	global.Stuff   = Stuff;
 
@@ -2585,9 +1852,7 @@
 
 		get: function() {
 
-			if (document.currentScript) {
-				return document.currentScript._filename;
-			} else if (_filename !== null) {
+			if (_filename !== null) {
 				return _filename;
 			}
 
@@ -2601,5 +1866,5 @@
 
 	});
 
-})(this.lychee, this);
+})(lychee, typeof global !== 'undefined' ? global : this);
 
