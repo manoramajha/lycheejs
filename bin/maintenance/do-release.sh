@@ -33,9 +33,9 @@ NPM_BIN=`which npm`;
 
 if [ "$GITHUB_TOKEN" == "" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) No GitHub Token found.                                     ";
-	echo "     Use \"echo YOUR-GITHUB-TOKEN > /opt/lycheejs/.github/TOKEN\".";
+	echo -e "\e[41m\e[97m";
+	echo " (E) No GitHub Token found.                                      ";
+	echo "     Use \"echo YOUR-GITHUB-TOKEN > /opt/lycheejs/.github/TOKEN\". ";
 	echo -e "\e[0m";
 
 	exit 1;
@@ -45,9 +45,9 @@ fi;
 
 if [ "$NPM_BIN" == "" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) No NPM found.                               ";
-	echo "     Please install NPM with the package manager.";
+	echo -e "\e[41m\e[97m";
+	echo " (E) No NPM found.                                ";
+	echo "     Please install NPM with the package manager. ";
 	echo -e "\e[0m";
 
 	exit 1;
@@ -58,7 +58,7 @@ fi;
 if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
 
 	echo " (L) ";
-	echo -e "\e[37m\e[42m (I) lychee.js Release Tool \e[0m";
+	echo -e "\e[42m\e[97m (I) lychee.js Release Tool \e[0m";
 	echo " (L) ";
 	echo " (L) All your data are belong to us.                     ";
 	echo " (L) This tool creates a new lychee.js release.          ";
@@ -78,10 +78,10 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
 	read -p " (L) Continue (y/n)? " -r
 
 	if [[ $REPLY =~ ^[Nn]$ ]]; then
-		echo -e "\e[37m\e[41m (E) ABORTED \e[0m";
+		echo -e "\e[41m\e[97m (E) ABORTED \e[0m";
 		exit 0;
 	elif ! [[ $REPLY =~ ^[Yy]$ ]]; then
-		echo -e "\e[37m\e[41m (E) INVALID SELECTION \e[0m";
+		echo -e "\e[41m\e[97m (E) INVALID SELECTION \e[0m";
 		exit 1;
 	fi;
 
@@ -189,7 +189,7 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
 	echo " (L) If no error occured, you can publish the new    ";
 	echo " (L) lychee.js release to GitHub and the peer cloud. ";
 	echo " (L) ";
-	echo -e "\e[37m\e[43m";
+	echo -e "\e[43m\e[97m";
 	echo " (W) WARNING: The publish process is irreversible.   ";
 	echo "     It is wise to manually check /tmp/lycheejs now. ";
 	echo -e "\e[0m";
@@ -199,10 +199,10 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
 	read -p " (L) Continue (y/n)? " -r
 
 	if [[ $REPLY =~ ^[Nn]$ ]]; then
-		echo -e "\e[37m\e[41m (E) ABORTED \e[0m";
+		echo -e "\e[41m\e[97m (E) ABORTED \e[0m";
 		exit 0;
 	elif ! [[ $REPLY =~ ^[Yy]$ ]]; then
-		echo -e "\e[37m\e[41m (E) INVALID SELECTION \e[0m";
+		echo -e "\e[41m\e[97m (E) INVALID SELECTION \e[0m";
 		exit 1;
 	fi;
 
@@ -249,7 +249,7 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
 
 
 	echo " (L) ";
-	echo -e "\e[37m\e[42m (I) SUCCESS \e[0m";
+	echo -e "\e[42m\e[97m (I) SUCCESS \e[0m";
 	echo " (L) ";
 	echo " (L) Remaining manual steps:                                       ";
 	echo " (L) ";
@@ -262,9 +262,9 @@ if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
 else
 
 	echo " (L) ";
-	echo -e "\e[37m\e[42m (I) lychee.js Release Tool \e[0m";
+	echo -e "\e[42m\e[97m (I) lychee.js Release Tool \e[0m";
 	echo " (L) ";
-	echo -e "\e[37m\e[42m (I) lychee.js $NEW_VERSION release already done. \e[0m";
+	echo -e "\e[42m\e[97m (I) lychee.js $NEW_VERSION release already done. \e[0m";
 	echo " (L) ";
 	exit 0;
 
