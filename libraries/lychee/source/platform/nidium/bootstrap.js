@@ -1784,6 +1784,7 @@
 		exec:   function() {},
 		Canvas: function() {},
 		File:   function() {},
+		Socket: function() {},
 
 		clearInterval:         function() {},
 		clearTimeout:          function() {},
