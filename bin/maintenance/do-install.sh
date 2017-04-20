@@ -45,18 +45,18 @@ fi;
 
 if [ "$USER_WHO" != "root" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) You are not root.                          ";
-	echo "     Use \"sudo ./bin/maintenance/do-install.sh\".";
+	echo -e "\e[41m\e[97m";
+	echo " (E) You are not root.                           ";
+	echo "     Use \"sudo ./bin/maintenance/do-install.sh\". ";
 	echo -e "\e[0m";
 
 	exit 1;
 
 elif [ "$OS" == "osx" ] && [ "$USER_WHO" == "root" ] && [ "$USER_LOG" == "root" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) You are root. Exit su shell and            ";
-	echo "     Use \"sudo ./bin/maintenance/do-install.sh\".";
+	echo -e "\e[41m\e[97m";
+	echo " (E) You are root. Exit su shell and             ";
+	echo "     Use \"sudo ./bin/maintenance/do-install.sh\". ";
 	echo -e "\e[0m";
 
 	exit 1;
@@ -70,7 +70,7 @@ else
 	else
 
 		echo " (L) ";
-		echo -e "\e[37m\e[42m (I) lychee.js Install Tool \e[0m";
+		echo -e "\e[42m\e[97m (I) lychee.js Install Tool \e[0m";
 		echo " (L) ";
 		echo " (L) All your data are belong to us.                      ";
 		echo " (L) This tool integrates lychee.js with your system.     ";
@@ -97,7 +97,7 @@ else
 		elif [[ $REPLY =~ ^[2]$ ]]; then
 			SELECTION="required";
 		else
-			echo -e "\e[37m\e[41m (E) INVALID SELECTION \e[0m";
+			echo -e "\e[41m\e[97m (E) INVALID SELECTION \e[0m";
 			exit 1;
 		fi;
 
@@ -188,15 +188,15 @@ else
 		_install "$REQUIRED_CMD";
 
 		if [ $? -eq 0 ]; then
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 		else
-			echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
+			echo -e "\e[41m\e[97m (E) > FAILURE \e[0m";
 		fi;
 
 	elif [ "$REQUIRED_CMD" == "" ]; then
 
 		echo " (L) ";
-		echo -e "\e[37m\e[41m";
+		echo -e "\e[41m\e[97m";
 		echo " (E)                                                           ";
 		echo " (E) Your package manager is not supported.                    ";
 		echo " (E) Feel free to modify this script!                          ";
@@ -218,9 +218,9 @@ else
 		_install "$OPTIONAL_CMD";
 
 		if [ $? -eq 0 ]; then
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 		else
-			echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
+			echo -e "\e[41m\e[97m (E) > FAILURE \e[0m";
 		fi;
 
 	fi;
@@ -261,7 +261,7 @@ else
 			fi;
 
 
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 		fi;
 
@@ -288,7 +288,7 @@ else
 			ln -s "$LYCHEEJS_ROOT/libraries/studio/bin/studio.sh"         /usr/local/bin/lycheejs-studio;
 
 
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 		fi;
 
@@ -302,7 +302,7 @@ else
 		open ./bin/helper/osx/helper.app 2> /dev/null;
 
 
-		echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+		echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 
 		if [ -d /usr/local/bin ]; then
@@ -335,7 +335,7 @@ else
 			ln -s "$LYCHEEJS_ROOT/libraries/studio/bin/studio.sh"         /usr/local/bin/lycheejs-studio;
 
 
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 		fi;
 

@@ -21,18 +21,18 @@ LYCHEEJS_CHANGE=$(cd $LYCHEEJS_ROOT && git status --porcelain);
 
 if [ "$USER_WHO" == "root" ] && [ "$USER_LOG" != "root" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) You are root. Exit sudo and          ";
-	echo "     Use \"./bin/maintenance/do-update.sh\".";
+	echo -e "\e[41m\e[97m";
+	echo " (E) You are root. Exit sudo and           ";
+	echo "     Use \"./bin/maintenance/do-update.sh\". ";
 	echo -e "\e[0m";
 
 	exit 1;
 
 elif [ "$OS" == "osx" ] && [ "$USER_WHO" == "root" ] && [ "$USER_LOG" == "root" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) You are root. Exit su shell and      ";
-	echo "     Use \"./bin/maintenance/do-update.sh\".";
+	echo -e "\e[41m\e[97m";
+	echo " (E) You are root. Exit su shell and       ";
+	echo "     Use \"./bin/maintenance/do-update.sh\". ";
 	echo -e "\e[0m";
 
 	exit 1;
@@ -40,7 +40,7 @@ elif [ "$OS" == "osx" ] && [ "$USER_WHO" == "root" ] && [ "$USER_LOG" == "root" 
 elif [ "$LYCHEEJS_CHANGE" == "" ]; then
 
 	echo " (L) ";
-	echo -e "\e[37m\e[42m (I) lychee.js Update Tool \e[0m";
+	echo -e "\e[42m\e[97m (I) lychee.js Update Tool \e[0m";
 	echo " (L) ";
 	echo " (L) All your data are belong to us.                ";
 	echo " (L) This tool updates your lychee.js installation. ";
@@ -66,7 +66,7 @@ elif [ "$LYCHEEJS_CHANGE" == "" ]; then
 	elif [[ $REPLY =~ ^[2]$ ]]; then
 		LYCHEEJS_BRANCH="master";
 	else
-		echo -e "\e[37m\e[41m (E) INVALID SELECTION \e[0m";
+		echo -e "\e[41m\e[97m (E) INVALID SELECTION \e[0m";
 		exit 1;
 	fi;
 
@@ -90,9 +90,9 @@ elif [ "$LYCHEEJS_CHANGE" == "" ]; then
 	fi;
 
 	if [ $? == 0 ]; then
-		echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+		echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 	else
-		echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
+		echo -e "\e[41m\e[97m (E) > FAILURE \e[0m";
 		exit 1;
 	fi;
 
@@ -138,9 +138,9 @@ elif [ "$LYCHEEJS_CHANGE" == "" ]; then
 
 
 			if [ "$DOWNLOAD_SUCCESS" == "1" ]; then
-				echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+				echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 			else
-				echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
+				echo -e "\e[41m\e[97m (E) > FAILURE \e[0m";
 				exit 1;
 			fi;
 
@@ -157,9 +157,9 @@ elif [ "$LYCHEEJS_CHANGE" == "" ]; then
 		./bin/do-update.sh;
 
 		if [ $? == 0 ]; then
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 		else
-			echo -e "\e[37m\e[41m (E) > FAILURE \e[0m";
+			echo -e "\e[41m\e[97m (E) > FAILURE \e[0m";
 			exit 1;
 		fi;
 
@@ -168,9 +168,9 @@ elif [ "$LYCHEEJS_CHANGE" == "" ]; then
 else
 
 	echo " (L) ";
-	echo -e "\e[37m\e[42m (I) lychee.js Update Tool \e[0m";
+	echo -e "\e[42m\e[97m (I) lychee.js Update Tool \e[0m";
 	echo " (L) ";
-	echo -e "\e[37m\e[41m";
+	echo -e "\e[41m\e[97m";
 	echo " (E) Cannot update when git has local changes.             ";
 	echo "     Please commit and push, this tool resets the history. ";
 	echo -e "\e[0m";

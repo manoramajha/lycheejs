@@ -46,66 +46,66 @@ fi;
 
 _print_help() {
 
-	echo "                                                                 ";
-	echo -e "\u001b[37m\u001b[42mlychee.js Helper\u001b[49m\u001b[39m";
-	echo "                                                                 ";
-	echo " Usage: lycheejs-helper [lycheejs://Action=Library/Project]      ";
-	echo "        lycheejs-helper [Action] [Library/Project]               ";
-	echo "        lycheejs-helper [Helper:Platform] [Library/Project]      ";
-	echo "                                                                 ";
-	echo " Notes:                                                          ";
-	echo "                                                                 ";
-	echo "     The [JSON] data is encoded as base64 only.                  ";
-	echo "                                                                 ";
-	echo "     The \"env:\" can be used as a Shebang in shell scripts:     ";
-	echo "     #!/usr/local/bin/lycheejs-helper env:node                   ";
-	echo "                                                                 ";
-	echo " Platforms:                                                      ";
-	echo "                                                                 ";
-	echo "    html, html-nwjs, node, node-sdl                              ";
-	echo "                                                                 ";
-	echo "                                                                 ";
-	echo "                                                                 ";
-	echo " Available Actions:                                              ";
-	echo "                                                                 ";
-	echo "    boot=[Profile]                                               ";
-	echo "    profile=[Profile]?data=[base64]                              ";
-	echo "    unboot                                                       ";
-	echo "                                                                 ";
-	echo "    start=[Library/Project]                                      ";
-	echo "    stop=[Library/Project]                                       ";
-	echo "    file=[Library/Project]                                       ";
-	echo "    edit=[Library/Project]                                       ";
-	echo "                                                                 ";
-	echo "    cmd=[Command]?data=[JSON]                                    ";
-	echo "    web=[URL]                                                    ";
-	echo "                                                                 ";
-	echo " Examples:                                                       ";
-	echo "                                                                 ";
-	echo "    lycheejs-helper lycheejs://start=/projects/boilerplate       ";
-	echo "    lycheejs-helper lycheejs://cmd=lycheejs-ranger               ";
-	echo "    lycheejs-helper lycheejs://profile=production?data=[base64]  ";
-	echo "    lycheejs-helper lycheejs://web=https://lychee.js.org         ";
-	echo "                                                                 ";
-	echo "    lycheejs-helper start /projects/boilerplate                  ";
-	echo "    lycheejs-helper edit /projects/boilerplate                   ";
-	echo "    lycheejs-helper web https://lychee.js.org                    ";
-	echo "                                                                 ";
-	echo "                                                                 ";
-	echo "                                                                 ";
-	echo " Available Helpers:                                              ";
-	echo "                                                                 ";
-	echo "    env:Platform                executes runtime env             ";
-	echo "    which:Platform              returns runtime path             ";
-	echo "    run:Platform/Identifier     executes fertilized runtime env  ";
-	echo "                                                                 ";
-	echo " Examples:                                                       ";
-	echo "                                                                 ";
-	echo "    lycheejs-helper env:node /path/to/file.js                    ";
-	echo "    lycheejs-helper env:html /path/to/file.html                  ";
-	echo "                                                                 ";
-	echo "    lycheejs-helper run:html-nwjs/main /libraries/ranger         ";
-	echo "                                                                 ";
+	echo " (L) ";
+	echo -e "\e[42m\e[97m (I) lychee.js Helper \e[0m";
+	echo " (L) ";
+	echo " (L) Usage: lycheejs-helper [lycheejs://Action=Library/Project]     ";
+	echo " (L)        lycheejs-helper [Action] [Library/Project]              ";
+	echo " (L)        lycheejs-helper [Helper:Platform] [Library/Project]     ";
+	echo " (L) ";
+	echo " (L) Notes:                                                         ";
+	echo " (L) ";
+	echo " (L)     The [JSON] data is encoded as base64.                      ";
+	echo " (L) ";
+	echo " (L)     The \"env:\" can be used as a Shebang in shell scripts:    ";
+	echo " (L)     #!/usr/local/bin/lycheejs-helper env:node                  ";
+	echo " (L) ";
+	echo " (L) Platforms:                                                     ";
+	echo " (L) ";
+	echo " (L)    html, html-nwjs, nidium, node, node-sdl                     ";
+	echo " (L) ";
+	echo " (L) ";
+	echo " (L) ";
+	echo " (L) Available Actions:                                             ";
+	echo " (L) ";
+	echo " (L)    boot=[Profile]                                              ";
+	echo " (L)    profile=[Profile]?data=[base64]                             ";
+	echo " (L)    unboot                                                      ";
+	echo " (L) ";
+	echo " (L)    start=[Library/Project]                                     ";
+	echo " (L)    stop=[Library/Project]                                      ";
+	echo " (L)    file=[Library/Project]                                      ";
+	echo " (L)    edit=[Library/Project]                                      ";
+	echo " (L) ";
+	echo " (L)    cmd=[Command]?data=[JSON]                                   ";
+	echo " (L)    web=[URL]                                                   ";
+	echo " (L) ";
+	echo " (L) Examples:                                                      ";
+	echo " (L) ";
+	echo " (L)    lycheejs-helper lycheejs://start=/projects/boilerplate      ";
+	echo " (L)    lycheejs-helper lycheejs://cmd=lycheejs-ranger              ";
+	echo " (L)    lycheejs-helper lycheejs://profile=production?data=[base64] ";
+	echo " (L)    lycheejs-helper lycheejs://web=https://lychee.js.org        ";
+	echo " (L) ";
+	echo " (L)    lycheejs-helper start /projects/boilerplate                 ";
+	echo " (L)    lycheejs-helper edit /projects/boilerplate                  ";
+	echo " (L)    lycheejs-helper web https://lychee.js.org                   ";
+	echo " (L) ";
+	echo " (L) ";
+	echo " (L) ";
+	echo " (L) Available Helpers:                                             ";
+	echo " (L) ";
+	echo " (L)    env:Platform                executes runtime env            ";
+	echo " (L)    which:Platform              returns runtime path            ";
+	echo " (L)    run:Platform/Identifier     executes fertilized runtime env ";
+	echo " (L) ";
+	echo " (L) Examples:                                                      ";
+	echo " (L) ";
+	echo " (L)    lycheejs-helper env:node /path/to/file.js                   ";
+	echo " (L)    lycheejs-helper env:html /path/to/file.html                 ";
+	echo " (L) ";
+	echo " (L)    lycheejs-helper run:html-nwjs/main /libraries/ranger        ";
+	echo " (L) ";
 
 }
 
@@ -450,6 +450,14 @@ elif [ "$protocol" == "env" ]; then
 				_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs $program $arg1 $arg2 $arg3;
 			fi;
 
+		elif [ "$platform" == "nidium" ]; then
+
+			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
+				_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium $program $arg1 $arg2 $arg3;
+			elif [ "$OS" == "osx" ]; then
+				_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium $program $arg1 $arg2 $arg3;
+			fi;
+
 		elif [ "$platform" == "node" ]; then
 
 			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
@@ -509,6 +517,14 @@ elif [ "$protocol" == "env" ]; then
 				$LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/$ARCH/nw;
 			elif [ "$OS" == "osx" ]; then
 				$LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs;
+			fi;
+
+		elif [ "$platform" == "nidium" ]; then
+
+			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
+				$LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium;
+			elif [ "$OS" == "osx" ]; then
+				$LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium;
 			fi;
 
 		elif [ "$platform" == "node" ]; then
@@ -663,6 +679,50 @@ elif [ "$protocol" == "run" ]; then
 
 			exit 1;
 
+		elif [ "$platform" == "nidium" ]; then
+
+			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
+
+				if [ -d "$build/nidium/$identifier" ]; then
+
+					program="$build/nidium/$identifier";
+					_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium $program $arg1 $arg2 $arg3;
+
+				elif [ -d "$build/nidium/$identifier-linux/$ARCH" ]; then
+
+					program="$build/nidium/$identifier-linux/$ARCH/$name.sh";
+
+					if [ -f $program ]; then
+						chmod +x $program;
+						_start_env $program $arg1 $arg2 $arg3;
+					else
+						exit 1;
+					fi;
+
+				fi;
+
+			elif [ "$OS" == "osx" ]; then
+
+				if [ -d "$build/nidium/$identifier" ]; then
+
+					program="$build/nidium/$identifier";
+					_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium $program $arg1 $arg2 $arg3;
+
+				elif [ -d "$build/nidium/$identifier-osx/$ARCH" ]; then
+
+					program="$build/nidium/$identifier-osx/$ARCH/$name.sh";
+
+					if [ -f $program ]; then
+						chmod +x $program;
+						_start_env $program $arg1 $arg2 $arg3;
+					else
+						exit 1;
+					fi;
+
+				fi;
+
+			fi;
+
 		elif [ "$platform" == "node" ]; then
 
 			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
@@ -805,6 +865,14 @@ elif [ "$protocol" == "which" ]; then
 			echo $LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/$ARCH/nw;
 		elif [ "$OS" == "osx" ]; then
 			echo $LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs;
+		fi;
+
+	elif [ "$platform" == "nidium" ]; then
+
+		if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
+			echo $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium;
+		elif [ "$OS" == "osx" ]; then
+			echo $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium;
 		fi;
 
 	elif [ "$platform" == "node" ]; then

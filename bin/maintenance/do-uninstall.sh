@@ -28,16 +28,16 @@ fi;
 
 if [ "$USER_WHO" != "root" ]; then
 
-	echo -e "\e[37m\e[41m";
-	echo " (E) You are not root.                            ";
-	echo "     Use \"sudo ./bin/maintenance/do-uninstall.sh\".";
+	echo -e "\e[41m\e[97m";
+	echo " (E) You are not root.                             ";
+	echo "     Use \"sudo ./bin/maintenance/do-uninstall.sh\". ";
 	echo -e "\e[0m";
 
 	exit 1;
 
 elif [ "$OS" == "osx" ] && [ "$USER_WHO" == "root" ] && [ "$USER_LOG" == "root" ]; then
 
-	echo -e "\e[37m\e[41m";
+	echo -e "\e[41m\e[97m";
 	echo " (E) You are root. Exit su shell and              ";
 	echo "     Use \"sudo ./bin/maintenance/do-uninstall.sh\".";
 	echo -e "\e[0m";
@@ -49,7 +49,7 @@ else
 	if [ "$ALWAYS_YES" != "true" ]; then
 
 		echo " (L) ";
-		echo -e "\e[37m\e[42m (I) lychee.js Uninstall Tool \e[0m";
+		echo -e "\e[42m\e[97m (I) lychee.js Uninstall Tool \e[0m";
 		echo " (L) ";
 		echo " (L) All your data are belong to us.                      ";
 		echo " (L) This tool separates lychee.js from your system.      ";
@@ -62,10 +62,10 @@ else
 		read -p " (L) Continue (y/n)? " -r
 
 		if [[ $REPLY =~ ^[Nn]$ ]]; then
-			echo -e "\e[37m\e[41m (E) ABORTED \e[0m";
+			echo -e "\e[41m\e[97m (E) ABORTED \e[0m";
 			exit 0;
 		elif ! [[ $REPLY =~ ^[Yy]$ ]]; then
-			echo -e "\e[37m\e[41m (E) INVALID SELECTION \e[0m";
+			echo -e "\e[41m\e[97m (E) INVALID SELECTION \e[0m";
 			exit 1;
 		fi;
 
@@ -100,7 +100,7 @@ else
 			fi;
 
 
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 		fi;
 
@@ -119,7 +119,7 @@ else
 			rm /usr/local/bin/lycheejs-studio     2> /dev/null;
 
 
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 		fi;
 
@@ -127,7 +127,7 @@ else
 
 		echo " (L) ";
 		echo " (L) > Separating GUI applications ...";
-		echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+		echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 
 		if [ -d /usr/local/bin ]; then
@@ -145,7 +145,7 @@ else
 			rm /usr/local/bin/lycheejs-studio     2> /dev/null;
 
 
-			echo -e "\e[37m\e[42m (I) > SUCCESS \e[0m";
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
 		fi;
 
