@@ -40,8 +40,9 @@ Thank you for your understanding.
 
 These are the things that we are currently working on:
 
-- lychee.ai.neat (ES/HyperNEAT AI) is being refactored and unstable.
-- lychee.js Studio is being refactored and unstable.
+- lychee.ai.neat (ES/HyperNEAT AI) is being refactored and unstable (`feature/neat` branch).
+- lychee.js Studio is being refactored and unstable (`feature/studio` branch).
+- lychee.net.protocol.MQTT is being implemented to support SCADA systems (`feature/mqtt` branch).
 - lychee.js Guide is subject to change (to integrate new AI stack).
 
 
@@ -188,8 +189,8 @@ repository).
 
 Notes:
 
-- **Windows** is **unsupported** as development host. Use a VM, the [Docker Image](https://hub.docker.com/r/cookiengineer/lycheejs) or the [Dockerfile](https://github.com/Artificial-Engineering/lycheejs-bundle/blob/master/bin/package/docker/Dockerfile) instead.
-- GNU/Linux requires either of `apt-get`, `dnf`, `pacman`, `yum` or `zipper` installed beforehand.
+- **Windows** is **unsupported** as development host. Use a VM, the [Docker Image (Arch Linux)](https://hub.docker.com/r/cookiengineer/lycheejs), the [Docker Mini Image (Alpine Linux)](https://hub.docker.com/r/cookiengineer/lycheejs-mini/) or the [Dockerfile](https://github.com/Artificial-Engineering/lycheejs-bundle/blob/master/bin/package/docker/Dockerfile) instead.
+- GNU/Linux requires either of `apk`, `apt-get`, `dnf`, `pacman`, `yum` or `zipper` installed beforehand.
 - Mac OSX requires [brew](https://brew.sh) installed beforehand.
 - FreeBSD/NetBSD requires `pkg` installed and [Linux Compatibility](https://www.freebsd.org/doc/handbook/linuxemu-lbc-install.html) activated beforehand.
 

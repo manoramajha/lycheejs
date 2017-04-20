@@ -53,7 +53,7 @@ lychee.define('lychee.ui.entity.Helper').tags({
 
 				return true;
 
-			} else if (/start|stop|edit|file|web/g.test(action) && resource !== '') {
+			} else if (/^(start|stop|edit|file|web)$/g.test(action) && resource !== '') {
 
 				return true;
 

@@ -300,8 +300,8 @@
 
 	(function() {
 
-		let _buffer_cache = {};
-		let _load_buffer  = function(url) {
+		const _buffer_cache = {};
+		const _load_buffer  = function(url) {
 
 			let cache = _buffer_cache[url] || null;
 			if (cache === null) {
