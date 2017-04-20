@@ -525,6 +525,11 @@
 					"bootstrap": [
 						"js"
 					],
+					"net": {
+						"Server": [
+							"js"
+						]
+					},
 					"ui": {
 						"entity": {
 							"Helper": [

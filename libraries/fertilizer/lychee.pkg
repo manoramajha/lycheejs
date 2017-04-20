@@ -102,6 +102,16 @@
 						"tpl"
 					]
 				},
+				"nidium": {
+					"Application": [
+						"index.tpl",
+						"js"
+					],
+					"Library": [
+						"js",
+						"tpl"
+					]
+				},
 				"node": {
 					"Application": [
 						"index.tpl",
