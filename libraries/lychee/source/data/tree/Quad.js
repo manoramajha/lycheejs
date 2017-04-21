@@ -19,6 +19,26 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 	_Quadrant.prototype = {
 
+		serialize: function() {
+
+			let filtered  = [];
+			let entities  = this.entities;
+			let quadrants = this.quadrants;
+
+			if (quadrants.length > 0) {
+
+				filtered.push.apply(filtered, quadrants.map(lychee.serialize));
+
+			} else if (entities.length > 0) {
+
+				filtered.push.apply(filtered, entities.map(lychee.serialize));
+
+			}
+
+			return filtered;
+
+		},
+
 		insert: function(position, entity) {
 
 			let quadrants = this.quadrants;
@@ -54,11 +74,10 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 				this.entities.push(entity);
 
-			}
+				if (this.entities.length > 8) {
+					this.split();
+				}
 
-
-			if (this.entities.length > 8) {
-				this.split();
 			}
 
 
@@ -79,9 +98,10 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 			} else if (quadrants.length > 0) {
 
-				let x     = position.x;
-				let y     = position.y;
-				let found = false;
+				let x      = position.x;
+				let y      = position.y;
+				let amount = 0;
+				let found  = false;
 
 				for (let q = 0, ql = quadrants.length; q < ql; q++) {
 
@@ -93,15 +113,26 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 						&& y <= quadrant.y2
 					) {
 
+
 						let check = quadrant.remove(position, entity);
 						if (check === true) {
 							found = true;
-							break;
+							// XXX: We need the sum for merge
+							// break;
 						}
 
 					}
 
+					amount += quadrant.entities.length;
+					amount += quadrant.quadrants.length;
+
 				}
+
+
+				if (amount === 0) {
+					this.merge();
+				}
+
 
 				return found;
 
@@ -281,13 +312,13 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 		deserialize: function(blob) {
 
-			if (blob.entities instanceof Object) {
+			if (blob.entities instanceof Array) {
 
-				for (let id in blob.entities) {
+				for (let e = 0, el = blob.entities.length; e < el; e++) {
 
-					let entity = lychee.deserialize(blob.entities[id]);
+					let entity = lychee.deserialize(blob.entities[e]);
 					if (entity !== null) {
-						this.addEntity(entity);
+						this.addEntity(entity.position, entity);
 					}
 
 				}
@@ -304,7 +335,11 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 			let root = this.__root;
 			if (root.quadrants.length > 0) {
 
-				// TODO: serialize
+				blob.entities = lychee.serialize(root);
+
+			} else if (root.entities.length > 0) {
+
+				blob.entities = root.entities.map(lychee.serialize);
 
 			}
 
