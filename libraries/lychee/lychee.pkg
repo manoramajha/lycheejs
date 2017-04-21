@@ -274,7 +274,12 @@
 			"data": {
 				"Tree": [
 					"js"
-				]
+				],
+				"tree": {
+					"Quad": [
+						"js"
+					]
+				}
 			},
 			"effect": {
 				"Alpha": [

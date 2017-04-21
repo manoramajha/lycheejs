@@ -170,33 +170,33 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 			// top left
 			this.quadrants[0] = new _Quadrant(
 				this.x1,
-				this.y2,
+				cy,
 				cx,
-				cy
+				this.y2
 			);
 
 			// top right
 			this.quadrants[1] = new _Quadrant(
 				cx,
-				this.y2,
+				cy,
 				this.x2,
-				cy
+				this.y2
 			);
 
 			// bottom right
 			this.quadrants[2] = new _Quadrant(
 				cx,
-				cy,
+				this.y1,
 				this.x2,
-				this.y1
+				cy
 			);
 
 			// bottom left
 			this.quadrants[3] = new _Quadrant(
 				this.x1,
-				cy,
+				this.y1,
 				cx,
-				this.y1
+				cy
 			);
 
 
