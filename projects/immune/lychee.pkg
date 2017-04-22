@@ -1,0 +1,107 @@
+{
+	"api": {
+		"files": {}
+	},
+	"build": {
+		"environments": {
+			"html-nwjs/main": {
+				"build": "game.Main",
+				"debug": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"sandbox": false,
+				"tags": {
+					"platform": [
+						"html-nwjs",
+						"html"
+					]
+				},
+				"variant": "application",
+				"profile": {}
+			},
+			"html-webview/main": {
+				"build": "game.Main",
+				"debug": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"sandbox": false,
+				"tags": {
+					"platform": [
+						"html-webview",
+						"html"
+					]
+				},
+				"variant": "application",
+				"profile": {}
+			},
+			"html/main": {
+				"build": "game.Main",
+				"debug": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"sandbox": false,
+				"tags": {
+					"platform": [
+						"html"
+					]
+				},
+				"variant": "application",
+				"profile": {}
+			}
+		},
+		"files": {}
+	},
+	"source": {
+		"environments": {},
+		"files": {
+			"Main": [
+				"js"
+			],
+			"app": {
+				"entity": {
+					"Cell": [
+						"js"
+					],
+					"Unit": [
+						"attack.snd",
+						"js",
+						"move.snd"
+					],
+					"Vesicle": [
+						"js"
+					],
+					"unit": {
+						"Globuline": [
+							"js"
+						],
+						"Leucocyte": [
+							"js"
+						],
+						"Virus": [
+							"js"
+						]
+					}
+				}
+			},
+			"state": {
+				"Menu": [
+					"js",
+					"json"
+				]
+			}
+		},
+		"tags": {}
+	}
+}
