@@ -45,16 +45,20 @@ lychee.define('game.app.entity.Cell').requires([
 
 		for (let v = 0, vl = vesicles.length; v < vl; v++) {
 
-			let vesicle  = vesicles[v];
-			let position = {
-				x: Math.sin(theta * v) * radius,
-				y: Math.cos(theta * v) * radius
-			};
+			let vesicle = vesicles[v];
+			if (vesicle !== null) {
+
+				let position = {
+					x: Math.sin(theta * v) * radius,
+					y: Math.cos(theta * v) * radius
+				};
 
 
-			vesicle.setHealth(health);
-			vesicle.setTeam(team);
-			vesicle.setPosition(position);
+				vesicle.setHealth(health);
+				vesicle.setTeam(team);
+				vesicle.setPosition(position);
+
+			}
 
 		}
 
@@ -92,9 +96,12 @@ lychee.define('game.app.entity.Cell').requires([
 
 		this.setHealth(settings.health);
 		this.setTeam(settings.team);
+		this.setVesicles(settings.vesicles);
+
 
 		delete settings.health;
 		delete settings.team;
+		delete settings.vesicles;
 
 
 		settings.collision = _Entity.COLLISION.A;
@@ -136,12 +143,7 @@ lychee.define('game.app.entity.Cell').requires([
 			if (blob.vesicles instanceof Array) {
 
 				for (let v = 0, vl = blob.vesicles.length; v < vl; v++) {
-
-					let vesicle = lychee.deserialize(blob.vesicles[v]);
-					if (vesicle !== null) {
-						this.vesicles[v] = vesicle;
-					}
-
+					this.vesicles[v] = lychee.deserialize(blob.vesicles[v]);
 				}
 
 			}
@@ -201,7 +203,11 @@ lychee.define('game.app.entity.Cell').requires([
 
 			let vesicles = this.vesicles;
 			for (let v = 0, vl = vesicles.length; v < vl; v++) {
-				vesicles[v].render(renderer, x, y);
+
+				let vesicle = vesicles[v];
+				if (vesicle !== null) {
+					vesicle.render(renderer, x, y);
+				}
 			}
 
 		},
@@ -222,16 +228,20 @@ lychee.define('game.app.entity.Cell').requires([
 			for (let v = 0, vl = vesicles.length; v < vl; v++) {
 
 				let vesicle = vesicles[v];
-				if (vesicle.team === 'neutral') {
-					neutral++;
-				} else if (vesicle.team === 'immune') {
-					immune++;
-				} else if (vesicle.team === 'virus') {
-					virus++;
-				}
+				if (vesicle !== null) {
 
-				vesicle.position.x = Math.sin(theta * v) * radius;
-				vesicle.position.y = Math.cos(theta * v) * radius;
+					if (vesicle.team === 'neutral') {
+						neutral++;
+					} else if (vesicle.team === 'immune') {
+						immune++;
+					} else if (vesicle.team === 'virus') {
+						virus++;
+					}
+
+					vesicle.position.x = Math.sin(theta * v) * radius;
+					vesicle.position.y = Math.cos(theta * v) * radius;
+
+				}
 
 			}
 
@@ -323,8 +333,32 @@ lychee.define('game.app.entity.Cell').requires([
 
 				let vesicles = this.vesicles;
 				for (let v = 0, vl = vesicles.length; v < vl; v++) {
-					vesicles[v].setTeam(team);
+
+					let vesicle = vesicles[v];
+					if (vesicle !== null) {
+						vesicle.setTeam(team);
+					}
 				}
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setVesicles: function(vesicles) {
+
+			vesicles = vesicles instanceof Array ? vesicles : null;
+
+
+			if (vesicles !== null) {
+
+				this.vesicles = vesicles.map(function(vesicle) {
+					return vesicle instanceof _Vesicle ? vesicle : null;
+				});
 
 				return true;
 
@@ -352,9 +386,9 @@ lychee.define('game.app.entity.Cell').requires([
 					for (let v = 0, vl = vesicles.length; v < vl; v++) {
 
 						let vesicle = vesicles[v];
-						if (found !== null) {
+						if (vesicle !== null && found !== null) {
 							found = _closest_vesicle(position, vesicle, found);
-						} else {
+						} else if (vesicle !== null) {
 							found = vesicle;
 						}
 
@@ -365,7 +399,7 @@ lychee.define('game.app.entity.Cell').requires([
 					for (let v = 0, vl = vesicles.length; v < vl; v++) {
 
 						let vesicle = vesicles[v];
-						if (vesicle.team === team) {
+						if (vesicle !== null && vesicle.team === team) {
 							found = vesicle;
 							break;
 						}
@@ -394,7 +428,7 @@ lychee.define('game.app.entity.Cell').requires([
 				for (let v = 0, vl = vesicles.length; v < vl; v++) {
 
 					let vesicle = vesicles[v];
-					if (vesicle.isAttackedBy(team) === true) {
+					if (vesicle !== null && vesicle.isAttackedBy(team) === true) {
 						result = true;
 						break;
 					}

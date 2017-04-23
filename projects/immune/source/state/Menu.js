@@ -2,6 +2,7 @@
 lychee.define('game.state.Menu').requires([
 	'game.app.entity.Cell',
 	'game.app.entity.Unit',
+	'game.app.entity.Vesicle',
 	'lychee.app.Layer',
 	'lychee.ui.Layer',
 	'lychee.ui.entity.Label'
