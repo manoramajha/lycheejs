@@ -1,16 +1,18 @@
 
-lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachments) {
+lychee.define('lychee.data.tree.Oct').exports(function(lychee, global, attachments) {
 
 	/*
 	 * HELPERS
 	 */
 
-	const _Quadrant = function(x1, y1, x2, y2) {
+	const _Quadrant = function(x1, y1, z1, x2, y2, z2) {
 
 		this.x1 = x1;
 		this.y1 = y1;
+		this.z1 = z1;
 		this.x2 = x2;
 		this.y2 = y2;
+		this.z2 = z2;
 
 		this.entities  = [];
 		this.quadrants = [];
@@ -41,11 +43,14 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 		insert: function(position, entity) {
 
+			let x = position.x || 0;
+			let y = position.y || 0;
+			let z = position.z || 0;
+
+
 			let quadrants = this.quadrants;
 			if (quadrants.length > 0) {
 
-				let x     = position.x;
-				let y     = position.y;
 				let found = false;
 
 				for (let q = 0, ql = quadrants.length; q < ql; q++) {
@@ -56,6 +61,8 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 						&& x <= quadrant.x2
 						&& y >= quadrant.y1
 						&& y <= quadrant.y2
+						&& z >= quadrant.z1
+						&& z <= quadrant.z2
 					) {
 
 						let check = quadrant.insert(position, entity);
@@ -80,8 +87,6 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 				if (entities.length > 8) {
 
 					let check = false;
-					let x     = position.x;
-					let y     = position.y;
 
 					for (let e = 1, el = entities.length; e < el; e++) {
 
@@ -90,6 +95,7 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 						if (
 							x !== entity.position.x
 							|| y !== entity.position.y
+							|| z !== entity.position.z
 						) {
 							check = true;
 							break;
@@ -126,6 +132,7 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 				let x      = position.x;
 				let y      = position.y;
+				let z      = position.z;
 				let amount = 0;
 				let found  = false;
 
@@ -137,6 +144,8 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 						&& x <= quadrant.x2
 						&& y >= quadrant.y1
 						&& y <= quadrant.y2
+						&& z >= quadrant.z1
+						&& z <= quadrant.z2
 					) {
 
 
@@ -196,11 +205,19 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 				let cx = this.x1 + Math.abs(this.x2 - this.x1) / 2;
 				let cy = this.y1 + Math.abs(this.y2 - this.y1) / 2;
+				let cz = this.z1 + Math.abs(this.z2 - this.z1) / 2;
 
-				quadrants[0] = new _Quadrant(cx,      cy,      this.x2, this.y2);
-				quadrants[1] = new _Quadrant(this.x1, cy,      cx,      this.y2);
-				quadrants[2] = new _Quadrant(this.x1, this.y1, cx,      cy);
-				quadrants[3] = new _Quadrant(cx,      this.y1, this.x2, cy);
+				// front
+				quadrants[0] = new _Quadrant(cx,      cy,      this.z1, this.x2, this.y2, cz);
+				quadrants[1] = new _Quadrant(this.x1, cy,      this.z1, cx,      this.y2, cz);
+				quadrants[2] = new _Quadrant(this.x1, this.y1, this.z1, cx,      cy,      cz);
+				quadrants[3] = new _Quadrant(cx,      this.y1, this.z1, this.x2, cy,      cz);
+
+				// back
+				quadrants[0] = new _Quadrant(cx,      cy,      cz, this.x2, this.y2, this.z2);
+				quadrants[1] = new _Quadrant(this.x1, cy,      cz, cx,      this.y2, this.z2);
+				quadrants[2] = new _Quadrant(this.x1, this.y1, cz, cx,      cy,      this.z2);
+				quadrants[3] = new _Quadrant(cx,      this.y1, cz, this.x2, cy,      this.z2);
 
 
 				let entities = this.entities;
@@ -327,6 +344,8 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 		this.__root = new _Quadrant(
 			-Number.MAX_SAFE_INTEGER,
 			-Number.MAX_SAFE_INTEGER,
+			-Number.MAX_SAFE_INTEGER,
+			+Number.MAX_SAFE_INTEGER,
 			+Number.MAX_SAFE_INTEGER,
 			+Number.MAX_SAFE_INTEGER
 		);
@@ -380,7 +399,7 @@ lychee.define('lychee.data.tree.Quad').exports(function(lychee, global, attachme
 
 
 			return {
-				'constructor': 'lychee.data.tree.Quad',
+				'constructor': 'lychee.data.tree.Oct',
 				'arguments':   [],
 				'blob':        Object.keys(blob).length > 0 ? blob : null
 			};
