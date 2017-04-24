@@ -1,0 +1,217 @@
+{
+	"layers": {
+		"background": {
+			"constructor": "lychee.app.Layer",
+			"arguments": [
+				{}
+			],
+			"blob": {
+				"entities": [
+					{
+						"constructor": "lychee.app.sprite.Emblem",
+						"arguments": [
+							{}
+						]
+					}
+				],
+				"map": {
+					"emblem": 0
+				}
+			}
+		},
+		"game": {
+			"constructor": "lychee.app.Layer",
+			"arguments": [
+				{}
+			],
+			"blob": {
+				"entities": [
+					{
+						"constructor": "game.app.entity.Cell",
+						"arguments": [
+							{
+								"team": "immune",
+								"radius": 160,
+								"position": {
+									"x": -256,
+									"y": -128
+								}
+							}
+						],
+						"blob": {
+							"vesicles": [
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								null,
+								null,
+								null,
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": [
+										{
+											"team": "immune"
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"constructor": "game.app.entity.Cell",
+						"arguments": [
+							{
+								"team": "virus",
+								"radius": 160,
+								"position": {
+									"x": 256,
+									"y": 128
+								}
+							}
+						],
+						"blob": {
+							"vesicles": [
+								null,
+								null,
+								null,
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": [
+										{
+											"team": "virus"
+										}
+									]
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": []
+								}
+							]
+						}
+					},
+					{
+						"constructor": "game.app.entity.Cell",
+						"arguments": [
+							{
+								"team": "neutral",
+								"position": {
+									"x": -256,
+									"y": 256
+								}
+							}
+						],
+						"blob": {
+							"vesicles": [
+								null,
+								null,
+								null,
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": [
+										{
+											"team": "neutral"
+										}
+									]
+								},
+								{
+									"constructor": "game.app.entity.Vesicle",
+									"arguments": [
+										{
+											"team": "neutral"
+										}
+									]
+								},
+								null,
+								null,
+								null
+							]
+						}
+					},
+					{
+						"constructor": "game.app.entity.Unit",
+						"arguments": [
+							{
+								"team": "neutral",
+								"radius": 32,
+								"speed": 300,
+								"position": {
+									"x": 0,
+									"y": 0
+								}
+							}
+						]
+					}
+				],
+				"map": {
+					"immune": 0,
+					"virus": 1,
+					"neutral": 2,
+					"unit": 3
+				}
+			}
+		},
+		"ui": {
+			"constructor": "lychee.ui.Layer",
+			"arguments": [
+				{}
+			],
+			"blob": {
+				"entities": [
+					{
+						"constructor": "lychee.ui.entity.Label",
+						"arguments": [
+							{
+								"value": "Woohoo",
+								"position": {
+									"x": 0,
+									"y": -128
+								}
+							}
+						]
+					},
+					{
+						"constructor": "lychee.ui.entity.Label",
+						"arguments": [
+							{
+								"value": "Hooray",
+								"position": {
+									"x": 0,
+									"y": 128
+								}
+							}
+						]
+					}
+				],
+				"map": {
+					"control": 0,
+					"timeout": 1
+				}
+			}
+		}
+	}
+}

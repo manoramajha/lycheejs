@@ -275,7 +275,15 @@
 			"data": {
 				"Tree": [
 					"js"
-				]
+				],
+				"tree": {
+					"Oct": [
+						"js"
+					],
+					"Quad": [
+						"js"
+					]
+				}
 			},
 			"effect": {
 				"Alpha": [
