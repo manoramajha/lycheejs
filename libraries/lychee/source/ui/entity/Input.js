@@ -186,11 +186,11 @@ lychee.define('lychee.ui.entity.Input').includes([
 
 				if (key.length === 1) {
 
-					if (type === Composite.TYPE.text && key.match(/([A-Za-z0-9\s+=-_#@$%*:.\(\)?!]+)/)) {
+					if (type === Composite.TYPE.text && /^([A-Za-z0-9\s`~!@#$%^&*\(\)-_=+\[\{\]\}\\|;:'",<.>/?]+)$/g.test(key)) {
 
 						this.__value = this.__value + key;
 
-					} else if (type === Composite.TYPE.number && key.match(/[0-9-+]/)) {
+					} else if (type === Composite.TYPE.number && /^[0-9-+]$/g.test(key)) {
 
 						let value = parseInt('' + this.__value + key, 10);
 						if (!isNaN(value)) {
