@@ -196,6 +196,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			if (font !== null) {
 
 				this.font = font;
+				this.setOptions([]);
 
 
 				let tmp1 = font.__font || null;
@@ -209,19 +210,20 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 				}
 
-				let buffer = font.__buffer || null;
-				if (buffer !== null) {
+				let tmp2 = font.__buffer || null;
+				if (tmp2 !== null) {
 
-					let tmp2 = buffer.font || null;
-					if (tmp2 === null) {
-						font.__buffer      = buffer || {};
+					let tmp3 = font.__buffer.font || null;
+					if (tmp3 === null) {
 						font.__buffer.font = {};
 					}
 
+				} else {
+
+					font.__buffer      = {};
+					font.__buffer.font = {};
+
 				}
-
-
-				this.setOptions([]);
 
 
 				return true;

@@ -6,18 +6,20 @@ lychee.define('studio.state.Asset').includes([
 //	'studio.ui.element.modify.Music',
 //	'studio.ui.element.modify.Sound',
 //	'studio.ui.element.modify.Sprite',
+	'studio.ui.element.preview.Font',
+//	'studio.ui.element.preview.Music',
+//	'studio.ui.element.preview.Sound',
+//	'studio.ui.element.preview.Sprite',
 	'lychee.ui.Blueprint',
 	'lychee.ui.Element',
 	'lychee.ui.Layer',
 	'lychee.ui.element.Search'
 ]).exports(function(lychee, global, attachments) {
 
-	const _State  = lychee.import('lychee.ui.State');
-	const _Font   = lychee.import('studio.ui.element.modify.Font');
-	const _Music  = lychee.import('studio.ui.element.modify.Music');
-	const _Sound  = lychee.import('studio.ui.element.modify.Sound');
-	const _Sprite = lychee.import('studio.ui.element.modify.Sprite');
-	const _BLOB   = attachments["json"].buffer;
+	const _State   = lychee.import('lychee.ui.State');
+	const _modify  = lychee.import('studio.ui.element.modify');
+	const _preview = lychee.import('studio.ui.element.preview');
+	const _BLOB    = attachments["json"].buffer;
 
 
 
@@ -27,49 +29,79 @@ lychee.define('studio.state.Asset').includes([
 
 	const _on_change = function(value) {
 
-		let layer   = this.queryLayer('ui', 'asset');
-		let modify  = this.queryLayer('ui', 'asset > modify');
-		let project = this.main.project;
-		let ext     = value.split('.').pop();
+		let layer     = this.queryLayer('ui', 'asset');
+		let modify    = this.queryLayer('ui', 'asset > modify');
+		let preview   = this.queryLayer('ui', 'asset > preview');
+		let project   = this.main.project;
+		let extension = value.split('.').pop();
+		let namespace = value.split('/')[0];
 
 
 		if (modify !== null) {
 			layer.removeEntity(modify);
 		}
 
+		if (preview !== null) {
+			layer.removeEntity(preview);
+		}
 
-		if (ext === 'fnt') {
+
+		if (extension === 'fnt') {
 
 			let asset = new Font(project.identifier + '/source/' + value);
 
 			asset.onload = function() {
 
-				let element = new _Font({
+				let modify = new _modify.Font({
 					width:  320,
 					height: 620,
 					font:   asset
 				});
 
-				element.bind('change', function(val) {
-					console.log('changed value', val);
+				let preview = new _preview.Font({
+					width:  400,
+					height: 620,
+					font:   asset
+				});
+
+				modify.bind('change', function(value) {
+
+					asset.texture    = value.texture;
+					asset.baseline   = value.baseline;
+					asset.charset    = value.charset;
+					asset.kerning    = value.kerning;
+					asset.spacing    = value.spacing;
+					asset.lineheight = value.lineheight;
+
+					asset.__buffer   = value.__buffer;
+					asset.__font     = value.__font;
+
+					preview.trigger('relayout');
+
 				}, this);
 
-				layer.setEntity('modify', element);
+				layer.setEntity('modify',  modify);
+				layer.setEntity('preview', preview);
 				layer.trigger('relayout');
 
 			}.bind(this);
 
 			asset.load();
 
-		} else if (ext === 'png') {
+		} else if (extension === 'json' && /^(app|entity|ui)$/g.test(namespace)) {
+
+			// TODO: Config support (or Sprite support)
+
+
+		} else if (extension === 'png') {
 
 			// TODO: Sprite support
 
-		} else if (ext === 'msc') {
+		} else if (extension === 'msc') {
 
 			// TODO: Music support
 
-		} else if (ext === 'snd') {
+		} else if (extension === 'snd') {
 
 			// TODO: Sound support
 
