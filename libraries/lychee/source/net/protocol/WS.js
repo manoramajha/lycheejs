@@ -526,10 +526,16 @@ lychee.define('lychee.net.protocol.WS').requires([
 							chunks.push(chunk);
 						}
 
+						if (buf.length - chunk.bytes > 0) {
 
-						tmp = new Buffer(buf.length - chunk.bytes);
-						buf.copy(tmp, 0, chunk.bytes);
-						buf = tmp;
+							tmp = new Buffer(buf.length - chunk.bytes);
+							buf.copy(tmp, 0, chunk.bytes);
+							buf = tmp;
+
+						} else {
+							buf = new Buffer(0);
+						}
+
 
 						chunk = null;
 						chunk = _decode_buffer.call(this, buf);
