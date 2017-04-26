@@ -4,9 +4,7 @@ lychee.define('studio.ui.element.preview.Font').includes([
 ]).exports(function(lychee, global, attachments) {
 
 	const _Element = lychee.import('lychee.ui.Element');
-	const _TEXT    = "The quick brown fox jumps over the lazy dog.".split(' ').map(function(word) {
-		return word + ' ';
-	});
+	const _TEXT    = "The quick brown fox jumps over the lazy dog?! ;*] \\_(-.+)_/ <{@.^}> %|#=~$".split(' ');
 
 
 
@@ -38,7 +36,7 @@ lychee.define('studio.ui.element.preview.Font').includes([
 
 			for (let t = 0, tl = _TEXT.length; t < tl; t++) {
 
-				let word = _TEXT[t];
+				let word = _TEXT[t] + (t < tl - 1 ? ' ' : '');
 				let dim  = font.measure(word);
 				if (dim !== null) {
 
