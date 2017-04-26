@@ -20,6 +20,14 @@ are listed in this specific order: `changed`, `removed`, `added`
 and `fixed`.
 
 
+## [2017-Q2] - UNRELEASED
+
+- **Added**: Integration of `nidium` platform.
+- **Added**: Project Immune as an RTS Game demo.
+- Added: lychee.js Studio supports Font and Sprite generation.
+- Added: `lychee.data.tree` Stack implementation.
+
+
 ## [2017-Q1] - 2017-03-28
 
 - **Changed**: Each Project and Library can have binaries (`./bin`).

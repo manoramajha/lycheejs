@@ -183,6 +183,9 @@
 				"Entity": [
 					"js"
 				],
+				"Flow": [
+					"js"
+				],
 				"Jukebox": [
 					"js"
 				],
