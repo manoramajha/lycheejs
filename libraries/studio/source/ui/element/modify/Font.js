@@ -22,8 +22,8 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 	const _on_change = function() {
 
-		let settings = this.font.__font;
-		let asset    = _FONT.encode({
+		let settings = this.value.__font;
+		let value    = _FONT.encode({
 			font: {
 				family:  settings.family,
 				color:   settings.color,
@@ -34,8 +34,10 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		});
 
 
-		if (asset !== null) {
-			this.trigger('change', [ asset ]);
+		if (value !== null) {
+
+			this.value = value;
+			this.trigger('change', [ this.value ]);
 		}
 
 	};
@@ -51,7 +53,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		let settings = Object.assign({}, data);
 
 
-		this.font = null;
+		this.value = null;
 
 
 		settings.label   = 'Modify';
@@ -100,7 +102,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('family').bind('change', function(value) {
 
-			let font = this.font;
+			let font = this.value;
 			if (font !== null) {
 				font.__buffer.font.family = value;
 				font.__font.family        = value;
@@ -112,7 +114,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('color').bind('change', function(value) {
 
-			let font = this.font;
+			let font = this.value;
 			if (font !== null) {
 				font.__buffer.font.color = value;
 				font.__font.color        = value;
@@ -124,7 +126,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('size').bind('change', function(value) {
 
-			let font = this.font;
+			let font = this.value;
 			if (font !== null) {
 				font.__buffer.font.size = value;
 				font.__font.size        = value;
@@ -136,7 +138,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('style').bind('change', function(value) {
 
-			let font = this.font;
+			let font = this.value;
 			if (font !== null) {
 				font.__buffer.font.style = value;
 				font.__font.style        = value;
@@ -148,7 +150,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('outline').bind('change', function(value) {
 
-			let font = this.font;
+			let font = this.value;
 			if (font !== null) {
 				font.__buffer.font.outline = value;
 				font.__font.outline        = value;
@@ -159,7 +161,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		}, this);
 
 
-		this.setFont(settings.font);
+		this.setValue(settings.value);
 
 		settings = null;
 
@@ -188,18 +190,18 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		 * CUSTOM API
 		 */
 
-		setFont: function(font) {
+		setValue: function(value) {
 
-			font = font instanceof Font ? font : null;
+			value = value instanceof Font ? value : null;
 
 
-			if (font !== null) {
+			if (value !== null) {
 
-				this.font = font;
+				this.value = value;
 				this.setOptions([]);
 
 
-				let tmp1 = font.__font || null;
+				let tmp1 = value.__font || null;
 				if (tmp1 !== null) {
 
 					this.getEntity('color').setValue(tmp1.color);
@@ -210,18 +212,18 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 				}
 
-				let tmp2 = font.__buffer || null;
+				let tmp2 = value.__buffer || null;
 				if (tmp2 !== null) {
 
-					let tmp3 = font.__buffer.font || null;
+					let tmp3 = value.__buffer.font || null;
 					if (tmp3 === null) {
-						font.__buffer.font = {};
+						value.__buffer.font = {};
 					}
 
 				} else {
 
-					font.__buffer      = {};
-					font.__buffer.font = {};
+					value.__buffer      = {};
+					value.__buffer.font = {};
 
 				}
 

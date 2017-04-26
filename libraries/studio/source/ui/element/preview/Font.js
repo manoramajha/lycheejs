@@ -4,6 +4,9 @@ lychee.define('studio.ui.element.preview.Font').includes([
 ]).exports(function(lychee, global, attachments) {
 
 	const _Element = lychee.import('lychee.ui.Element');
+	const _TEXT    = "The quick brown fox jumps over the lazy dog.".split(' ').map(function(word) {
+		return word + ' ';
+	});
 
 
 
@@ -13,13 +16,13 @@ lychee.define('studio.ui.element.preview.Font').includes([
 
 	const _render_buffer = function(renderer) {
 
-		let font = this.font;
+		let font = this.value;
 		if (font !== null && font.texture !== null) {
 
 			if (this.__buffer !== null) {
-				this.__buffer.resize(this.width - 2, this.height - 128);
+				this.__buffer.resize(this.width - 32, this.height - 144);
 			} else {
-				this.__buffer = renderer.createBuffer(this.width - 2, this.height - 128);
+				this.__buffer = renderer.createBuffer(this.width - 32, this.height - 144);
 			}
 
 
@@ -28,16 +31,48 @@ lychee.define('studio.ui.element.preview.Font').includes([
 			renderer.setAlpha(1.0);
 
 
-			renderer.drawBox(
-				0,
-				0,
-				this.__buffer.width,
-				this.__buffer.height,
-				'#32afe5',
-				true
-			);
+			let offset_x  = 0;
+			let offset_y  = 0;
+			let max_width = this.width - 2;
 
-			// TODO: render buffer contents
+
+			for (let t = 0, tl = _TEXT.length; t < tl; t++) {
+
+				let word = _TEXT[t];
+				let dim  = font.measure(word);
+				if (dim !== null) {
+
+					if (offset_x + dim.realwidth > max_width) {
+
+						offset_y += dim.realheight;
+						offset_x  = 0;
+
+						renderer.drawText(
+							offset_x,
+							offset_y,
+							word,
+							font
+						);
+
+						offset_x += dim.realwidth;
+
+					} else {
+
+						renderer.drawText(
+							offset_x,
+							offset_y,
+							word,
+							font
+						);
+
+						offset_x += dim.realwidth;
+
+					}
+
+				}
+
+			}
+
 
 			renderer.setBuffer(null);
 			this.__isDirty = false;
@@ -57,7 +92,7 @@ lychee.define('studio.ui.element.preview.Font').includes([
 		let settings = Object.assign({}, data);
 
 
-		this.font = null;
+		this.value = null;
 
 		this.__buffer  = null;
 		this.__isDirty = true;
@@ -70,7 +105,7 @@ lychee.define('studio.ui.element.preview.Font').includes([
 		_Element.call(this, settings);
 
 
-		this.setFont(settings.font);
+		this.setValue(settings.value);
 
 		settings = null;
 
@@ -130,8 +165,8 @@ lychee.define('studio.ui.element.preview.Font').includes([
 			if (this.__buffer !== null) {
 
 				renderer.drawBuffer(
-					x - hwidth,
-					y - hheight + 64,
+					x - hwidth  + 16,
+					y - hheight + 80,
 					this.__buffer
 				);
 
@@ -149,14 +184,14 @@ lychee.define('studio.ui.element.preview.Font').includes([
 		 * CUSTOM API
 		 */
 
-		setFont: function(font) {
+		setValue: function(value) {
 
-			font = font instanceof Font ? font : null;
+			value = value instanceof Font ? value : null;
 
 
-			if (font !== null) {
+			if (value !== null) {
 
-				this.font = font;
+				this.value = value;
 				this.setOptions([ 'Save' ]);
 				this.__isDirty = true;
 

@@ -2,6 +2,7 @@
 lychee.define('studio.state.Asset').includes([
 	'lychee.ui.State'
 ]).requires([
+	'studio.codec.FONT',
 	'studio.ui.element.modify.Font',
 //	'studio.ui.element.modify.Music',
 //	'studio.ui.element.modify.Sound',
@@ -19,6 +20,7 @@ lychee.define('studio.state.Asset').includes([
 	const _State   = lychee.import('lychee.ui.State');
 	const _modify  = lychee.import('studio.ui.element.modify');
 	const _preview = lychee.import('studio.ui.element.preview');
+	const _FONT    = lychee.import('studio.codec.FONT');
 	const _BLOB    = attachments["json"].buffer;
 
 
@@ -50,32 +52,40 @@ lychee.define('studio.state.Asset').includes([
 
 			let asset = new Font(project.identifier + '/source/' + value);
 
-			asset.onload = function() {
+			asset.onload = function(result) {
+
+				if (result === false) {
+
+					asset = _FONT.encode({
+						font: {
+							family:  'Ubuntu Mono',
+							color:   '#ffffff',
+							size:    16,
+							style:   'normal',
+							outline: 1
+						}
+					});
+
+//					asset.url = '/tmp/Font.fnt';
+
+				}
+
 
 				let modify = new _modify.Font({
 					width:  320,
 					height: 620,
-					font:   asset
+					value:  asset
 				});
 
 				let preview = new _preview.Font({
 					width:  400,
 					height: 620,
-					font:   asset
+					value:  asset
 				});
 
 				modify.bind('change', function(value) {
 
-					asset.texture    = value.texture;
-					asset.baseline   = value.baseline;
-					asset.charset    = value.charset;
-					asset.kerning    = value.kerning;
-					asset.spacing    = value.spacing;
-					asset.lineheight = value.lineheight;
-
-					asset.__buffer   = value.__buffer;
-					asset.__font     = value.__font;
-
+					preview.setValue(value);
 					preview.trigger('relayout');
 
 				}, this);
