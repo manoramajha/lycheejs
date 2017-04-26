@@ -22,6 +22,7 @@ and `fixed`.
 
 ## [2017-Q2] - UNRELEASED
 
+- **Changed**: lychee.js Harvester synchronizes platform tags.
 - **Added**: Integration of `nidium` platform.
 - **Added**: Project Immune as an RTS Game demo.
 - Added: lychee.js Studio supports Font and Sprite generation.
