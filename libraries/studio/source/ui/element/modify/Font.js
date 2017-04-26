@@ -13,6 +13,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 	const _Select  = lychee.import('lychee.ui.entity.Select');
 	const _Slider  = lychee.import('lychee.ui.entity.Slider');
 	const _FONT    = lychee.import('studio.codec.FONT');
+	let   _TIMEOUT = Date.now();
 
 
 
@@ -22,22 +23,32 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 	const _on_change = function() {
 
-		let settings = this.value.__font;
-		let value    = _FONT.encode({
-			font: {
-				family:  settings.family,
-				color:   settings.color,
-				size:    settings.size,
-				style:   settings.style,
-				outline: settings.outline
+		if (Date.now() > _TIMEOUT + 250) {
+
+			let font     = this.value;
+			let settings = this.value.__font;
+			let value    = _FONT.encode({
+				spacing: font.spacing,
+				font: {
+					family:  settings.family,
+					color:   settings.color,
+					size:    settings.size,
+					style:   settings.style,
+					outline: settings.outline
+				}
+			});
+
+
+
+			if (value !== null) {
+
+				this.value = value;
+				this.trigger('change', [ this.value ]);
 			}
-		});
 
 
-		if (value !== null) {
+			_TIMEOUT = 0;
 
-			this.value = value;
-			this.trigger('change', [ this.value ]);
 		}
 
 	};
@@ -99,6 +110,14 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			value: 1
 		}));
 
+		this.setEntity('spacing', new _Slider({
+			max:   16,
+			min:   0,
+			step:  1,
+			type:  _Slider.TYPE.horizontal,
+			value: 0
+		}));
+
 
 		this.getEntity('family').bind('change', function(value) {
 
@@ -108,7 +127,8 @@ lychee.define('studio.ui.element.modify.Font').requires([
 				font.__font.family        = value;
 			}
 
-			_on_change.call(this);
+			_TIMEOUT = Date.now();
+			setTimeout(_on_change.bind(this), 500);
 
 		}, this);
 
@@ -120,7 +140,8 @@ lychee.define('studio.ui.element.modify.Font').requires([
 				font.__font.color        = value;
 			}
 
-			_on_change.call(this);
+			_TIMEOUT = Date.now();
+			setTimeout(_on_change.bind(this), 300);
 
 		}, this);
 
@@ -132,7 +153,8 @@ lychee.define('studio.ui.element.modify.Font').requires([
 				font.__font.size        = value;
 			}
 
-			_on_change.call(this);
+			_TIMEOUT = Date.now();
+			setTimeout(_on_change.bind(this), 300);
 
 		}, this);
 
@@ -144,7 +166,8 @@ lychee.define('studio.ui.element.modify.Font').requires([
 				font.__font.style        = value;
 			}
 
-			_on_change.call(this);
+			_TIMEOUT = Date.now();
+			setTimeout(_on_change.bind(this), 300);
 
 		}, this);
 
@@ -156,7 +179,20 @@ lychee.define('studio.ui.element.modify.Font').requires([
 				font.__font.outline        = value;
 			}
 
-			_on_change.call(this);
+			_TIMEOUT = Date.now();
+			setTimeout(_on_change.bind(this), 300);
+
+		}, this);
+
+		this.getEntity('spacing').bind('change', function(value) {
+
+			let font = this.value;
+			if (font !== null) {
+				font.spacing = value;
+			}
+
+			_TIMEOUT = Date.now();
+			setTimeout(_on_change.bind(this), 300);
 
 		}, this);
 

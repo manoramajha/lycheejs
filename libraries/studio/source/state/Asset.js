@@ -66,8 +66,6 @@ lychee.define('studio.state.Asset').includes([
 						}
 					});
 
-//					asset.url = '/tmp/Font.fnt';
-
 				}
 
 
@@ -86,7 +84,10 @@ lychee.define('studio.state.Asset').includes([
 				modify.bind('change', function(value) {
 
 					preview.setValue(value);
-					preview.trigger('relayout');
+
+					setTimeout(function() {
+						preview.trigger('relayout');
+					}, 200);
 
 				}, this);
 
