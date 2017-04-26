@@ -23,7 +23,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 	const _on_change = function() {
 
-		if (Date.now() > _TIMEOUT + 250) {
+		if (Date.now() > _TIMEOUT + 100) {
 
 			let font     = this.value;
 			let settings = this.value.__font;
@@ -128,7 +128,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			}
 
 			_TIMEOUT = Date.now();
-			setTimeout(_on_change.bind(this), 500);
+			setTimeout(_on_change.bind(this), 150);
 
 		}, this);
 
@@ -141,7 +141,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			}
 
 			_TIMEOUT = Date.now();
-			setTimeout(_on_change.bind(this), 300);
+			setTimeout(_on_change.bind(this), 150);
 
 		}, this);
 
@@ -154,7 +154,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			}
 
 			_TIMEOUT = Date.now();
-			setTimeout(_on_change.bind(this), 300);
+			setTimeout(_on_change.bind(this), 150);
 
 		}, this);
 
@@ -167,7 +167,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			}
 
 			_TIMEOUT = Date.now();
-			setTimeout(_on_change.bind(this), 300);
+			setTimeout(_on_change.bind(this), 150);
 
 		}, this);
 
@@ -180,7 +180,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			}
 
 			_TIMEOUT = Date.now();
-			setTimeout(_on_change.bind(this), 300);
+			setTimeout(_on_change.bind(this), 150);
 
 		}, this);
 
@@ -192,7 +192,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			}
 
 			_TIMEOUT = Date.now();
-			setTimeout(_on_change.bind(this), 300);
+			setTimeout(_on_change.bind(this), 150);
 
 		}, this);
 
