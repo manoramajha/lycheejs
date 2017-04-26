@@ -1225,14 +1225,22 @@
 		}
 
 
+		_parse_font_characters.call(this);
+
+	};
+
+	const _parse_font_characters = function() {
+
+		let data = this.__buffer;
+		let url  = this.url;
+
+		if (_CHAR_CACHE[url] === undefined) {
+			_CHAR_CACHE[url] = {};
+		}
+
 		if (data.map instanceof Array) {
 
 			let offset = this.spacing;
-			let url    = this.url;
-
-			if (_CHAR_CACHE[url] === undefined) {
-				_CHAR_CACHE[url] = {};
-			}
 
 			for (let c = 0, cl = this.charset.length; c < cl; c++) {
 
@@ -1378,24 +1386,36 @@
 					let data = cache[text] || null;
 					if (data === null) {
 
+						let check = cache[this.charset[0]] || null;
+						if (check === null) {
+							_parse_font_characters.call(this);
+						}
+
+
 						let width = 0;
 
 						for (let t = 0; t < tl; t++) {
 							let chr = this.measure(text[t]);
-							width  += chr.realwidth + this.kerning;
+							if (chr !== null) {
+								width += chr.realwidth + this.kerning;
+							}
 						}
 
 
-						// TODO: Embedded Font ligatures will set x and y values based on settings.map
+						if (width > 0) {
 
-						data = cache[text] = {
-							width:      width,
-							height:     this.lineheight,
-							realwidth:  width,
-							realheight: this.lineheight,
-							x:          0,
-							y:          0
-						};
+							// TODO: Embedded Font ligatures will set x and y values based on settings.map
+
+							data = cache[text] = {
+								width:      width,
+								height:     this.lineheight,
+								realwidth:  width,
+								realheight: this.lineheight,
+								x:          0,
+								y:          0
+							};
+
+						}
 
 					}
 
