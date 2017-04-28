@@ -7,18 +7,59 @@ const _CHILDREN      = [];
 const _ROOT          = process.env.LYCHEEJS_ROOT || '/opt/lycheejs';
 
 
-if (_fs.existsSync(_ROOT + '/libraries/lychee/build/node/core.js') === false) {
-	require(_ROOT + '/bin/configure.js');
-}
-
-
-const lychee = require(_ROOT + '/libraries/lychee/build/node/core.js')(_ROOT);
-
-
 
 /*
  * USAGE
  */
+
+const _print_autocomplete = function(target, project, flag) {
+
+	let targets = [];
+	let flags   = [ '--debug', '--sandbox' ];
+
+	_fs.readdirSync(_ROOT + '/libraries/lychee/build').sort().forEach(function(platform) {
+		targets.push(platform + '/dist');
+		targets.push(platform + '/main');
+	});
+
+	let libraries = _fs.readdirSync(_ROOT + '/libraries').sort().filter(function(value) {
+		return _fs.existsSync(_ROOT + '/libraries/' + value + '/lychee.pkg');
+	}).map(function(value) {
+		return '/libraries/' + value;
+	});
+	let projects = _fs.readdirSync(_ROOT + '/projects').sort().filter(function(value) {
+		return _fs.existsSync(_ROOT + '/projects/' + value + '/lychee.pkg');
+	}).map(function(value) {
+		return '/projects/' + value;
+	});
+
+
+	let suggestions = [];
+	let has_target  = targets.find(t => t === target);
+	let has_project = libraries.find(l => l === project) || projects.find(p => p === project);
+	let has_flag    = flags.find(f => f === flag);
+
+	if (has_target && has_project && has_flag) {
+		// Nothing to suggest
+	} else if (has_target && has_project && flag) {
+		suggestions = flags.filter(f => f.startsWith(flag));
+	} else if (has_target && has_project) {
+		suggestions = flags;
+	} else if (has_target && project) {
+		suggestions.push.apply(suggestions, libraries.filter(l => l.startsWith(project)));
+		suggestions.push.apply(suggestions, projects.filter(p => p.startsWith(project)));
+	} else if (has_target) {
+		suggestions.push.apply(suggestions, libraries);
+		suggestions.push.apply(suggestions, projects);
+	} else if (target) {
+		suggestions = targets.filter(t => t.startsWith(target));
+	} else {
+		suggestions = targets;
+	}
+
+	return suggestions.sort();
+
+};
 
 const _print_help = function() {
 
@@ -195,6 +236,26 @@ const _spawn = function(program, args) {
 
 
 
+if (process.argv.includes('--autocomplete')) {
+
+	let tmp1   = process.argv.indexOf('--autocomplete');
+	let words  = process.argv.slice(tmp1 + 1);
+	let result = _print_autocomplete.apply(null, words);
+
+	process.stdout.write(result.join(' '));
+
+	process.exit(0);
+	return;
+
+}
+
+
+
+if (_fs.existsSync(_ROOT + '/libraries/lychee/build/node/core.js') === false) {
+	require(_ROOT + '/bin/configure.js');
+}
+
+const lychee    = require(_ROOT + '/libraries/lychee/build/node/core.js')(_ROOT);
 const _SETTINGS = (function() {
 
 	let args     = process.argv.slice(2).filter(val => val !== '');

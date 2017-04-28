@@ -131,7 +131,11 @@ _start_env () {
 
 	# FUCK YOU, bash. Seriously, fuck you.
 
-	if [ $args_length == 4 ]; then
+	if [ $args_length == 2 ]; then
+		"${1}" "${2}" &
+	elif [ $args_length == 3 ]; then
+		"${1}" "${2}" "${3}" &
+	elif [ $args_length == 4 ]; then
 		"${1}" "${2}" "${3}" "${4}" &
 	elif [ $args_length == 5 ]; then
 		"${1}" "${2}" "${3}" "${4}" "${5}" &

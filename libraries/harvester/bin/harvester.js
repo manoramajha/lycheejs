@@ -6,18 +6,46 @@ const _path = require('path');
 const _ROOT = process.env.LYCHEEJS_ROOT || '/opt/lycheejs';
 
 
-if (_fs.existsSync(_ROOT + '/libraries/lychee/build/node/core.js') === false) {
-	require(_ROOT + '/bin/configure.js');
-}
-
-
-const lychee = require(_ROOT + '/libraries/lychee/build/node/core.js')(_ROOT);
-
-
 
 /*
  * USAGE
  */
+
+const _print_autocomplete = function(action, profile, flag) {
+
+	let actions  = [ 'start', 'status', 'stop' ];
+	let flags    = [ '--debug', '--sandbox' ];
+	let profiles = _fs.readdirSync(_ROOT + '/libraries/harvester/profiles').filter(function(value) {
+		return value.endsWith('.json');
+	}).map(function(value) {
+		return '' + value.substr(0, value.indexOf('.json')) + '';
+	});
+
+
+	let suggestions = [];
+	let has_action  = actions.find(a => a === action);
+	let has_profile = profiles.find(p => p === profile);
+	let has_flag    = flags.find(f => f === flag);
+
+	if (has_action && has_profile && has_flag) {
+		// Nothing to suggest
+	} else if (has_action && has_profile && flag) {
+		suggestions = flags.filter(f => f.startsWith(flag));
+	} else if (has_action && has_profile) {
+		suggestions = flags;
+	} else if (has_action && profile) {
+		suggestions = profiles.filter(p => p.startsWith(profile));
+	} else if (has_action) {
+		suggestions = profiles;
+	} else if (action) {
+		suggestions = actions.filter(a => a.startsWith(action));
+	} else {
+		suggestions = actions;
+	}
+
+	return suggestions.sort();
+
+};
 
 const _print_help = function() {
 
@@ -200,6 +228,26 @@ const _bootup = function(settings) {
 
 
 
+if (process.argv.includes('--autocomplete')) {
+
+	let tmp1   = process.argv.indexOf('--autocomplete');
+	let words  = process.argv.slice(tmp1 + 1);
+	let result = _print_autocomplete.apply(null, words);
+
+	process.stdout.write(result.join(' '));
+
+	process.exit(0);
+	return;
+
+}
+
+
+
+if (_fs.existsSync(_ROOT + '/libraries/lychee/build/node/core.js') === false) {
+	require(_ROOT + '/bin/configure.js');
+}
+
+const lychee    = require(_ROOT + '/libraries/lychee/build/node/core.js')(_ROOT);
 const _SETTINGS = (function() {
 
 	let args     = process.argv.slice(2).filter(val => val !== '');

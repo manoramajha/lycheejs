@@ -46,7 +46,5 @@ _autocomplete_lycheejs() {
 complete -F _autocomplete_lycheejs lycheejs-breeder;
 complete -F _autocomplete_lycheejs lycheejs-fertilizer;
 complete -F _autocomplete_lycheejs lycheejs-harvester;
-# complete -F _autocomplete_lycheejs lycheejs-ranger;
 complete -F _autocomplete_lycheejs lycheejs-strainer;
-# complete -F _autocomplete_lycheejs lycheejs-studio;
 
