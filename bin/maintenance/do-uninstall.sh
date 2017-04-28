@@ -123,6 +123,17 @@ else
 
 		fi;
 
+		if [ -d /etc/bash_completion.d ]; then
+
+			echo " (L) ";
+			echo " (L) > Separating CLI autocompletions ...";
+
+			rm /etc/bash_completion.d/lycheejs 2> /dev/null;
+
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
+
+		fi;
+
 	elif [ "$OS" == "osx" ]; then
 
 		echo " (L) ";
@@ -144,6 +155,17 @@ else
 			rm /usr/local/bin/lycheejs-strainer   2> /dev/null;
 			rm /usr/local/bin/lycheejs-studio     2> /dev/null;
 
+
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
+
+		fi;
+
+		if [ -d /etc/bash_completion.d ]; then
+
+			echo " (L) ";
+			echo " (L) > Separating CLI autocompletions ...";
+
+			rm /etc/bash_completion.d/lycheejs 2> /dev/null;
 
 			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 

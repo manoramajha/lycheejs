@@ -127,7 +127,26 @@ _start_env () {
 
 	_trap _handle_signal INT HUP KILL TERM EXIT;
 
-	$1 $2 $3 $4 $5 &
+	local args_length=$#;
+
+	# FUCK YOU, bash. Seriously, fuck you.
+
+	if [ $args_length == 4 ]; then
+		"${1}" "${2}" "${3}" "${4}" &
+	elif [ $args_length == 5 ]; then
+		"${1}" "${2}" "${3}" "${4}" "${5}" &
+	elif [ $args_length == 6 ]; then
+		"${1}" "${2}" "${3}" "${4}" "${5}" "${6}" &
+	elif [ $args_length == 7 ]; then
+		"${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" &
+	elif [ $args_length == 8 ]; then
+		"${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" &
+	elif [ $args_length == 9 ]; then
+		"${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" &
+	elif [ $args_length == 10 ]; then
+		"${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" "${10}" &
+	fi;
+
 
 	CHILD_PID=$!;
 	wait "$CHILD_PID";
@@ -400,10 +419,15 @@ if [ "$protocol" == "lycheejs" ]; then
 elif [ "$protocol" == "env" ]; then
 
 	platform=$(echo $content | cut -d":" -f 2);
-	program=$2;
-	arg1=$3;
-	arg2=$4;
-	arg3=$5;
+	program="${2}";
+	arg1="${3}";
+	arg2="${4}";
+	arg3="${5}";
+	arg4="${6}";
+	arg5="${7}";
+	arg6="${8}";
+	arg7="${9}";
+	arg8="${10}";
 
 
 	if [ "$program" != "" ]; then
@@ -445,33 +469,33 @@ elif [ "$protocol" == "env" ]; then
 		elif [ "$platform" == "html-nwjs" ]; then
 
 			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/$ARCH/nw $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/$ARCH/nw $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			elif [ "$OS" == "osx" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			fi;
 
 		elif [ "$platform" == "nidium" ]; then
 
 			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			elif [ "$OS" == "osx" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			fi;
 
 		elif [ "$platform" == "node" ]; then
 
 			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/node/linux/$ARCH/node $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/node/linux/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			elif [ "$OS" == "osx" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/node/osx/$ARCH/node $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/node/osx/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			fi;
 
 		elif [ "$platform" == "node-sdl" ]; then
 
 			if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/linux/$ARCH/node $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/linux/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			elif [ "$OS" == "osx" ]; then
-				_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/osx/$ARCH/node $program $arg1 $arg2 $arg3;
+				_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/osx/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 			fi;
 
 		fi;
@@ -554,10 +578,15 @@ elif [ "$protocol" == "run" ]; then
 
 	platform=$(echo $content | cut -d":" -f 2 | cut -d"/" -f 1);
 	identifier=$(echo $content | cut -d":" -f 2 | cut -d"/" -f 2);
-	resource="$2";
-	arg1=$3;
-	arg2=$4;
-	arg3=$5;
+	resource="${2}";
+	arg1="${3}";
+	arg2="${4}";
+	arg3="${5}";
+	arg4="${6}";
+	arg5="${7}";
+	arg6="${8}";
+	arg7="${9}";
+	arg8="${10}";
 
 	if [ "$resource" != "" ] && [ -d "$LYCHEEJS_ROOT$resource/build" ]; then
 
@@ -632,7 +661,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/html-nwjs/$identifier" ]; then
 
 					program="$build/html-nwjs/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/$ARCH/nw $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/$ARCH/nw $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/html-nwjs/$identifier-linux/$ARCH" ]; then
 
@@ -652,7 +681,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/html-nwjs/$identifier" ]; then
 
 					program="$build/html-nwjs/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/$ARCH/nwjs.app/Contents/MacOS/nwjs $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/html-nwjs/$identifier-osx/$ARCH" ]; then
 
@@ -660,7 +689,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						open $program $arg1 $arg2 $arg3 2>&1;
+						open $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8 2>&1;
 					else
 						exit 1;
 					fi;
@@ -686,7 +715,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/nidium/$identifier" ]; then
 
 					program="$build/nidium/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/linux/$ARCH/nidium $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/nidium/$identifier-linux/$ARCH" ]; then
 
@@ -694,7 +723,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						_start_env $program $arg1 $arg2 $arg3;
+						_start_env $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 					else
 						exit 1;
 					fi;
@@ -706,7 +735,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/nidium/$identifier" ]; then
 
 					program="$build/nidium/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/nidium/osx/$ARCH/nidium $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/nidium/$identifier-osx/$ARCH" ]; then
 
@@ -714,7 +743,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						_start_env $program $arg1 $arg2 $arg3;
+						_start_env $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 					else
 						exit 1;
 					fi;
@@ -730,7 +759,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/node/$identifier" ]; then
 
 					program="$build/node/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/node/linux/$ARCH/node $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/node/linux/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/node/$identifier-linux/$ARCH" ]; then
 
@@ -738,7 +767,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						_start_env $program $arg1 $arg2 $arg3;
+						_start_env $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 					else
 						exit 1;
 					fi;
@@ -750,7 +779,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/node/$identifier" ]; then
 
 					program="$build/node/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/node/osx/$ARCH/node $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/node/osx/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/node/$identifier-osx/$ARCH" ]; then
 
@@ -758,7 +787,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						_start_env $program $arg1 $arg2 $arg3;
+						_start_env $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 					else
 						exit 1;
 					fi;
@@ -774,7 +803,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/node-sdl/$identifier" ]; then
 
 					program="$build/node-sdl/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/linux/$ARCH/node $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/linux/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/node-sdl/$identifier-linux/$ARCH" ]; then
 
@@ -782,7 +811,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						_start_env $program $arg1 $arg2 $arg3;
+						_start_env $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 					else
 						exit 1;
 					fi;
@@ -794,7 +823,7 @@ elif [ "$protocol" == "run" ]; then
 				if [ -d "$build/node-sdl/$identifier" ]; then
 
 					program="$build/node-sdl/$identifier";
-					_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/osx/$ARCH/node $program $arg1 $arg2 $arg3;
+					_start_env $LYCHEEJS_ROOT/bin/runtime/node-sdl/osx/$ARCH/node $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 
 				elif [ -d "$build/node-sdl/$identifier-osx/$ARCH" ]; then
 
@@ -802,7 +831,7 @@ elif [ "$protocol" == "run" ]; then
 
 					if [ -f $program ]; then
 						chmod +x $program;
-						_start_env $program $arg1 $arg2 $arg3;
+						_start_env $program $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8;
 					else
 						exit 1;
 					fi;

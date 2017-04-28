@@ -292,6 +292,17 @@ else
 
 		fi;
 
+		if [ -d /etc/bash_completion.d ]; then
+
+			echo " (L) ";
+			echo " (L) > Integrating CLI autocompletions ...";
+
+			cp ./bin/helper-autocomplete.sh /etc/bash_completion.d/lycheejs;
+
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
+
+		fi;
+
 	elif [ "$OS" == "osx" ]; then
 
 		echo " (L) ";
@@ -334,6 +345,17 @@ else
 			ln -s "$LYCHEEJS_ROOT/libraries/strainer/bin/strainer.sh"     /usr/local/bin/lycheejs-strainer;
 			ln -s "$LYCHEEJS_ROOT/libraries/studio/bin/studio.sh"         /usr/local/bin/lycheejs-studio;
 
+
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
+
+		fi;
+
+		if [ -d /etc/bash_completion.d ]; then
+
+			echo " (L) ";
+			echo " (L) > Integrating CLI autocompletions ...";
+
+			cp ./bin/helper-autocomplete.sh /etc/bash_completion.d/lycheejs;
 
 			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
 
