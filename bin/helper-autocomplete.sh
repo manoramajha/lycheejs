@@ -1,5 +1,5 @@
 
-_harvester() {
+_autocomplete_lycheejs() {
 
 	COMPREPLY=();
 
@@ -43,10 +43,10 @@ _harvester() {
 
 }
 
-complete -F _harvester lycheejs-breeder;
-complete -F _harvester lycheejs-fertilizer;
-complete -F _harvester lycheejs-harvester;
-# complete -F _harvester lycheejs-ranger;
-complete -F _harvester lycheejs-strainer;
-# complete -F _harvester lycheejs-studio;
+complete -F _autocomplete_lycheejs lycheejs-breeder;
+complete -F _autocomplete_lycheejs lycheejs-fertilizer;
+complete -F _autocomplete_lycheejs lycheejs-harvester;
+# complete -F _autocomplete_lycheejs lycheejs-ranger;
+complete -F _autocomplete_lycheejs lycheejs-strainer;
+# complete -F _autocomplete_lycheejs lycheejs-studio;
 
