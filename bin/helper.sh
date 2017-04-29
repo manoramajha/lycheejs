@@ -252,7 +252,15 @@ _handle_action () {
 
 				if [ "$OS" == "linux" ] || [ "$OS" == "bsd" ]; then
 
-					xdg-open "file://$LYCHEEJS_ROOT$resource" 2>&1;
+					gio_open=`which gio`;
+					xdg_open=`which xdg-open`;
+
+					if [ "$gio_open" != "" ]; then
+						$gio_open open "$LYCHEEJS_ROOT$resource" 2>&1;
+					else
+						$xdg_open "file://$LYCHEEJS_ROOT$resource" 2>&1;
+					fi;
+
 					exit 0;
 
 				elif [ "$OS" == "osx" ]; then
@@ -318,7 +326,16 @@ _handle_action () {
 				elif [ -x "$chrome4" ]; then
 					"$chrome4" "$clean_resource";
 				else
-					xdg-open "$clean_resource" 2>&1;
+
+					gio_open=`which gio`;
+					xdg_open=`which xdg-open`;
+
+					if [ "$gio_open" != "" ]; then
+						$gio_open open "$clean_resource" 2>&1;
+					else
+						$xdg_open "$clean_resource" 2>&1;
+					fi;
+
 				fi;
 
 				exit 0;
@@ -455,7 +472,16 @@ elif [ "$protocol" == "env" ]; then
 				elif [ -x "$chrome4" ]; then
 					"$chrome4" "$program";
 				else
-					xdg-open "$program" 2>&1;
+
+					gio_open=`which gio`;
+					xdg_open=`which xdg-open`;
+
+					if [ "$gio_open" != "" ]; then
+						$gio_open open "$program" 2>&1;
+					else
+						$xdg_open "$program" 2>&1;
+					fi;
+
 				fi;
 
 			elif [ "$OS" == "osx" ]; then
@@ -623,7 +649,16 @@ elif [ "$protocol" == "run" ]; then
 						elif [ -x "$chrome4" ]; then
 							"$chrome4" "$program";
 						else
-							xdg-open "$program" 2>&1;
+
+							gio_open=`which gio`;
+							xdg_open=`which xdg-open`;
+
+							if [ "$gio_open" != "" ]; then
+								$gio_open open "$program" 2>&1;
+							else
+								$xdg_open "$program" 2>&1;
+							fi;
+
 						fi;
 
 					else
