@@ -68,23 +68,40 @@ lychee.define('studio.codec.SPRITE').tags({
 		}
 
 
-		while (files.length > Math.pow(atlas_frames, 2)) {
+		if (files.length > 1) {
 
-			atlas_border = _BORDER[_BORDER.indexOf(atlas_border) + 1] || null;
+			while (files.length > Math.pow(atlas_frames, 2)) {
 
-			if (atlas_border !== null) {
+				atlas_border = _BORDER[_BORDER.indexOf(atlas_border) + 1] || null;
 
-				atlas_frames = Math.floor(atlas_border / frame_width);
+				if (atlas_border !== null) {
 
-				if (atlas_frames === 0) {
-					atlas_frames = 1;
+					atlas_frames = Math.floor(atlas_border / frame_width);
+
+					if (atlas_frames === 0) {
+						atlas_frames = 1;
+					}
+
+				} else {
+
+					atlas_border = 8192;
+
+					break;
+
 				}
 
-			} else {
+			}
 
-				atlas_border = 8192;
+		} else {
 
-				break;
+			let border = _BORDER.find(function(value) {
+				return value > frame_width && value > frame_height;
+			}) || null;
+
+			if (border !== null) {
+
+				atlas_border = border;
+				atlas_frames = 1;
 
 			}
 
