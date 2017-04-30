@@ -26,18 +26,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		if (Date.now() > _TIMEOUT + 100) {
 
 			let settings = this.__settings;
-			let value    = _FONT.encode({
-				spacing: settings.spacing,
-				font: {
-					family:  settings.family,
-					color:   settings.color,
-					size:    settings.size,
-					style:   settings.style,
-					outline: settings.outline
-				}
-			});
-
-
+			let value    = _FONT.encode(settings);
 			if (value !== null) {
 
 				this.value = value;

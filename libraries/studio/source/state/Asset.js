@@ -112,23 +112,7 @@ lychee.define('studio.state.Asset').includes([
 			let asset = new Font(path);
 
 			asset.onload = function(result) {
-
-				if (result === false) {
-
-					asset = _FONT.encode({
-						font: {
-							family:  'Ubuntu Mono',
-							color:   '#ffffff',
-							size:    16,
-							style:   'normal',
-							outline: 1
-						}
-					});
-
-				}
-
 				_update_view.call(that, 'Font', asset);
-
 			}.bind(this);
 
 			asset.load();
