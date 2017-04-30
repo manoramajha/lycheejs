@@ -59,16 +59,16 @@ lychee.define('studio.codec.SPRITE').tags({
 	 * HELPERS
 	 */
 
-	const _measure_atlas = function(files) {
+	const _measure_atlas = function(textures) {
 
 		let atlas_border = _BORDER[0];
 		let atlas_frames = 1;
 		let frame_width  = 0;
 		let frame_height = 0;
 
-		files.forEach(function(file) {
-			frame_width  = Math.max(frame_width,  file.data.width);
-			frame_height = Math.max(frame_height, file.data.height);
+		textures.forEach(function(texture) {
+			frame_width  = Math.max(frame_width,  texture.width);
+			frame_height = Math.max(frame_height, texture.height);
 		});
 
 
@@ -83,9 +83,9 @@ lychee.define('studio.codec.SPRITE').tags({
 		}
 
 
-		if (files.length > 1) {
+		if (textures.length > 1) {
 
-			while (files.length > Math.pow(atlas_frames, 2)) {
+			while (textures.length > Math.pow(atlas_frames, 2)) {
 
 				atlas_border = _BORDER[_BORDER.indexOf(atlas_border) + 1] || null;
 
@@ -157,12 +157,12 @@ lychee.define('studio.codec.SPRITE').tags({
 
 
 	const _DEFAULTS = {
-		width:  null,
-		height: null,
-		depth:  null,
-		radius: null,
-		shape:  1,
-		files:  []
+		width:    null,
+		height:   null,
+		depth:    null,
+		radius:   null,
+		shape:    1,
+		textures: []
 	};
 
 
@@ -173,7 +173,7 @@ lychee.define('studio.codec.SPRITE').tags({
 
 	const _encode = function(texture, config, settings) {
 
-		let atlas  = _measure_atlas(settings.files);
+		let atlas  = _measure_atlas(settings.textures);
 		let frames = [];
 		let states = {};
 		let map    = {};
@@ -184,13 +184,12 @@ lychee.define('studio.codec.SPRITE').tags({
 		 * 1. Measure frame dimensions
 		 */
 
-		settings.files.forEach(function(file, index) {
+		settings.textures.forEach(function(texture, index) {
 
-			let state   = file.name.toLowerCase().split('_')[0].split('.')[0];
-			let texture = file.data;
+			let state   = texture.url.toLowerCase().split('_')[0].split('.')[0];
 			let mapx    = (index % atlas.frames)       * atlas.frame.width;
 			let mapy    = ((index / atlas.frames) | 0) * atlas.frame.height;
-			let renderx = mapx + (atlas.frame.width / 2) - (texture.width / 2);
+			let renderx = mapx + (atlas.frame.width  / 2) - (texture.width  / 2);
 			let rendery = mapy + (atlas.frame.height / 2) - (texture.height / 2);
 			let data    = {
 				state:   state,
@@ -221,9 +220,9 @@ lychee.define('studio.codec.SPRITE').tags({
 		 * 2. Generate Config States
 		 */
 
-		settings.files.forEach(function(file) {
+		settings.textures.forEach(function(texture) {
 
-			let state = file.name.toLowerCase().split('_')[0].split('.')[0];
+			let state = texture.url.toLowerCase().split('_')[0].split('.')[0];
 			if (states[state] === undefined) {
 
 				states[state] = {
@@ -259,9 +258,12 @@ lychee.define('studio.codec.SPRITE').tags({
 		 */
 
 		let tmp_config = {
-			map:    map,
-			shape:  settings.shape,
-			states: states
+			map:      map,
+			shape:    settings.shape,
+			states:   states,
+			__sprite: {
+				textures: []
+			}
 		};
 
 		if (settings.shape === _SHAPE.circle || settings.shape === _SHAPE.sphere) {
@@ -295,6 +297,15 @@ lychee.define('studio.codec.SPRITE').tags({
 			}
 
 		}
+
+		settings.textures.forEach(function(texture) {
+
+			let url = texture.url || null;
+			if (url !== null) {
+				tmp_config.__sprite.textures.push(url);
+			}
+
+		});
 
 
 
@@ -351,10 +362,8 @@ lychee.define('studio.codec.SPRITE').tags({
 		if (radius !== null) settings.radius = radius;
 
 
-		// TODO: Figure out smart way to encode files[]
 		settings.sprite = {
-			files:  tmp.files  || [],
-			frames: tmp.frames || []
+			textures: tmp.textures || []
 		};
 
 

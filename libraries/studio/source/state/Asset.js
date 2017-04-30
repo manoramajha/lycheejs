@@ -29,28 +29,87 @@ lychee.define('studio.state.Asset').includes([
 	 * HELPERS
 	 */
 
+	const _update_view = function(type, asset) {
+
+		let layer   = this.queryLayer('ui', 'asset');
+		let modify  = this.queryLayer('ui', 'asset > modify');
+		let preview = this.queryLayer('ui', 'asset > preview');
+
+
+		if (!(modify instanceof _modify[type])) {
+
+			layer.removeEntity(modify);
+
+			modify = null;
+			modify = new _modify[type]({
+				width:   320,
+				height:  620,
+				value:   asset,
+				visible: true
+			});
+
+			modify.bind('change', function(value) {
+
+				preview.setValue(value);
+
+				setTimeout(function() {
+					preview.trigger('relayout');
+				}, 200);
+
+			}, this);
+
+			layer.setEntity('modify', modify);
+
+		} else {
+
+			modify.visible = true;
+			modify.setValue(asset);
+
+		}
+
+
+		if (!(preview instanceof _preview[type])) {
+
+			layer.removeEntity(preview);
+
+			preview = null;
+			preview = new _preview[type]({
+				width:   400,
+				height:  620,
+				value:   asset,
+				visible: true
+			});
+
+			layer.setEntity('preview', preview);
+
+		} else {
+
+			preview.visible = true;
+			preview.setValue(asset);
+
+			setTimeout(function() {
+				preview.trigger('relayout');
+			}, 200);
+
+		}
+
+
+		layer.trigger('relayout');
+
+	};
+
 	const _on_change = function(value) {
 
-		let layer     = this.queryLayer('ui', 'asset');
-		let modify    = this.queryLayer('ui', 'asset > modify');
-		let preview   = this.queryLayer('ui', 'asset > preview');
-		let project   = this.main.project;
-		let extension = value.split('.').pop();
-		let namespace = value.split('/')[0];
+		let that    = this;
+		let project = this.main.project;
+		let path    = project.identifier + '/source/' + value;
+		let ext     = value.split('.').pop();
+		let ns      = value.split('/')[0];
 
 
-		if (modify !== null) {
-			layer.removeEntity(modify);
-		}
+		if (ext === 'fnt') {
 
-		if (preview !== null) {
-			layer.removeEntity(preview);
-		}
-
-
-		if (extension === 'fnt') {
-
-			let asset = new Font(project.identifier + '/source/' + value);
+			let asset = new Font(path);
 
 			asset.onload = function(result) {
 
@@ -68,51 +127,56 @@ lychee.define('studio.state.Asset').includes([
 
 				}
 
-
-				let modify = new _modify.Font({
-					width:  320,
-					height: 620,
-					value:  asset
-				});
-
-				let preview = new _preview.Font({
-					width:  400,
-					height: 620,
-					value:  asset
-				});
-
-				modify.bind('change', function(value) {
-
-					preview.setValue(value);
-
-					setTimeout(function() {
-						preview.trigger('relayout');
-					}, 200);
-
-				}, this);
-
-				layer.setEntity('modify',  modify);
-				layer.setEntity('preview', preview);
-				layer.trigger('relayout');
+				_update_view.call(that, 'Font', asset);
 
 			}.bind(this);
 
 			asset.load();
 
-		} else if (extension === 'json' && /^(app|entity|ui)$/g.test(namespace)) {
+		} else if (ext === 'png' || (ext === 'json' && /^(app|entity|ui)$/g.test(ns))) {
 
-			// TODO: Config support (or Sprite support)
+			let tmp   = path.split('.');
+			let asset = {
+				texture: null,
+				config:  null
+			};
+
+			if (ext === 'png') {
+
+				tmp[tmp.length - 1] = 'json';
+				asset.texture = new Texture(path);
+				asset.config  = new Config(tmp.join('.'));
+
+			} else if (ext === 'json') {
+
+				tmp[tmp.length - 1] = 'png';
+				asset.texture = new Texture(tmp.join('.'));
+				asset.config  = new Config(path);
+
+			}
 
 
-		} else if (extension === 'png') {
+			asset.texture.onload = function() {
 
-			// TODO: Sprite support
+				asset.config.onload = function() {
+					_update_view.call(that, 'Sprite', asset);
+				};
 
-		} else if (extension === 'msc') {
+				asset.config.load();
+
+			};
+
+			asset.texture.load();
+
+		} else if (ext === 'json') {
+
+			// TODO: Config support
+
+		} else if (ext === 'msc') {
 
 			// TODO: Music support
 
-		} else if (extension === 'snd') {
+		} else if (ext === 'snd') {
 
 			// TODO: Sound support
 
@@ -161,6 +225,20 @@ lychee.define('studio.state.Asset').includes([
 
 
 			this.queryLayer('ui', 'asset > select').bind('change', _on_change, this);
+
+
+			let modify  = this.queryLayer('ui', 'asset > modify');
+			let preview = this.queryLayer('ui', 'asset > preview');
+
+			modify.bind('change', function(value) {
+
+				preview.setValue(value);
+
+				setTimeout(function() {
+					preview.trigger('relayout');
+				}, 200);
+
+			}, this);
 
 		},
 
