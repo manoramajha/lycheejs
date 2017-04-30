@@ -25,10 +25,9 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		if (Date.now() > _TIMEOUT + 100) {
 
-			let font     = this.value;
-			let settings = this.value.__font;
+			let settings = this.__settings;
 			let value    = _FONT.encode({
-				spacing: font.spacing,
+				spacing: settings.spacing,
 				font: {
 					family:  settings.family,
 					color:   settings.color,
@@ -37,7 +36,6 @@ lychee.define('studio.ui.element.modify.Font').requires([
 					outline: settings.outline
 				}
 			});
-
 
 
 			if (value !== null) {
@@ -65,6 +63,17 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 
 		this.value = null;
+
+		this.__settings = {
+			spacing: 0,
+			font: {
+				family:  'Ubuntu Mono',
+				color:   '#ffffff',
+				size:    16,
+				style:   'normal',
+				outline: 1
+			}
+		};
 
 
 		settings.label   = 'Modify';
@@ -121,11 +130,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('family').bind('change', function(value) {
 
-			let font = this.value;
-			if (font !== null) {
-				font.__buffer.font.family = value;
-				font.__font.family        = value;
-			}
+			this.__settings.font.family = value;
 
 			_TIMEOUT = Date.now();
 			setTimeout(_on_change.bind(this), 150);
@@ -134,11 +139,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('color').bind('change', function(value) {
 
-			let font = this.value;
-			if (font !== null) {
-				font.__buffer.font.color = value;
-				font.__font.color        = value;
-			}
+			this.__settings.font.color = value;
 
 			_TIMEOUT = Date.now();
 			setTimeout(_on_change.bind(this), 150);
@@ -147,11 +148,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('size').bind('change', function(value) {
 
-			let font = this.value;
-			if (font !== null) {
-				font.__buffer.font.size = value;
-				font.__font.size        = value;
-			}
+			this.__settings.font.size = value;
 
 			_TIMEOUT = Date.now();
 			setTimeout(_on_change.bind(this), 150);
@@ -160,11 +157,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('style').bind('change', function(value) {
 
-			let font = this.value;
-			if (font !== null) {
-				font.__buffer.font.style = value;
-				font.__font.style        = value;
-			}
+			this.__settings.font.style = value;
 
 			_TIMEOUT = Date.now();
 			setTimeout(_on_change.bind(this), 150);
@@ -173,11 +166,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('outline').bind('change', function(value) {
 
-			let font = this.value;
-			if (font !== null) {
-				font.__buffer.font.outline = value;
-				font.__font.outline        = value;
-			}
+			this.__settings.font.outline = value;
 
 			_TIMEOUT = Date.now();
 			setTimeout(_on_change.bind(this), 150);
@@ -186,10 +175,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 		this.getEntity('spacing').bind('change', function(value) {
 
-			let font = this.value;
-			if (font !== null) {
-				font.spacing = value;
-			}
+			this.__settings.spacing = value;
 
 			_TIMEOUT = Date.now();
 			setTimeout(_on_change.bind(this), 150);
@@ -213,7 +199,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		serialize: function() {
 
 			let data = _Element.prototype.serialize.call(this);
-			data['constructor'] = 'studio.ui.element.Font';
+			data['constructor'] = 'studio.ui.element.modify.Font';
 
 
 			return data;
@@ -237,30 +223,48 @@ lychee.define('studio.ui.element.modify.Font').requires([
 				this.setOptions([]);
 
 
-				let tmp1 = value.__font || null;
-				if (tmp1 !== null) {
-
-					this.getEntity('color').setValue(tmp1.color);
-					this.getEntity('family').setValue(tmp1.family);
-					this.getEntity('outline').setValue(tmp1.outline);
-					this.getEntity('size').setValue(tmp1.size);
-					this.getEntity('style').setValue(tmp1.style);
-
+				if (value.__font === null) {
+					value.__font = {};
 				}
 
-				let tmp2 = value.__buffer || null;
-				if (tmp2 !== null) {
 
-					let tmp3 = value.__buffer.font || null;
-					if (tmp3 === null) {
-						value.__buffer.font = {};
-					}
+				let buffer    = value.__font;
+				let s_spacing = typeof value.spacing === 'number'  ? value.spacing  : null;
+				let s_family  = typeof buffer.family === 'string'  ? buffer.family  : null;
+				let s_color   = typeof buffer.color === 'string'   ? buffer.color   : null;
+				let s_size    = typeof buffer.size === 'number'    ? buffer.size    : null;
+				let s_style   = typeof buffer.style === 'string'   ? buffer.style   : null;
+				let s_outline = typeof buffer.outline === 'number' ? buffer.outline : null;
 
-				} else {
 
-					value.__buffer      = {};
-					value.__buffer.font = {};
+				if (s_spacing !== null) {
+					this.getEntity('spacing').setValue(s_spacing);
+					this.__settings.spacing = s_spacing;
+				}
 
+				if (s_family !== null) {
+					this.getEntity('family').setValue(s_family);
+					this.__settings.font.family = s_family;
+				}
+
+				if (s_color !== null) {
+					this.getEntity('color').setValue(s_color);
+					this.__settings.font.color = s_color;
+				}
+
+				if (s_size !== null) {
+					this.getEntity('size').setValue(s_size);
+					this.__settings.font.size = s_size;
+				}
+
+				if (s_style !== null) {
+					this.getEntity('style').setValue(s_style);
+					this.__settings.font.style = s_style;
+				}
+
+				if (s_outline !== null) {
+					this.getEntity('outline').setValue(s_outline);
+					this.__settings.font.outline = s_outline;
 				}
 
 

@@ -356,7 +356,8 @@ lychee.define('studio.codec.FONT').tags({
 
 			if (data !== null) {
 
-				let font = new Font('/tmp/Font-' + (_FONT_ID++) + '.fnt');
+				let id   = _FONT_ID++;
+				let font = new Font('/tmp/Font-' + id + '.fnt');
 
 				_encode(font, data);
 

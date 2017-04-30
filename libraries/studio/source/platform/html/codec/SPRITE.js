@@ -37,6 +37,7 @@ lychee.define('studio.codec.SPRITE').tags({
 		sphere:    2,
 		cuboid:    3
 	};
+	let _SPRITE_ID = 0;
 
 
 
@@ -382,8 +383,9 @@ lychee.define('studio.codec.SPRITE').tags({
 
 			if (data !== null) {
 
-				let texture = new Texture();
-				let config  = new Config();
+				let id      = _SPRITE_ID++;
+				let texture = new Texture('/tmp/Sprite-' + id + '.png');
+				let config  = new Config('/tmp/Sprite-' + id + '.json');
 
 				_encode(texture, config, Object.assign({}, _DEFAULTS, data));
 
