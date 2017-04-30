@@ -25,8 +25,9 @@ lychee.define('studio.codec.SPRITE').tags({
 
 }).exports(function(lychee, global, attachments) {
 
-	const _CANVAS  = document.createElement('canvas');
-	const _CONTEXT = _CANVAS.getContext('2d');
+	// const _Canvas = global.require('canvas');
+	// const _CANVAS = new _Canvas(300, 150);
+	// const _CONTEXT = _CANVAS.getContext('2d');
 	const _BORDER  = [ 64, 128, 256, 512, 1024, 2048, 4096, 8192 ];
 	const _JSON    = {
 		encode: function(data) {
@@ -40,6 +41,17 @@ lychee.define('studio.codec.SPRITE').tags({
 		sphere:    2,
 		cuboid:    3
 	};
+
+
+	// XXX: Port this to canvas library
+	const _CANVAS  = {};
+	const _CONTEXT = {};
+
+	(function(context) {
+
+		context.antialias = 'subpixel';
+
+	})(_CONTEXT);
 
 
 
@@ -71,23 +83,40 @@ lychee.define('studio.codec.SPRITE').tags({
 		}
 
 
-		while (files.length > Math.pow(atlas_frames, 2)) {
+		if (files.length > 1) {
 
-			atlas_border = _BORDER[_BORDER.indexOf(atlas_border) + 1] || null;
+			while (files.length > Math.pow(atlas_frames, 2)) {
 
-			if (atlas_border !== null) {
+				atlas_border = _BORDER[_BORDER.indexOf(atlas_border) + 1] || null;
 
-				atlas_frames = Math.floor(atlas_border / frame_width);
+				if (atlas_border !== null) {
 
-				if (atlas_frames === 0) {
-					atlas_frames = 1;
+					atlas_frames = Math.floor(atlas_border / frame_width);
+
+					if (atlas_frames === 0) {
+						atlas_frames = 1;
+					}
+
+				} else {
+
+					atlas_border = 8192;
+
+					break;
+
 				}
 
-			} else {
+			}
 
-				atlas_border = 8192;
+		} else {
 
-				break;
+			let border = _BORDER.find(function(value) {
+				return value > frame_width && value > frame_height;
+			}) || null;
+
+			if (border !== null) {
+
+				atlas_border = border;
+				atlas_frames = 1;
 
 			}
 

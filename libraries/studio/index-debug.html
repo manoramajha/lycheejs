@@ -40,6 +40,17 @@
 			}, {
 			});
 
+
+			setTimeout(function() {
+
+				console.clear();
+
+				// XXX: Debug Flows for easy development
+				// lychee.assimilate('./flow/asset-font.js');
+				lychee.assimilate('./flow/asset-sprite.js');
+
+			}, 3000);
+
 		}.bind(this), 200);
 
 	})(lychee, typeof global !== 'undefined' ? global : this);
