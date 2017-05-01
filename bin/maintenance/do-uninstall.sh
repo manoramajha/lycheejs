@@ -123,7 +123,21 @@ else
 
 		fi;
 
-		if [ -d /etc/bash_completion.d ]; then
+
+		if [ -d /usr/share/bash-completion/completions ]; then
+
+			echo " (L) ";
+			echo " (L) > Integrating CLI autocompletions ...";
+
+			rm /usr/share/bash-completion/completions/lycheejs            2> /dev/null;
+			rm /usr/share/bash-completion/completions/lycheejs-breeder    2> /dev/null;
+			rm /usr/share/bash-completion/completions/lycheejs-fertilizer 2> /dev/null;
+			rm /usr/share/bash-completion/completions/lycheejs-harvester  2> /dev/null;
+			rm /usr/share/bash-completion/completions/lycheejs-strainer   2> /dev/null;
+
+			echo -e "\e[42m\e[97m (I) > SUCCESS \e[0m";
+
+		elif [ -d /etc/bash_completion.d ]; then
 
 			echo " (L) ";
 			echo " (L) > Separating CLI autocompletions ...";
