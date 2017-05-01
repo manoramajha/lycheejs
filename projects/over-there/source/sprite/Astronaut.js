@@ -1,9 +1,12 @@
 
-lychee.define('app.entity.Astronaut').includes([
+lychee.define('app.sprite.Astronaut').requires([
+	'lychee.app.Entity'
+]).includes([
 	'lychee.app.Sprite'
 ]).exports(function(lychee, global, attachments) {
 
 	let   _id       = 0;
+	const _Entity   = lychee.import('lychee.app.Entity');
 	const _Sprite   = lychee.import('lychee.app.Sprite');
 	const _CONFIG   = attachments["json"].buffer;
 	const _TEXTURES = [
@@ -34,7 +37,7 @@ lychee.define('app.entity.Astronaut').includes([
 		settings.width   = 32;
 		settings.height  = 32;
 		settings.map     = _CONFIG.map;
-		settings.shape   = lychee.app.Entity.SHAPE.rectangle;
+		settings.shape   = _Entity.SHAPE.rectangle;
 		settings.states  = _CONFIG.states;
 		settings.state   = settings.state || _CONFIG.state;
 		settings.texture = _TEXTURES[_id++];
@@ -61,7 +64,7 @@ lychee.define('app.entity.Astronaut').includes([
 		serialize: function() {
 
 			let data = _Sprite.prototype.serialize.call(this);
-			data['constructor'] = 'app.entity.Astronaut';
+			data['constructor'] = 'app.sprite.Astronaut';
 
 
 			return data;

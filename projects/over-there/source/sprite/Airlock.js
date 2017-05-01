@@ -1,14 +1,11 @@
 
-lychee.define('app.entity.Emblem').includes([
+lychee.define('app.sprite.Airlock').includes([
 	'lychee.app.Sprite'
 ]).exports(function(lychee, global, attachments) {
 
 	const _Sprite  = lychee.import('lychee.app.Sprite');
+	const _CONFIG  = attachments["json"].buffer;
 	const _TEXTURE = attachments["png"];
-	const _CONFIG  = {
-		width:  256,
-		height: 64
-	};
 
 
 
@@ -21,9 +18,12 @@ lychee.define('app.entity.Emblem').includes([
 		let settings = Object.assign({}, data);
 
 
+		settings.width   = 0;
+		settings.height  = 0;
+		settings.map     = _CONFIG.map;
+		settings.state   = settings.state || 'horizontal-big';
+		settings.states  = _CONFIG.states;
 		settings.texture = _TEXTURE;
-		settings.width   = _CONFIG.width;
-		settings.height  = _CONFIG.height;
 
 
 		_Sprite.call(this, settings);
@@ -42,7 +42,7 @@ lychee.define('app.entity.Emblem').includes([
 		serialize: function() {
 
 			let data = _Sprite.prototype.serialize.call(this);
-			data['constructor'] = 'app.entity.Emblem';
+			data['constructor'] = 'app.sprite.Airlock';
 
 
 			return data;

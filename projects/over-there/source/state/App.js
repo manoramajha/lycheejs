@@ -2,21 +2,21 @@
 lychee.define('app.state.App').requires([
 	'lychee.effect.Alpha',
 	'lychee.effect.Position',
-	'app.entity.Background',
-	'app.entity.Astronaut',
-	'app.entity.Emblem',
-	'app.entity.Midground',
-	'app.entity.Airlock',
-	'app.entity.Room',
+	'app.sprite.Background',
+	'app.sprite.Astronaut',
+	'app.sprite.Emblem',
+	'app.sprite.Midground',
+	'app.sprite.Airlock',
+	'app.sprite.Room',
 	'app.ui.layer.Overlay'
 ]).includes([
 	'lychee.app.State'
 ]).exports(function(lychee, global, attachments) {
 
 	const _Alpha     = lychee.import('lychee.effect.Alpha');
-	const _Astronaut = lychee.import('app.entity.Astronaut');
+	const _Astronaut = lychee.import('app.sprite.Astronaut');
 	const _Position  = lychee.import('lychee.effect.Position');
-	const _Room      = lychee.import('app.entity.Room');
+	const _Room      = lychee.import('app.sprite.Room');
 	const _State     = lychee.import('lychee.app.State');
 	const _BLOB      = attachments["json"].buffer;
 	const _MUSIC     = attachments["msc"];

@@ -1,5 +1,5 @@
 
-lychee.define('app.entity.Background').includes([
+lychee.define('app.sprite.Background').includes([
 	'lychee.app.sprite.Background'
 ]).exports(function(lychee, global, attachments) {
 
@@ -44,7 +44,7 @@ lychee.define('app.entity.Background').includes([
 		serialize: function() {
 
 			let data = _Background.prototype.serialize.call(this);
-			data['constructor'] = 'app.entity.Background';
+			data['constructor'] = 'app.sprite.Background';
 
 
 			return data;
