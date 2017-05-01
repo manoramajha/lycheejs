@@ -3,8 +3,8 @@ lychee.define('game.state.Game').requires([
 	'lychee.effect.Color',
 	'lychee.effect.Shake',
 	'lychee.ui.entity.Label',
-	'game.entity.Ball',
-	'game.entity.Paddle',
+	'game.app.sprite.Ball',
+	'game.app.sprite.Paddle',
 	'game.ui.sprite.Background',
 	'game.ui.sprite.Welcome'
 ]).includes([

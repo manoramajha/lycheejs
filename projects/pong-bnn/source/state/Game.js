@@ -5,8 +5,8 @@ lychee.define('game.state.Game').requires([
 	'lychee.effect.Shake',
 	'lychee.ui.entity.Label',
 	'game.ai.Agent',
-	'game.entity.Ball',
-	'game.entity.Paddle',
+	'game.app.sprite.Ball',
+	'game.app.sprite.Paddle',
 	'game.ui.sprite.Background'
 ]).includes([
 	'lychee.app.State'
