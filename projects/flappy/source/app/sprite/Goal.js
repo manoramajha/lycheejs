@@ -1,5 +1,5 @@
 
-lychee.define('game.entity.Goal').includes([
+lychee.define('game.app.sprite.Goal').includes([
 	'lychee.app.Sprite'
 ]).exports(function(lychee, global, attachments) {
 
@@ -44,7 +44,7 @@ lychee.define('game.entity.Goal').includes([
 		serialize: function() {
 
 			let data = _Sprite.prototype.serialize.call(this);
-			data['constructor'] = 'game.entity.Goal';
+			data['constructor'] = 'game.app.sprite.Goal';
 
 
 			return data;

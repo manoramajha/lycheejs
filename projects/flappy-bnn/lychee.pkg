@@ -54,24 +54,26 @@
 					"js"
 				]
 			},
+			"app": {
+				"sprite": {
+					"Goal": [
+						"js",
+						"json",
+						"png"
+					],
+					"Plane": [
+						"js",
+						"json",
+						"png"
+					]
+				}
+			},
 			"effect": {
 				"Explosion": [
 					"js",
 					"json",
 					"png",
 					"snd"
-				]
-			},
-			"entity": {
-				"Goal": [
-					"js",
-					"json",
-					"png"
-				],
-				"Plane": [
-					"js",
-					"json",
-					"png"
 				]
 			},
 			"policy": {
