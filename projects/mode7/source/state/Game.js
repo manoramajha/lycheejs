@@ -1,16 +1,16 @@
 
 lychee.define('game.state.Game').requires([
 	'lychee.app.sprite.Emblem',
-	'game.entity.Background',
-	'game.entity.Track'
+	'game.app.entity.Background',
+	'game.level.Track'
 ]).includes([
 	'lychee.app.State'
 ]).exports(function(lychee, global, attachments) {
 
-	const _Background = lychee.import('game.entity.Background');
+	const _Background = lychee.import('game.app.entity.Background');
 	const _Emblem     = lychee.import('lychee.app.sprite.Emblem');
 	const _State      = lychee.import('lychee.app.State');
-	const _Track      = lychee.import('game.entity.Track');
+	const _Track      = lychee.import('game.level.Track');
 
 
 

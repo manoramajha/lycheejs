@@ -1,19 +1,11 @@
 
-lychee.define('game.entity.Track').exports(function(lychee, global, attachments) {
+lychee.define('game.level.Track').exports(function(lychee, global, attachments) {
 
-	const _TRACKS = {};
-
-	for (let file in attachments) {
-
-		let tmp = file.split('.');
-		let id  = tmp[0];
-		let ext = tmp[1];
-
-		if (ext === 'json') {
-			_TRACKS[id] = attachments[file].buffer;
-		}
-
-	}
+	const _TRACKS = {
+		circuit:  attachments["circuit.json"],
+		straight: attachments["straight.json"],
+		valley:   attachments["valley.json"]
+	};
 
 
 
@@ -21,23 +13,14 @@ lychee.define('game.entity.Track').exports(function(lychee, global, attachments)
 	 * HELPERS
 	 */
 
-	const _parse_track = function(track, data) {
-
-		if (data instanceof Object === false) {
-			return;
-		}
-
-
-		let raw;
-
+	const _parse_track = function(data) {
 
 		for (let p = 0, pl = data.palette.length; p < pl; p++) {
 
-			raw = data.palette[p];
-
+			let raw = data.palette[p];
 			if (raw instanceof Object) {
 
-				track.addPalette(
+				this.addPalette(
 					raw.terrain,
 					raw.road,
 					raw.rumble,
@@ -62,27 +45,27 @@ lychee.define('game.entity.Track').exports(function(lychee, global, attachments)
 			switch (type) {
 
 				case "straight":
-					track.addRoute(length,   0, element, lastaltitude, altitude);
+					this.addRoute(length,   0, element, lastaltitude, altitude);
 					lastaltitude = altitude;
 					break;
 
 				case "left-45":
-					track.addRoute(length, -45, element, lastaltitude, altitude);
+					this.addRoute(length, -45, element, lastaltitude, altitude);
 					lastaltitude = altitude;
 					break;
 
 				case "left-90":
-					track.addRoute(length, -90, element, lastaltitude, altitude);
+					this.addRoute(length, -90, element, lastaltitude, altitude);
 					lastaltitude = altitude;
 					break;
 
 				case "right-45":
-					track.addRoute(length,  45, element, lastaltitude, altitude);
+					this.addRoute(length,  45, element, lastaltitude, altitude);
 					lastaltitude = altitude;
 					break;
 
 				case "right-90":
-					track.addRoute(length,  90, element, lastaltitude, altitude);
+					this.addRoute(length,  90, element, lastaltitude, altitude);
 					lastaltitude = altitude;
 					break;
 
@@ -192,7 +175,7 @@ lychee.define('game.entity.Track').exports(function(lychee, global, attachments)
 
 	let Composite = function(id) {
 
-		id = typeof id === 'string' ? id : 'valley';
+		id = typeof id === 'string' ? id : 'circuit';
 
 
 		this.id         = id;
@@ -206,10 +189,7 @@ lychee.define('game.entity.Track').exports(function(lychee, global, attachments)
 		this.__type     = 'stadium';
 
 
-		let data = _TRACKS[id] || _TRACKS['valley'] || null;
-		if (data !== null) {
-			_parse_track(this, data);
-		}
+		_parse_track.call(this, (_TRACKS[id] || _TRACKS.circuit).buffer);
 
 	};
 
@@ -236,7 +216,7 @@ lychee.define('game.entity.Track').exports(function(lychee, global, attachments)
 		serialize: function() {
 
 			return {
-				'constructor': 'game.entity.Track',
+				'constructor': 'game.level.Track',
 				'arguments':   [ this.id ]
 			};
 

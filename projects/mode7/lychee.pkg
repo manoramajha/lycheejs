@@ -77,11 +77,15 @@
 			"Renderer": [
 				"js"
 			],
-			"entity": {
-				"Background": [
-					"js",
-					"png"
-				],
+			"app": {
+				"entity": {
+					"Background": [
+						"js",
+						"png"
+					]
+				}
+			},
+			"level": {
 				"Track": [
 					"circuit.json",
 					"js",

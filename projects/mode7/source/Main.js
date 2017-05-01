@@ -134,7 +134,9 @@ lychee.define('game.Main').requires([
 			}, this);
 
 
-			this.changeState('game', { track: this.settings.track || 'valley' });
+			this.changeState('game', {
+				track: this.settings.track || null
+			});
 
 		}, this, true);
 
