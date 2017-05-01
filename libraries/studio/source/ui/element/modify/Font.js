@@ -31,6 +31,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 
 				this.value = value;
 				this.trigger('change', [ this.value ]);
+
 			}
 
 

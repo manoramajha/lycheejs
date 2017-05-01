@@ -49,21 +49,13 @@
 			"Main": [
 				"js"
 			],
-			"entity": {
-				"Board": [
-					"js",
-					"json",
-					"png"
-				],
-				"Emblem": [
-					"js",
-					"png"
-				],
-				"Tile": [
-					"js",
-					"json",
-					"png"
-				]
+			"app": {
+				"sprite": {
+					"Emblem": [
+						"js",
+						"png"
+					]
+				}
 			},
 			"state": {
 				"Game": [
@@ -74,10 +66,26 @@
 				]
 			},
 			"ui": {
-				"Label": [
-					"fnt",
-					"js"
-				]
+				"entity": {
+					"Label": [
+						"fnt",
+						"js"
+					]
+				},
+				"layer": {
+					"Board": [
+						"js",
+						"json",
+						"png"
+					]
+				},
+				"sprite": {
+					"Tile": [
+						"js",
+						"json",
+						"png"
+					]
+				}
 			}
 		},
 		"tags": {}

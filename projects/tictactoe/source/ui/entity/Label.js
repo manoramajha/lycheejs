@@ -1,5 +1,5 @@
 
-lychee.define('game.ui.Label').includes([
+lychee.define('game.ui.entity.Label').includes([
 	'lychee.ui.entity.Label'
 ]).exports(function(lychee, global, attachments) {
 
@@ -35,7 +35,7 @@ lychee.define('game.ui.Label').includes([
 		serialize: function() {
 
 			let data = _Label.prototype.serialize.call(this);
-			data['constructor'] = 'game.ui.Label';
+			data['constructor'] = 'game.ui.entity.Label';
 
 
 			return data;

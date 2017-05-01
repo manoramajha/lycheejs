@@ -1,12 +1,12 @@
 
-lychee.define('game.entity.Board').requires([
-	'game.entity.Tile'
+lychee.define('game.ui.layer.Board').requires([
+	'game.ui.sprite.Tile'
 ]).includes([
 	'lychee.ui.Layer'
 ]).exports(function(lychee, global, attachments) {
 
 	const _Layer   = lychee.import('lychee.ui.Layer');
-	const _Tile    = lychee.import('game.entity.Tile');
+	const _Tile    = lychee.import('game.ui.sprite.Tile');
 	const _TEXTURE = attachments["png"];
 	const _CONFIG  = attachments["json"].buffer;
 
@@ -71,7 +71,7 @@ lychee.define('game.entity.Board').requires([
 		serialize: function() {
 
 			let data = _Layer.prototype.serialize.call(this);
-			data['constructor'] = 'game.entity.Board';
+			data['constructor'] = 'game.ui.layer.Board';
 
 
 			return data;

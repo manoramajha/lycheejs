@@ -2,8 +2,8 @@
 lychee.define('game.state.Game').requires([
 	'lychee.effect.Shake',
 	'lychee.app.sprite.Background',
-	'game.entity.Board',
-	'game.ui.Label'
+	'game.ui.layer.Board',
+	'game.ui.entity.Label'
 ]).includes([
 	'lychee.app.State'
 ]).exports(function(lychee, global, attachments) {

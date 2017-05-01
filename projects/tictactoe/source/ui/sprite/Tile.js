@@ -1,5 +1,5 @@
 
-lychee.define('game.entity.Tile').includes([
+lychee.define('game.ui.sprite.Tile').includes([
 	'lychee.ui.Sprite'
 ]).exports(function(lychee, global, attachments) {
 
@@ -48,7 +48,7 @@ lychee.define('game.entity.Tile').includes([
 		serialize: function() {
 
 			let data = _Sprite.prototype.serialize.call(this);
-			data['constructor'] = 'game.entity.Tile';
+			data['constructor'] = 'game.ui.sprite.Tile';
 
 
 			return data;

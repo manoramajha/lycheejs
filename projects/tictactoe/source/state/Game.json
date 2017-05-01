@@ -29,7 +29,7 @@
 			"blob": {
 				"entities": [
 					{
-						"constructor": "game.entity.Board",
+						"constructor": "game.ui.layer.Board",
 						"arguments": [
 							{
 								"position": {
@@ -40,7 +40,7 @@
 						]
 					},
 					{
-						"constructor": "game.ui.Label",
+						"constructor": "game.ui.entity.Label",
 						"arguments": [
 							{
 								"label": "0 : 0",
