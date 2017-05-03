@@ -33,8 +33,9 @@ lychee.define('lychee.ui.element.Search').requires([
 		delete settings.data;
 
 
-		settings.label   = 'Search';
-		settings.options = [];
+		settings.label    = 'Search';
+		settings.options  = [];
+		settings.relayout = true;
 
 
 		_Element.call(this, settings);

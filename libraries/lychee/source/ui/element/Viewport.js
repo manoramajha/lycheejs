@@ -122,8 +122,9 @@ lychee.define('lychee.ui.element.Viewport').requires([
 		let settings = Object.assign({}, data);
 
 
-		settings.label   = 'Viewport';
-		settings.options = [ 'Save' ];
+		settings.label    = 'Viewport';
+		settings.options  = [ 'Save' ];
+		settings.relayout = true;
 
 
 		_Element.call(this, settings);

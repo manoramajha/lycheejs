@@ -660,7 +660,6 @@ lychee.define('lychee.app.Layer').requires([
 						this.trigger('relayout');
 					}
 
-
 					return true;
 
 				}
@@ -681,13 +680,14 @@ lychee.define('lychee.app.Layer').requires([
 			if (id !== null && entity !== null && this.__map[id] === undefined) {
 
 				this.__map[id] = entity;
+				this.entities.push(entity);
 
-				let result = this.addEntity(entity);
-				if (result === true) {
-					return true;
-				} else {
-					delete this.__map[id];
+				if (this.__relayout === true) {
+					this.trigger('relayout');
 				}
+
+
+				return true;
 
 			}
 
@@ -797,13 +797,24 @@ lychee.define('lychee.app.Layer').requires([
 
 			if (entities !== null) {
 
+				let filtered = [];
+
 				for (let e = 0, el = entities.length; e < el; e++) {
 
-					let result = this.addEntity(entities[e]);
-					if (result === false) {
+					let entity = entities[e];
+					let index  = filtered.indexOf(entity);
+					if (index === -1) {
+						filtered.push(entity);
+					} else {
 						all = false;
 					}
 
+				}
+
+				this.entities = filtered;
+
+				if (this.__relayout === true) {
+					this.trigger('relayout');
 				}
 
 			}
@@ -818,8 +829,7 @@ lychee.define('lychee.app.Layer').requires([
 
 			for (let e = 0, el = entities.length; e < el; e++) {
 
-				this.removeEntity(entities[e]);
-
+				entities.splice(e, 1);
 				el--;
 				e--;
 
