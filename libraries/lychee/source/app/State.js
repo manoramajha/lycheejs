@@ -106,8 +106,12 @@ lychee.define('lychee.app.State').requires([
 
 
 			for (let id in this.__layers) {
-				this.__layers[id].setPosition(position);
-				this.__layers[id].trigger('relayout');
+
+				let layer = this.__layers[id];
+
+				layer.setPosition(position);
+				layer.trigger('relayout');
+
 			}
 
 		}
