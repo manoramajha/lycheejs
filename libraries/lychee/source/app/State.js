@@ -542,6 +542,40 @@ lychee.define('lychee.app.State').requires([
 
 		},
 
+		query: function(query) {
+
+			query = typeof query === 'string' ? query : null;
+
+
+			if (query !== null) {
+
+				let tmp   = query.split(' > ');
+				let layer = this.getLayer(tmp[0].trim());
+				if (layer !== null) {
+
+					let entity = layer;
+
+					for (let t = 1, tl = tmp.length; t < tl; t++) {
+
+						entity = entity.getEntity(tmp[t].trim());
+
+						if (entity === null) {
+							break;
+						}
+
+					}
+
+					return entity;
+
+				}
+
+			}
+
+
+			return null;
+
+		},
+
 		render: function(clock, delta, custom) {
 
 			custom = custom === true;
@@ -628,42 +662,6 @@ lychee.define('lychee.app.State').requires([
 
 			if (id !== null && this.__layers[id] !== undefined) {
 				return this.__layers[id];
-			}
-
-
-			return null;
-
-		},
-
-		queryLayer: function(id, query) {
-
-			id    = typeof id === 'string'    ? id    : null;
-			query = typeof query === 'string' ? query : null;
-
-
-			if (id !== null && query !== null) {
-
-				let layer = this.getLayer(id);
-				if (layer !== null) {
-
-					let entity = layer;
-					let ids    = query.split(' > ');
-
-					for (let i = 0, il = ids.length; i < il; i++) {
-
-						entity = entity.getEntity(ids[i]);
-
-						if (entity === null) {
-							break;
-						}
-
-					}
-
-
-					return entity;
-
-				}
-
 			}
 
 

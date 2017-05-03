@@ -38,7 +38,7 @@ lychee.define('lychee.ui.State').requires([
 
 	const _on_escape = function() {
 
-		let menu = this.queryLayer('ui', 'menu');
+		let menu = this.query('ui > menu');
 		if (menu !== null) {
 
 			if (menu.state === 'active') {
@@ -47,7 +47,7 @@ lychee.define('lychee.ui.State').requires([
 					this.__focus.trigger('blur');
 				}
 
-				this.__focus = this.queryLayer('ui', menu.value.toLowerCase());
+				this.__focus = this.query('ui > ' + menu.value.toLowerCase());
 				this.__focus.trigger('focus');
 
 			} else {
@@ -68,7 +68,7 @@ lychee.define('lychee.ui.State').requires([
 	const _on_fade = function(id) {
 
 		let fade_offset = -3 / 2 * this.getLayer('ui').height;
-		let entity      = this.queryLayer('ui', id);
+		let entity      = this.query('ui > ' + id);
 		let layers      = this.getLayer('ui').entities.filter(function(layer) {
 			return layer !== _MENU && layer !== _NOTICE;
 		});
@@ -153,8 +153,8 @@ lychee.define('lychee.ui.State').requires([
 			let height = viewport.height;
 
 
-			let menu   = this.queryLayer('ui', 'menu');
-			let notice = this.queryLayer('ui', 'notice');
+			let menu   = this.query('ui > menu');
+			let notice = this.query('ui > notice');
 
 			if (menu !== null && notice !== null) {
 
@@ -232,8 +232,8 @@ lychee.define('lychee.ui.State').requires([
 
 				let main   = this.main;
 				let bg     = this.getLayer('bg');
-				let menu   = this.queryLayer('ui', 'menu');
-				let notice = this.queryLayer('ui', 'notice');
+				let menu   = this.query('ui > menu');
+				let notice = this.query('ui > notice');
 
 
 				if (main !== null && bg !== null) {
@@ -252,7 +252,7 @@ lychee.define('lychee.ui.State').requires([
 						for (let sid in this.__states) {
 
 							let state = this.__states[sid];
-							let layer = state.queryLayer('ui', val);
+							let layer = state.query('ui > ' + val);
 
 							if (layer !== null) {
 
@@ -272,13 +272,13 @@ lychee.define('lychee.ui.State').requires([
 					let viewport = this.viewport;
 					if (viewport !== null) {
 
-						viewport.relay('reshape', this.queryLayer('bg', 'background'));
-						viewport.relay('reshape', this.queryLayer('bg', 'emblem'));
-						viewport.relay('reshape', this.queryLayer('ui', 'menu'));
-						viewport.relay('reshape', this.queryLayer('ui', 'notice'));
+						viewport.relay('reshape', this.query('bg > background'));
+						viewport.relay('reshape', this.query('bg > emblem'));
+						viewport.relay('reshape', this.query('ui > menu'));
+						viewport.relay('reshape', this.query('ui > notice'));
 
-						viewport.relay('reshape', this.queryLayer('ui', 'welcome'));
-						viewport.relay('reshape', this.queryLayer('ui', 'settings'));
+						viewport.relay('reshape', this.query('ui > welcome'));
+						viewport.relay('reshape', this.query('ui > settings'));
 
 					}
 
@@ -297,8 +297,8 @@ lychee.define('lychee.ui.State').requires([
 
 				let main   = this.main;
 				let bg     = this.getLayer('bg');
-				let menu   = this.queryLayer('ui', 'menu');
-				let notice = this.queryLayer('ui', 'notice');
+				let menu   = this.query('ui > menu');
+				let notice = this.query('ui > notice');
 
 
 				if (bg !== null && bg !== _BG) {
@@ -448,7 +448,7 @@ lychee.define('lychee.ui.State').requires([
 				_on_fade.call(this, id_layer);
 
 
-				let focus = this.queryLayer('ui', id_layer);
+				let focus = this.query('ui > ' + id_layer);
 				if (focus !== null && focus !== _MENU) {
 					focus.trigger('focus');
 					this.__focus = focus;
