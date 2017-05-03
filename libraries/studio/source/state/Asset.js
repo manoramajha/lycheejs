@@ -31,16 +31,18 @@ lychee.define('studio.state.Asset').includes([
 
 	const _update_view = function(type, asset) {
 
-		let layer   = this.queryLayer('ui', 'asset');
-		let modify  = this.queryLayer('ui', 'asset > modify');
-		let preview = this.queryLayer('ui', 'asset > preview');
+		let layer   = this.query('ui > asset');
+		let modify  = this.query('ui > asset > modify');
+		let preview = this.query('ui > asset > preview');
 
 
 		if (!(modify instanceof _modify[type])) {
 
-			layer.removeEntity(modify);
+			if (modify !== null) {
+				layer.removeEntity(modify);
+				modify = null;
+			}
 
-			modify = null;
 			modify = new _modify[type]({
 				width:   320,
 				height:  620,
@@ -70,9 +72,11 @@ lychee.define('studio.state.Asset').includes([
 
 		if (!(preview instanceof _preview[type])) {
 
-			layer.removeEntity(preview);
+			if (preview !== null) {
+				layer.removeEntity(preview);
+				preview = null;
+			}
 
-			preview = null;
 			preview = new _preview[type]({
 				width:   400,
 				height:  620,
@@ -117,7 +121,7 @@ lychee.define('studio.state.Asset').includes([
 
 			asset.load();
 
-		} else if (ext === 'png' || (ext === 'json' && /^(app|entity|ui)$/g.test(ns))) {
+		} else if (ext === 'png' || (ext === 'json' && /^(app|entity|sprite|ui)$/g.test(ns))) {
 
 			let tmp   = path.split('.');
 			let asset = {
@@ -208,12 +212,11 @@ lychee.define('studio.state.Asset').includes([
 			_State.prototype.deserialize.call(this, blob);
 
 
-			this.queryLayer('ui', 'asset > select').bind('change', _on_change, this);
+			let select  = this.query('ui > asset > select');
+			let modify  = this.query('ui > asset > modify');
+			let preview = this.query('ui > asset > preview');
 
-
-			let modify  = this.queryLayer('ui', 'asset > modify');
-			let preview = this.queryLayer('ui', 'asset > preview');
-
+			select.bind('change', _on_change, this);
 			modify.bind('change', function(value) {
 
 				preview.setValue(value);
@@ -229,7 +232,7 @@ lychee.define('studio.state.Asset').includes([
 		enter: function(oncomplete, data) {
 
 			let project = this.main.project;
-			let select  = this.queryLayer('ui', 'asset > select');
+			let select  = this.query('ui > asset > select');
 
 			if (project !== null && select !== null) {
 

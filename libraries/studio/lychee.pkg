@@ -143,10 +143,16 @@
 						],
 						"Project": [
 							"js"
+						],
+						"Sprite": [
+							"js"
 						]
 					},
 					"preview": {
 						"Font": [
+							"js"
+						],
+						"Sprite": [
 							"js"
 						]
 					}

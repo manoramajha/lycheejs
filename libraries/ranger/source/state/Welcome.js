@@ -23,8 +23,13 @@ lychee.define('ranger.state.Welcome').requires([
 
 	let _on_sync = function(projects) {
 
-		this.queryLayer('ui', 'welcome > dialog').setVisible(false);
-		this.queryLayer('ui', 'welcome > status').setVisible(true);
+		let dialog = this.query('ui > welcome > dialog');
+		let status = this.query('ui > welcome > status');
+
+		if (dialog !== null && status !== null) {
+			dialog.setVisible(false);
+			status.setVisible(true);
+		}
 
 
 		if (projects instanceof Array) {
@@ -76,7 +81,7 @@ lychee.define('ranger.state.Welcome').requires([
 				return {
 					identifier: project.identifier,
 					control:    control,
-					web:		web
+					web:        web
 				};
 
 			});
@@ -84,7 +89,7 @@ lychee.define('ranger.state.Welcome').requires([
 
 			if (value.length > 0) {
 
-				let table = this.queryLayer('ui', 'welcome > status > 0');
+				let table = this.query('ui > welcome > status > 0');
 				if (table !== null) {
 					table.setValue(value);
 				}
@@ -122,53 +127,63 @@ lychee.define('ranger.state.Welcome').requires([
 			_State.prototype.deserialize.call(this, blob);
 
 
-			this.queryLayer('ui', 'menu').setHelpers([
-				'refresh',
-				'unboot'
-			]);
+			let menu = this.query('ui > menu');
+			if (menu !== null) {
+				menu.setHelpers([
+					'refresh',
+					'unboot'
+				]);
+			}
 
 
-			this.queryLayer('ui', 'welcome > dialog').bind('change', function(value) {
+			let dialog = this.query('ui > welcome > dialog');
+			if (dialog !== null) {
 
-				if (value === 'boot') {
+				dialog.bind('#change', function(self, value) {
 
-					let profile = this.queryLayer('ui', 'welcome > dialog > profile');
-					if (profile !== null) {
+					if (value === 'boot') {
 
-						_helper.setValue('boot=' + profile.value);
-						_helper.trigger('touch');
+						let profile = self.query('profile');
+						if (profile !== null) {
 
-						this.queryLayer('ui', 'welcome > dialog').setVisible(false);
+							_helper.setValue('boot=' + profile.value);
+							_helper.trigger('touch');
 
-						this.loop.setTimeout(3000, function() {
-							this.changeState('welcome');
-						}, this.main);
+							self.setVisible(false);
+
+							this.loop.setTimeout(3000, function() {
+								this.changeState('welcome');
+							}, this.main);
+
+						}
 
 					}
 
-				}
+				}, this);
 
-			}, this);
+			}
 
 
-			let entity   = null;
 			let viewport = this.viewport;
-			if (viewport !== null) {
+			let welcome  = this.query('ui > welcome');
 
-				entity = this.queryLayer('ui', 'welcome');
-				entity.bind('#relayout', function(blueprint) {
+			if (viewport !== null && welcome !== null) {
 
-					let element = this.queryLayer('ui', 'welcome > status');
+				welcome.bind('#relayout', function(self) {
+
+					let element = self.query('status');
 					if (element !== null) {
-						element.width  = blueprint.width - 64;
-						element.height = blueprint.height;
-						element.trigger('relayout');
-					}
 
-					let entity = element.getEntity('0');
-					if (entity !== null && element !== null) {
-						entity.width  = element.width  - 32;
-						entity.height = element.height - 96;
+						element.width  = self.width - 64;
+						element.height = self.height;
+						element.trigger('relayout');
+
+						let entity = element.getEntity('0');
+						if (entity !== null && element !== null) {
+							entity.width  = element.width  - 32;
+							entity.height = element.height - 96;
+						}
+
 					}
 
 				}, this);
@@ -189,8 +204,13 @@ lychee.define('ranger.state.Welcome').requires([
 
 		enter: function(oncomplete, data) {
 
-			this.queryLayer('ui', 'welcome > dialog').setVisible(true);
-			this.queryLayer('ui', 'welcome > status').setVisible(false);
+			let dialog = this.query('ui > welcome > dialog');
+			let status = this.query('ui > welcome > status');
+
+			if (dialog !== null && status !== null) {
+				dialog.setVisible(true);
+				status.setVisible(false);
+			}
 
 
 			let client = this.client;

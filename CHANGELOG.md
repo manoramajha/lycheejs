@@ -26,8 +26,10 @@ and `fixed`.
 - **Changed**: lychee.js Harvester synchronizes platform tags.
 - **Added**: lychee.js Helper supports bash autocompletion.
 - **Added**: Integration of `nidium` platform.
-- **Added**: Project Immune as an RTS Game demo.
+- Changed: lychee.app.State `query()` handles invalid queries correctly.
+- Added: Project Immune as an RTS Game demo.
 - Added: lychee.js Studio supports Font and Sprite generation.
+- Added: lychee.app.Layer `query()` method.
 - Added: `lychee.data.tree` Stack implementation.
 
 

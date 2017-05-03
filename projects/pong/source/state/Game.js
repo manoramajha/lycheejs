@@ -49,7 +49,7 @@ lychee.define('game.state.Game').requires([
 		player = typeof player === 'string' ? player : null;
 
 
-		let ball = this.queryLayer('game', 'ball');
+		let ball = this.query('game > ball');
 		if (ball !== null) {
 
 			let position = {
@@ -87,7 +87,7 @@ lychee.define('game.state.Game').requires([
 				this.jukebox.play(_SOUNDS.boo);
 			}
 
-			let info = this.queryLayer('ui', 'info');
+			let info = this.query('ui > info');
 			if (info !== null) {
 				info.setValue(stats.good + ' - ' + stats.evil);
 			}
@@ -95,8 +95,8 @@ lychee.define('game.state.Game').requires([
 		}
 
 
-		this.queryLayer('game', 'good').setPosition({ y: 0 });
-		this.queryLayer('game', 'evil').setPosition({ y: 0 });
+		this.query('game > good').setPosition({ y: 0 });
+		this.query('game > evil').setPosition({ y: 0 });
 
 	};
 
@@ -132,7 +132,7 @@ lychee.define('game.state.Game').requires([
 		}));
 
 
-		let background = this.queryLayer('bg', 'background');
+		let background = this.query('bg > background');
 		if (background !== null) {
 
 			background.setColor(color);
@@ -194,19 +194,19 @@ lychee.define('game.state.Game').requires([
 					let height = renderer.height;
 
 
-					entity = this.queryLayer('bg', 'background');
+					entity = this.query('bg > background');
 					entity.trigger('reshape', [ null, null, width, height ]);
 
-					entity = this.queryLayer('ui', 'info');
+					entity = this.query('ui > info');
 					entity.setPosition({
 						x: 0,
 						y: -1 / 2 * height + 42
 					});
 
-					entity = this.queryLayer('game', 'good');
+					entity = this.query('game > good');
 					entity.setPosition({ x: -1 / 2 * width + 42 });
 
-					entity = this.queryLayer('game', 'evil');
+					entity = this.query('game > evil');
 					entity.setPosition({ x:  1 / 2 * width - 42 });
 
 				}
@@ -253,7 +253,7 @@ lychee.define('game.state.Game').requires([
 
 			// Allow AI playing while welcome dialog is visible
 
-			let welcome = this.queryLayer('ui', 'welcome');
+			let welcome = this.query('ui > welcome');
 			if (welcome !== null) {
 
 				welcome.setVisible(true);
@@ -308,9 +308,9 @@ lychee.define('game.state.Game').requires([
 			let jukebox  = this.jukebox;
 			let renderer = this.renderer;
 
-			let ball     = this.queryLayer('game', 'ball');
-			let evil     = this.queryLayer('game', 'evil');
-			let good     = this.queryLayer('game', 'good');
+			let ball     = this.query('game > ball');
+			let evil     = this.query('game > evil');
+			let good     = this.query('game > good');
 			let hwidth   = renderer.width / 2;
 			let hheight  = renderer.height / 2;
 			let position = ball.position;

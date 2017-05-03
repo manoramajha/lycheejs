@@ -55,7 +55,7 @@ lychee.define('studio.state.Project').includes([
 			_State.prototype.deserialize.call(this, blob);
 
 
-			let menu = this.queryLayer('ui', 'menu');
+			let menu = this.query('ui > menu');
 			if (menu !== null) {
 
 				menu.setHelpers([
@@ -64,124 +64,134 @@ lychee.define('studio.state.Project').includes([
 
 			}
 
-			let notice = this.queryLayer('ui', 'notice');
+			let notice = this.query('ui > notice');
 			if (notice !== null) {
 				notice.setOptions([]);
 			}
 
 
-			let api = this.api;
-			if (api !== null) {
+			let select = this.query('ui > project > select');
+			if (select !== null) {
 
-				let select          = this.queryLayer('ui', 'project > select');
-				let library_service = api.getService('library');
-				let project_service = api.getService('project');
+				let api = this.api;
+				if (api !== null) {
 
-				if (library_service !== null) {
+					let library_service = api.getService('library');
+					let project_service = api.getService('project');
 
-					library_service.bind('sync', function(data) {
+					if (library_service !== null) {
 
-						if (data instanceof Array) {
+						library_service.bind('sync', function(data) {
 
-							let filtered = [].slice.call(this.data);
+							if (data instanceof Array) {
 
-							data.map(function(library) {
-								return library.identifier;
-							}).forEach(function(value) {
+								let filtered = [].slice.call(this.data);
 
-								if (filtered.indexOf(value) === -1) {
-									filtered.push(value);
-								}
+								data.map(function(library) {
+									return library.identifier;
+								}).forEach(function(value) {
 
-							});
+									if (filtered.indexOf(value) === -1) {
+										filtered.push(value);
+									}
 
-							filtered = filtered.filter(function(value) {
-								return value !== '/libraries/harvester';
-							});
+								});
 
-							this.setData(filtered);
+								filtered = filtered.filter(function(value) {
+									return value !== '/libraries/harvester';
+								});
 
-						}
+								this.setData(filtered);
 
-					}, select);
+							}
+
+						}, select);
+
+					}
+
+
+					if (project_service !== null) {
+
+						project_service.bind('sync', function(data) {
+
+							if (data instanceof Array) {
+
+								let filtered = [].slice.call(this.data);
+
+								data.map(function(project) {
+									return project.identifier;
+								}).forEach(function(value) {
+
+									if (filtered.indexOf(value) === -1) {
+										filtered.push(value);
+									}
+
+								});
+
+								this.setData(filtered);
+
+							}
+
+						}, select);
+
+					}
 
 				}
 
 
-				if (project_service !== null) {
+				select.bind('change', function(value) {
 
-					project_service.bind('sync', function(data) {
+					if (/^\/libraries|projects\//g.test(value) === false) {
+						value = '/projects/' + value.split('/').pop();
+					}
 
-						if (data instanceof Array) {
 
-							let filtered = [].slice.call(this.data);
+					let project = new _Project(value);
 
-							data.map(function(project) {
-								return project.identifier;
-							}).forEach(function(value) {
+					project.onload = function() {
 
-								if (filtered.indexOf(value) === -1) {
-									filtered.push(value);
-								}
+						this.main.setProject(project);
 
-							});
 
-							this.setData(filtered);
-
+						let modify = this.query('ui > project > modify');
+						if (modify !== null) {
+							modify.setProject(project);
+							modify.setVisible(true);
 						}
 
-					}, select);
+						let notice = this.query('ui > notice');
+						if (notice !== null) {
+							notice.setLabel('Project opened.');
+							notice.setState('active');
+						}
 
-				}
+					}.bind(this);
+
+					project.load();
+
+				}, this);
 
 			}
 
 
-			this.queryLayer('ui', 'project > select').bind('change', function(value) {
+			let modify = this.query('ui > project > modify');
+			if (modify !== null) {
 
-				if (/^\/libraries|projects\//g.test(value) === false) {
-					value = '/projects/' + value.split('/').pop();
-				}
+				modify.bind('change', function(action) {
 
+					if (action === 'save') {
 
-				let project = new _Project(value);
+						let notice = this.query('ui > notice');
+						if (notice !== null) {
+							notice.setLabel('Project saved.');
+							notice.setState('active');
+						}
 
-				project.onload = function() {
-
-					this.main.setProject(project);
-
-
-					let modify = this.queryLayer('ui', 'project > modify');
-					if (modify !== null) {
-						modify.setProject(project);
-						modify.setVisible(true);
 					}
 
-					let notice = this.queryLayer('ui', 'notice');
-					if (notice !== null) {
-						notice.setLabel('Project opened.');
-						notice.setState('active');
-					}
+				}, this);
 
-				}.bind(this);
-
-				project.load();
-
-			}, this);
-
-			this.queryLayer('ui', 'project > modify').bind('change', function(action) {
-
-				if (action === 'save') {
-
-					let notice = this.queryLayer('ui', 'notice');
-					if (notice !== null) {
-						notice.setLabel('Project saved.');
-						notice.setState('active');
-					}
-
-				}
-
-			}, this);
+			}
 
 		},
 

@@ -189,11 +189,11 @@ lychee.define('game.state.Game').requires([
 					let height = renderer.height;
 
 
-					entity = this.queryLayer('bg', 'background');
+					entity = this.query('bg > background');
 					entity.trigger('reshape', [ null, null, width, height ]);
 					this.__cache.background = entity;
 
-					entity = this.queryLayer('ui', 'info');
+					entity = this.query('ui > info');
 					entity.setPosition({
 						y: -1 / 2 * height + 32
 					});

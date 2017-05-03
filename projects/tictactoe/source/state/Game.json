@@ -1,6 +1,6 @@
 {
 	"layers": {
-		"background": {
+		"bg": {
 			"constructor": "lychee.app.Layer",
 			"arguments": [
 				{}

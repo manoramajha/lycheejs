@@ -3,7 +3,7 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.queryLayer('ui', 'project > select > 2');
+		let entity = this.main.state.query('ui > project > select > 2');
 		entity.setValue('/projects/immune');
 		entity.trigger('change', [ entity.value ]);
 
@@ -15,20 +15,20 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.queryLayer('ui', 'menu');
+		let entity = this.main.state.query('ui > menu');
 		entity.setValue('Asset');
 		entity.trigger('change', [ entity.value ]);
 
 		setTimeout(function() {
 			oncomplete(true);
-		}, 1000);
+		}, 500);
 
 	});
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.queryLayer('ui', 'asset > select > 0');
-		entity.setValue('app/Test.fnt');
+		let entity = this.main.state.query('ui > asset > select > 0');
+		entity.setValue('ui/entity/Test.fnt');
 		entity.trigger('change', [ entity.value ]);
 
 		setTimeout(function() {
@@ -39,30 +39,19 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.queryLayer('ui', 'asset > preview');
-		entity.trigger('relayout');
-
-		setTimeout(function() {
-			oncomplete(true);
-		}, 200);
-
-	});
-
-	flow.then(function(oncomplete) {
-
-		let entity = this.main.state.queryLayer('ui', 'asset > modify > color');
+		let entity = this.main.state.query('ui > asset > modify > color');
 		entity.setValue('#ff00ff');
 		entity.trigger('change', [ entity.value ]);
 
-		entity = this.main.state.queryLayer('ui', 'asset > modify > size');
+		entity = this.main.state.query('ui > asset > modify > size');
 		entity.setValue(100);
 		entity.trigger('change', [ entity.value ]);
 
-		entity = this.main.state.queryLayer('ui', 'asset > modify > style');
+		entity = this.main.state.query('ui > asset > modify > style');
 		entity.setValue('italic');
 		entity.trigger('change', [ entity.value ]);
 
-		entity = this.main.state.queryLayer('ui', 'asset > modify > spacing');
+		entity = this.main.state.query('ui > asset > modify > spacing');
 		entity.setValue(16);
 		entity.trigger('change', [ entity.value ]);
 
@@ -74,7 +63,7 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.queryLayer('ui', 'asset > preview');
+		let entity = this.main.state.query('ui > asset > preview');
 		entity.trigger('relayout');
 
 		oncomplete(true);

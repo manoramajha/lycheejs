@@ -61,7 +61,8 @@
 				"profile": {}
 			}
 		},
-		"files": {}
+		"files": {},
+		"tags": {}
 	},
 	"source": {
 		"environments": {},

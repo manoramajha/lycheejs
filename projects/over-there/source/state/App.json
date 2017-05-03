@@ -1,6 +1,6 @@
 {
 	"layers": {
-		"background": {
+		"bg1": {
 			"constructor": "lychee.app.Layer",
 			"arguments": [
 				{}
@@ -19,7 +19,7 @@
 				}
 			}
 		},
-		"midground": {
+		"bg2": {
 			"constructor": "lychee.app.Layer",
 			"arguments": [
 				{}
@@ -45,7 +45,7 @@
 				}
 			}
 		},
-		"foreground": {
+		"bg3": {
 			"constructor": "lychee.app.Layer",
 			"arguments": [
 				{}

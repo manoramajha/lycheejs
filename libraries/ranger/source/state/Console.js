@@ -27,13 +27,13 @@ lychee.define('ranger.state.Console').requires([
 
 		if (value.length > 0) {
 
-			let table = this.queryLayer('ui', 'console > status > 0');
+			let table = this.query('ui > console > status > 0');
 			if (table !== null) {
 				table.setValue(value);
 			}
 
 
-			let blueprint = this.queryLayer('ui', 'console');
+			let blueprint = this.query('ui > console');
 			if (blueprint !== null) {
 				blueprint.trigger('relayout');
 			}
@@ -72,14 +72,14 @@ lychee.define('ranger.state.Console').requires([
 			let viewport = this.viewport;
 			if (viewport !== null) {
 
-				viewport.relay('reshape', this.queryLayer('ui', 'console > status'));
+				let blueprint = this.query('ui > console');
+				let element   = this.query('ui > console > status');
 
+				if (blueprint !== null && element !== null) {
 
-				entity = this.queryLayer('ui', 'console');
-				entity.bind('#relayout', function(blueprint) {
+					viewport.relay('reshape', element);
 
-					let element = this.queryLayer('ui', 'console > status');
-					if (element !== null) {
+					blueprint.bind('#relayout', function(blueprint) {
 
 						element.width  = blueprint.width - 64;
 						element.height = blueprint.height;
@@ -110,9 +110,9 @@ lychee.define('ranger.state.Console').requires([
 
 						element.trigger('relayout');
 
-					}
+					}, this);
 
-				}, this);
+				}
 
 			}
 
@@ -130,7 +130,10 @@ lychee.define('ranger.state.Console').requires([
 
 		enter: function(oncomplete, data) {
 
-			this.queryLayer('ui', 'console > status').setVisible(true);
+			let status = this.query('ui > console > status');
+			if (status !== null) {
+				status.setVisible(true);
+			}
 
 
 			let client = this.client;
