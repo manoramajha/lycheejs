@@ -78,7 +78,7 @@ lychee.define('Viewport').tags({
 		 *
 		 * The reflow is too slow for an update, so we have
 		 * to lock the heuristic to only be executed once,
-		 * waiting for a second to let the reflow finish.
+		 * waiting for 500ms to let the reflow finish.
 		 */
 
 		setTimeout(function() {
@@ -91,7 +91,7 @@ lychee.define('Viewport').tags({
 			_reshapeheight = global.innerHeight;
 			_reshapeactive = false;
 
-		}, 1000);
+		}, 500);
 
 	};
 

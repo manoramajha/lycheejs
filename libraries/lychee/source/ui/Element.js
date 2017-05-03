@@ -172,9 +172,9 @@ lychee.define('lychee.ui.Element').requires([
 		let settings = Object.assign({}, data);
 
 
-		this.label     = 'CONTENT';
-		this.options   = [ 'Okay', 'Cancel' ];
-		this.order     = 1;
+		this.label   = 'CONTENT';
+		this.options = [ 'Okay', 'Cancel' ];
+		this.order   = 1;
 
 
 		settings.width    = typeof settings.width === 'number'     ? settings.width    : 256;

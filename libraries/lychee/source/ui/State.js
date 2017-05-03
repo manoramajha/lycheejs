@@ -145,12 +145,12 @@ lychee.define('lychee.ui.State').requires([
 
 	const _on_relayout = function() {
 
-		let viewport = this.viewport;
-		if (viewport !== null) {
+		let renderer = this.renderer;
+		if (renderer !== null) {
 
 			let entity = null;
-			let width  = viewport.width;
-			let height = viewport.height;
+			let width  = renderer.width;
+			let height = renderer.height;
 
 
 			let menu   = this.query('ui > menu');
@@ -179,6 +179,7 @@ lychee.define('lychee.ui.State').requires([
 
 
 				notice.position.x = menu.width / 2;
+				notice.trigger('relayout');
 
 			}
 
@@ -274,11 +275,33 @@ lychee.define('lychee.ui.State').requires([
 
 						viewport.relay('reshape', this.query('bg > background'));
 						viewport.relay('reshape', this.query('bg > emblem'));
-						viewport.relay('reshape', this.query('ui > menu'));
-						viewport.relay('reshape', this.query('ui > notice'));
-
-						viewport.relay('reshape', this.query('ui > welcome'));
 						viewport.relay('reshape', this.query('ui > settings'));
+
+						viewport.bind('reshape', function(orientation, rotation, width, height) {
+
+							let renderer = this.renderer;
+							if (renderer !== null) {
+
+								let args = [
+									orientation,
+									rotation,
+									renderer.width,
+									renderer.height
+								];
+
+								let menu = this.query('ui > menu');
+								if (menu !== null) {
+									menu.trigger('reshape', args);
+								}
+
+								let notice = this.query('ui > notice');
+								if (notice !== null) {
+									notice.trigger('reshape', args);
+								}
+
+							}
+
+						}, this);
 
 					}
 
