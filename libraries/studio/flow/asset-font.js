@@ -21,7 +21,7 @@
 
 		setTimeout(function() {
 			oncomplete(true);
-		}, 500);
+		}, 1000);
 
 	});
 
