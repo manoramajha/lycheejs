@@ -273,10 +273,6 @@ lychee.define('lychee.ui.State').requires([
 					let viewport = this.viewport;
 					if (viewport !== null) {
 
-						viewport.relay('reshape', this.query('bg > background'));
-						viewport.relay('reshape', this.query('bg > emblem'));
-						viewport.relay('reshape', this.query('ui > settings'));
-
 						viewport.bind('reshape', function(orientation, rotation, width, height) {
 
 							let renderer = this.renderer;
@@ -289,14 +285,19 @@ lychee.define('lychee.ui.State').requires([
 									renderer.height
 								];
 
-								let menu = this.query('ui > menu');
-								if (menu !== null) {
-									menu.trigger('reshape', args);
-								}
+								let entities = [
+									this.query('bg > background'),
+									this.query('bg > emblem'),
+									this.query('ui > menu'),
+									this.query('ui > notice'),
+									this.query('ui > settings')
+								].filter(function(entity) {
+									return entity !== null;
+								});
 
-								let notice = this.query('ui > notice');
-								if (notice !== null) {
-									notice.trigger('reshape', args);
+
+								for (let e = 0, el = entities.length; e < el; e++) {
+									entities[e].trigger('reshape', args);
 								}
 
 							}
