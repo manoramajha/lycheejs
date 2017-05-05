@@ -25,19 +25,12 @@ lychee.define('lychee.ui.element.Search').requires([
 		this.value = '';
 
 
-		this.setData(settings.data);
-
-		delete settings.data;
-
-
 		settings.label    = 'Search';
 		settings.options  = [];
 		settings.relayout = true;
 
 
 		_Element.call(this, settings);
-
-		settings = null;
 
 
 
@@ -97,8 +90,17 @@ lychee.define('lychee.ui.element.Search').requires([
 			select.height = this.height - 128;
 		}, this);
 
-		this.setEntity('search', input);
-		this.setEntity('select', select);
+
+		this.addEntity(input);
+		this.addEntity(select);
+
+
+		// XXX: This must be done afterwards
+
+		this.setData(settings.data);
+		delete settings.data;
+
+		settings = null;
 
 	};
 
@@ -126,6 +128,23 @@ lychee.define('lychee.ui.element.Search').requires([
 		/*
 		 * CUSTOM API
 		 */
+
+		getEntity: function(id, position) {
+
+			id        = typeof id === 'string'    ? id       : null;
+			position = position instanceof Object ? position : null;
+
+
+			if (id === 'search') {
+				return this.entities[3] || null;
+			} else if (id === 'select') {
+				return this.entities[5] || null;
+			}
+
+
+			return _Element.prototype.getEntity.call(this, id, position);
+
+		},
 
 		setData: function(data) {
 
