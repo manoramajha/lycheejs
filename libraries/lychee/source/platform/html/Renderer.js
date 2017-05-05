@@ -353,30 +353,101 @@ lychee.define('Renderer').tags({
 
 		},
 
-		drawBuffer: function(x1, y1, buffer) {
+		drawBuffer: function(x1, y1, buffer, map) {
 
 			buffer = buffer instanceof _Buffer ? buffer : null;
+			map    = map instanceof Object     ? map    : null;
 
 
 			if (buffer !== null) {
 
 				let ctx    = this.__ctx;
-				let width  = buffer.width;
-				let height = buffer.height;
+				let width  = 0;
+				let height = 0;
+				let x      = 0;
+				let y      = 0;
+				let r      = 0;
 
 
 				ctx.globalAlpha = this.alpha;
-				ctx.drawImage(
-					buffer.__buffer,
-					0,
-					0,
-					width,
-					height,
-					x1,
-					y1,
-					width,
-					height
-				);
+
+				if (map === null) {
+
+					width  = buffer.width;
+					height = buffer.height;
+
+					ctx.drawImage(
+						buffer.__buffer,
+						x,
+						y,
+						width,
+						height,
+						x1,
+						y1,
+						width,
+						height
+					);
+
+				} else {
+
+					width  = map.w;
+					height = map.h;
+					x      = map.x;
+					y      = map.y;
+					r      = map.r || 0;
+
+					if (r === 0) {
+
+						ctx.drawImage(
+							buffer.__buffer,
+							x,
+							y,
+							width,
+							height,
+							x1,
+							y1,
+							width,
+							height
+						);
+
+					} else {
+
+						let cos = Math.cos(r * Math.PI / 180);
+						let sin = Math.sin(r * Math.PI / 180);
+
+						ctx.setTransform(
+							cos,
+							sin,
+							-sin,
+							cos,
+							x1,
+							y1
+						);
+
+						ctx.drawImage(
+							buffer.__buffer,
+							x,
+							y,
+							width,
+							height,
+							-1 / 2 * width,
+							-1 / 2 * height,
+							width,
+							height
+						);
+
+						ctx.setTransform(
+							1,
+							0,
+							0,
+							1,
+							0,
+							0
+						);
+
+					}
+
+				}
 
 			}
 

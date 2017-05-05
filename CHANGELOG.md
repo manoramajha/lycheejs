@@ -27,6 +27,7 @@ and `fixed`.
 - **Added**: lychee.js Helper supports bash autocompletion.
 - **Added**: Integration of `nidium` platform.
 - Changed: lychee.app.State `query()` handles invalid queries correctly.
+- Changed: lychee.Renderer `drawBuffer()` handles `map` and rotations.
 - Added: Project Immune as an RTS Game demo.
 - Added: lychee.js Studio supports Font and Sprite generation.
 - Added: lychee.app.Layer `query()` method.

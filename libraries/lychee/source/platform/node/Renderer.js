@@ -373,24 +373,65 @@ lychee.define('Renderer').tags({
 
 		},
 
-		drawBuffer: function(x1, y1, buffer) {
+		drawBuffer: function(x1, y1, buffer, map) {
 
 			buffer = buffer instanceof _Buffer ? buffer : null;
+			map    = map instanceof Object     ? map    : null;
 
 
 			if (buffer !== null) {
 
-				let ctx = this.__ctx;
+				let ctx    = this.__ctx;
+				let width  = 0;
+				let height = 0;
+				let x      = 0;
+				let y      = 0;
+				let r      = 0;
 
 
-				let x2 = Math.min(x1 + buffer.width,  this.__buffer.width);
-				let y2 = Math.min(y1 + buffer.height, this.__buffer.height);
+				// XXX: No support for alpha :(
 
+				if (map === null) {
 
-				for (let y = y1; y < y2; y++) {
+					width  = buffer.width;
+					height = buffer.height;
 
-					for (let x = x1; x < x2; x++) {
-						ctx[y][x] = buffer.__ctx[y - y1][x - x1];
+					let x2 = Math.min(x1 + width,  this.__buffer.width);
+					let y2 = Math.min(y1 + height, this.__buffer.height);
+
+					for (let cy = y1; cy < y2; cy++) {
+
+						for (let cx = x1; cx < x2; cx++) {
+							ctx[cy][cx] = buffer.__ctx[cy - y1][cx - x1];
+						}
+
+					}
+
+				} else {
+
+					width  = map.w;
+					height = map.h;
+					x      = map.x;
+					y      = map.y;
+					r      = map.r || 0;
+
+					if (r === 0) {
+
+						let x2 = Math.min(x1 + width,  this.__buffer.width);
+						let y2 = Math.min(y1 + height, this.__buffer.height);
+
+						for (let cy = y1; cy < y2; cy++) {
+
+							for (let cx = x1; cx < x2; cx++) {
+								ctx[cy][cx] = buffer.__ctx[cy - y1 + y][cx - x1 + x];
+							}
+
+						}
+
+					} else {
+
+						// XXX: No support for rotation
+
 					}
 
 				}
