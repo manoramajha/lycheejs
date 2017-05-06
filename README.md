@@ -162,13 +162,12 @@ iOS App and use the `html` platform adapter.
 
 ## Quickstart
 
+<img src="./guides/asset/quickstart.gif" align="right" width="640px">
+
 This is the it-works-failsafe guide of how to install the lychee.js
 Engine on your development machine. For everything related to Bundles,
 Dev Ops, Security, Deployments and Virtualization - please consult the
 [lychee.js Guide](https://github.com/Artificial-Engineering/lycheejs-guide.git).
-
-
-![Quickstart](./guides/asset/quickstart.gif)
 
 
 **1) Installation**
