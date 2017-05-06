@@ -162,7 +162,7 @@ iOS App and use the `html` platform adapter.
 
 ## Quickstart
 
-<img src="./guides/asset/quickstart.gif" align="right" width="640px">
+<img src="./guides/asset/quickstart.gif" align="right" width="480px">
 
 This is the it-works-failsafe guide of how to install the lychee.js
 Engine on your development machine. For everything related to Bundles,
