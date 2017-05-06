@@ -217,6 +217,8 @@ lycheejs-harvester start development;
 
 **3) Integration**
 
+<img src="./guides/asset/quickstart-collaborators.png" align="right" width="320px">
+
 The lychee.js Project is tightly integrated with our
 Artificial Intelligence, which is represented by the account
 [@humansneednotapply](https://github.com/humansneednotapply).
@@ -235,8 +237,6 @@ echo "MY-PERSONAL-ACCESS-TOKEN" > .github/TOKEN;
 Then you must add the account [@humansneednotapply](https://github.com/humansneednotapply)
 to your lychee.js Project's repository collaborators in its
 `Settings > Collaborators & teams` section.
-
-![Collaborators Settings](./guides/asset/quickstart-collaborators.png)
 
 Notes:
 
