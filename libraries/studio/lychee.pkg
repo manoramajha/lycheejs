@@ -52,7 +52,7 @@
 				"variant": "application",
 				"profile": {
 					"client": "http://localhost:4848/api/server/connect?identifier=/libraries/studio",
-					"server": "http://localhost:4848/api/server/connect?identifier=/libraries/studio"
+					"server": null
 				}
 			},
 			"node/main": {

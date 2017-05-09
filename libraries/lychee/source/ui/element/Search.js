@@ -57,6 +57,7 @@ lychee.define('lychee.ui.element.Search').requires([
 					select.setOptions([ '- No matches -' ]);
 					this.trigger('relayout');
 
+					this.value = value;
 					this.trigger('change', [ value ]);
 
 				} else {

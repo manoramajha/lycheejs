@@ -50,16 +50,7 @@ lychee.define('studio.state.Asset').includes([
 				visible: true
 			});
 
-			modify.bind('change', function(value) {
-
-				preview.setValue(value);
-
-				setTimeout(function() {
-					preview.trigger('relayout');
-				}, 200);
-
-			}, this);
-
+			modify.bind('change', _on_modify_change, this);
 			layer.setEntity('modify', modify);
 
 		} else {
@@ -84,6 +75,7 @@ lychee.define('studio.state.Asset').includes([
 				visible: true
 			});
 
+			preview.bind('change', _on_preview_change, this);
 			layer.setEntity('preview', preview);
 
 		} else {
@@ -102,7 +94,7 @@ lychee.define('studio.state.Asset').includes([
 
 	};
 
-	const _on_change = function(value) {
+	const _on_select_change = function(value) {
 
 		let that    = this;
 		let project = this.main.project;
@@ -172,6 +164,47 @@ lychee.define('studio.state.Asset').includes([
 
 	};
 
+	const _on_modify_change = function(value) {
+
+		let preview = this.query('ui > asset > preview');
+		if (preview !== null) {
+
+			preview.setValue(value);
+
+			setTimeout(function() {
+				preview.trigger('relayout');
+			}, 200);
+
+		}
+
+	};
+
+	const _on_preview_change = function(action) {
+
+		let select = this.query('ui > asset > select');
+		let modify = this.query('ui > asset > modify');
+		if (modify !== null) {
+
+			let project = this.main.project;
+			let url     = project.identifier + '/source/' + select.value;
+			let asset   = modify.value || null;
+
+			console.log(select, modify);
+
+			if (asset !== null) {
+
+				if (action === 'save') {
+
+					console.log('Saving asset!', url, asset);
+
+				}
+
+			}
+
+		}
+
+	};
+
 
 
 	/*
@@ -212,20 +245,29 @@ lychee.define('studio.state.Asset').includes([
 			_State.prototype.deserialize.call(this, blob);
 
 
-			let select  = this.query('ui > asset > select');
+			let select = this.query('ui > asset > select');
+			if (select !== null) {
+				select.bind('change', _on_select_change, this);
+			}
+
+
 			let modify  = this.query('ui > asset > modify');
 			let preview = this.query('ui > asset > preview');
 
-			select.bind('change', _on_change, this);
-			modify.bind('change', function(value) {
+			if (modify !== null && preview !== null) {
 
-				preview.setValue(value);
+				modify.bind('change', function(value) {
 
-				setTimeout(function() {
-					preview.trigger('relayout');
-				}, 200);
+					preview.setValue(value);
 
-			}, this);
+					setTimeout(function() {
+						preview.trigger('relayout');
+					}, 200);
+
+				}, this);
+				preview.bind('change', _on_preview_change, this);
+
+			}
 
 		},
 
