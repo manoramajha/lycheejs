@@ -29,9 +29,10 @@ and `fixed`.
 - Changed: lychee.app.State `query()` handles invalid queries correctly.
 - Changed: lychee.Renderer `drawBuffer()` handles `map` and rotations.
 - Changed: lychee.net.protocol.WS detects fragments dynamically.
+- Added: lychee.js Fertilizer supports `*/target` and `platform/*` syntax.
+- Added: lychee.js Studio supports Font and Sprite generation.
 - Added: lychee.app.Main supports auto-sync of Stash and Storage instances.
 - Added: Project Immune as an RTS Game demo.
-- Added: lychee.js Studio supports Font and Sprite generation.
 - Added: lychee.app.Layer `query()` method.
 - Added: `lychee.data.tree` Stack implementation.
 

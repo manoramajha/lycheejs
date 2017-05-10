@@ -270,7 +270,7 @@ const _SETTINGS = (function() {
 	};
 
 
-	let identifier   = args.find(val => /^([a-z-]+)\/([a-z]+)$/g.test(val)) || args.find(val => val === 'auto');
+	let identifier   = args.find(val => /^(([a-z-]+|\*))\/(([a-z]+)|\*)$/g.test(val)) || args.find(val => val === 'auto');
 	let project      = args.find(val => /^\/(libraries|projects)\/([A-Za-z0-9-_\/]+)$/g.test(val));
 	let debug_flag   = args.find(val => /--([debug]{5})/g.test(val));
 	let sandbox_flag = args.find(val => /--([sandbox]{7})/g.test(val));
@@ -294,13 +294,21 @@ const _SETTINGS = (function() {
 
 			if (json.build instanceof Object && json.build.environments instanceof Object) {
 
+				let found = false;
+
 				Object.keys(json.build.environments).forEach(function(identifier) {
 
 					if (identifier !== 'auto') {
+						found = true;
 						_spawn(prog, [ process.argv[1], identifier, project ]);
 					}
 
 				});
+
+
+				if (found === false) {
+					console.warn('No Target in "' + project + '"');
+				}
 
 			}
 
@@ -309,6 +317,66 @@ const _SETTINGS = (function() {
 			settings.auto       = false;
 			settings.project    = project;
 			settings.identifier = 'auto';
+
+		}
+
+	} else if ((identifier.startsWith('*') || identifier.endsWith('*')) && project !== undefined && _fs.existsSync(_ROOT + project) === true) {
+
+		settings.auto = true;
+
+
+		let json = null;
+
+		try {
+			json = JSON.parse(_fs.readFileSync(_ROOT + project + '/lychee.pkg', 'utf8'));
+		} catch (err) {
+			json = null;
+		}
+
+
+		if (json !== null) {
+
+			if (json.build instanceof Object && json.build.environments instanceof Object) {
+
+				let template = identifier.split('/');
+				let found    = false;
+
+				Object.keys(json.build.environments).forEach(function(identifier) {
+
+					if (identifier !== 'auto') {
+
+						let valid = true;
+
+						identifier.split('/').forEach(function(chunk, c) {
+
+							let str = template[c];
+							if (str !== '*' && str !== chunk) {
+								valid = false;
+							}
+
+						});
+
+						if (valid === true) {
+							found = true;
+							_spawn(prog, [ process.argv[1], identifier, project ]);
+						}
+
+					}
+
+				});
+
+
+				if (found === false) {
+					console.warn('No Target for "' + identifier + '" in "' + project + '"');
+				}
+
+			}
+
+		} else {
+
+			settings.auto       = false;
+			settings.project    = project;
+			settings.identifier = identifier;
 
 		}
 
