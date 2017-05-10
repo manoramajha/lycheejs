@@ -305,6 +305,18 @@ lychee.define('lychee.net.protocol.WS').requires([
 		// 0: Continuation Frame (Fragmentation)
 		if (operator === 0x00) {
 
+			if (payload_data !== null) {
+
+				let payload = new Buffer(fragment.payload.length + payload_length);
+
+				fragment.payload.copy(payload, 0);
+				payload_data.copy(payload, fragment.payload.length);
+
+				fragment.payload = payload;
+
+			}
+
+
 			if (fin === true) {
 
 				let tmp0 = _JSON.decode(fragment.payload);
@@ -315,15 +327,6 @@ lychee.define('lychee.net.protocol.WS').requires([
 
 				fragment.operator = 0x00;
 				fragment.payload  = new Buffer(0);
-
-			} else if (payload_data !== null) {
-
-				let payload = new Buffer(fragment.payload.length + payload_length);
-
-				fragment.payload.copy(payload, 0);
-				payload_data.copy(payload, fragment.payload.length);
-
-				fragment.payload = payload;
 
 			}
 
@@ -339,10 +342,15 @@ lychee.define('lychee.net.protocol.WS').requires([
 					chunk.payload = tmp1.payload || null;
 				}
 
-			} else {
+			} else if (payload_data !== null) {
 
+				let payload = new Buffer(fragment.payload.length + payload_length);
+
+				fragment.payload.copy(payload, 0);
+				payload_data.copy(payload, fragment.payload.length);
+
+				fragment.payload  = payload;
 				fragment.operator = operator;
-				fragment.payload  = payload_data;
 
 			}
 
@@ -358,10 +366,15 @@ lychee.define('lychee.net.protocol.WS').requires([
 					chunk.payload = tmp2.payload || null;
 				}
 
-			} else {
+			} else if (payload_data !== null) {
 
+				let payload = new Buffer(fragment.payload.length + payload_length);
+
+				fragment.payload.copy(payload, 0);
+				payload_data.copy(payload, fragment.payload.length);
+
+				fragment.payload  = payload;
 				fragment.operator = operator;
-				fragment.payload  = payload_data;
 
 			}
 
@@ -538,6 +551,7 @@ lychee.define('lychee.net.protocol.WS').requires([
 						if (chunk.payload !== null) {
 							chunks.push(chunk);
 						}
+
 
 						if (buf.length - chunk.bytes > 0) {
 
