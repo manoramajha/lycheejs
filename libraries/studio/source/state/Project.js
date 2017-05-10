@@ -100,14 +100,36 @@ lychee.define('studio.state.Project').includes([
 
 	const _on_modify_change = function(action) {
 
-		// TODO: Save project
+		let select = this.query('ui > project > select');
+		let modify = this.query('ui > project > modify');
+		let notice = this.query('ui > notice');
 
-		if (action === 'save') {
 
-			let notice = this.query('ui > notice');
-			if (notice !== null) {
-				notice.setLabel('Project saved.');
-				notice.setState('active');
+		if (select !== null && modify !== null) {
+
+			if (action === 'save') {
+
+				let stash = this.main.stash || null;
+				let asset = modify.value;
+
+				if (asset !== null && stash !== null) {
+
+					if (asset.icon !== null) {
+						stash.write(asset.icon.url, asset.icon);
+					}
+
+					if (asset.config !== null) {
+						stash.write(asset.config.url, asset.config);
+					}
+
+
+					if (notice !== null) {
+						notice.setLabel('Project saved.');
+						notice.setState('active');
+					}
+
+				}
+
 			}
 
 		}
