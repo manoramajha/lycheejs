@@ -14,7 +14,7 @@ lychee.define('lychee.net.protocol.WS').requires([
 	/*
 	 * WebSocket Framing Protocol
 	 *
-	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+	 * |0 1 2 3 4 5 6 7|0 1 2 3 4 5 6 7|0 1 2 3 4 5 6 7|0 1 2 3 4 5 6 7|
 	 * +-+-+-+-+-------+-+-------------+-------------------------------+
 	 * |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
 	 * |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
@@ -250,6 +250,12 @@ lychee.define('lychee.net.protocol.WS').requires([
 
 			payload_length = (buffer[2] << 8) + buffer[3];
 
+
+			if (payload_length > buffer.length) {
+				return chunk;
+			}
+
+
 			if (mask === true) {
 				mask_data    = buffer.slice(4, 8);
 				payload_data = buffer.slice(8, 8 + payload_length);
@@ -262,10 +268,17 @@ lychee.define('lychee.net.protocol.WS').requires([
 
 		} else if (payload_length === 127) {
 
-			let hi = (buffer[2] << 24) + (buffer[3] << 16) + (buffer[4] << 8) + buffer[5];
-			let lo = (buffer[6] << 24) + (buffer[7] << 16) + (buffer[8] << 8) + buffer[9];
+			let hi = (buffer[2] * 0x1000000) + ((buffer[3] << 16) | (buffer[4] << 8) | buffer[5]);
+			let lo = (buffer[6] * 0x1000000) + ((buffer[7] << 16) | (buffer[8] << 8) | buffer[9]);
+
 
 			payload_length = (hi * 4294967296) + lo;
+
+
+			if (payload_length > buffer.length) {
+				return chunk;
+			}
+
 
 			if (mask === true) {
 				mask_data    = buffer.slice(10, 14);
