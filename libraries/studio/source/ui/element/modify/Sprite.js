@@ -94,24 +94,30 @@ lychee.define('studio.ui.element.modify.Sprite').requires([
 		}));
 
 		this.setEntity('width', new _Input({
-			type: _Input.TYPE.number,
-			min:  0
+			type:    _Input.TYPE.number,
+			min:     0,
+			visible: true
 		}));
 
 		this.setEntity('height', new _Input({
-			type: _Input.TYPE.number,
-			min:  0
+			type:    _Input.TYPE.number,
+			min:     0,
+			visible: true
 		}));
 
 		this.setEntity('depth', new _Input({
-			type: _Input.TYPE.number,
-			min:  0
+			type:    _Input.TYPE.number,
+			min:     0,
+			visible: false
 		}));
+		this.entities[10].visible = false;
 
 		this.setEntity('radius', new _Input({
-			type: _Input.TYPE.number,
-			min:  0
+			type:    _Input.TYPE.number,
+			min:     0,
+			visible: false
 		}));
+		this.entities[12].visible = false;
 
 
 		this.getEntity('textures').bind('change', function(value) {
@@ -120,50 +126,57 @@ lychee.define('studio.ui.element.modify.Sprite').requires([
 
 		this.getEntity('shape').bind('change', function(val) {
 
-			let value = _Entity.SHAPE[val] || null;
+			let value = _Entity.SHAPE[val] !== undefined ? _Entity.SHAPE[val] : null;
 			if (value !== null) {
 
 				this.__settings.shape = value;
 
 
-				let width  = this.getEntity('width');
-				let height = this.getEntity('height');
-				let depth  = this.getEntity('depth');
-				let radius = this.getEntity('radius');
+				let entities = {
+					width:  [ this.entities[6],  this.getEntity('width')  ],
+					height: [ this.entities[8],  this.getEntity('height') ],
+					depth:  [ this.entities[10], this.getEntity('depth')  ],
+					radius: [ this.entities[12], this.getEntity('radius') ]
+				};
+
+				for (let id in entities) {
+					entities[id][0].visible = false;
+					entities[id][1].visible = false;
+				}
+
 
 				if (value === _Entity.SHAPE.circle) {
 
-					width.visible  = false;
-					height.visible = false;
-					depth.visible  = false;
-					radius.visible = true;
+					entities.radius[0].visible = true;
+					entities.radius[1].visible = true;
 
 				} else if (value === _Entity.SHAPE.rectangle) {
 
-					width.visible  = true;
-					height.visible = true;
-					depth.visible  = false;
-					radius.visible = false;
+					entities.width[0].visible  = true;
+					entities.width[1].visible  = true;
+					entities.height[0].visible = true;
+					entities.height[1].visible = true;
 
 				} else if (value === _Entity.SHAPE.sphere) {
 
-					width.visible  = false;
-					height.visible = false;
-					depth.visible  = false;
-					radius.visible = true;
+					entities.radius[0].visible = true;
+					entities.radius[1].visible = true;
 
 				} else if (value === _Entity.SHAPE.cuboid) {
 
-					width.visible  = true;
-					height.visible = true;
-					depth.visible  = true;
-					radius.visible = false;
+					entities.width[0].visible  = true;
+					entities.width[1].visible  = true;
+					entities.height[0].visible = true;
+					entities.height[1].visible = true;
+					entities.depth[0].visible  = true;
+					entities.depth[1].visible  = true;
 
 				}
 
 
 				_TIMEOUT = Date.now();
 				setTimeout(_on_change.bind(this), 150);
+				this.trigger('relayout');
 
 			}
 
@@ -207,6 +220,7 @@ lychee.define('studio.ui.element.modify.Sprite').requires([
 
 
 		this.setValue(settings.value);
+		this.trigger('relayout');
 
 		settings = null;
 
@@ -246,6 +260,12 @@ lychee.define('studio.ui.element.modify.Sprite').requires([
 				this.setOptions([]);
 
 
+				let texture = value.texture || null;
+				if (texture !== null) {
+					this.__settings.textures = [ texture ];
+				}
+
+
 				if (value.config.buffer === null) {
 					value.config.buffer = {};
 				}
@@ -265,8 +285,9 @@ lychee.define('studio.ui.element.modify.Sprite').requires([
 
 						let tmp1 = Object.keys(_Entity.SHAPE);
 						let tmp2 = Object.values(_Entity.SHAPE);
+						let tmp3 = tmp1[tmp2.indexOf(s_shape)];
 
-						this.getEntity('shape').setValue(tmp1[tmp2.indexOf(s_shape)]);
+						this.getEntity('shape').setValue(tmp3);
 						this.__settings.shape = s_shape;
 
 					}

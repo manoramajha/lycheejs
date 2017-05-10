@@ -4,7 +4,7 @@
 	flow.then(function(oncomplete) {
 
 		let entity = this.main.state.query('ui > project > select > search');
-		entity.setValue('/projects/immune');
+		entity.setValue('/projects/flappy');
 		entity.trigger('change', [ entity.value ]);
 
 		setTimeout(function() {
@@ -28,7 +28,7 @@
 	flow.then(function(oncomplete) {
 
 		let entity = this.main.state.query('ui > asset > select > search');
-		entity.setValue('ui/entity/Test.png');
+		entity.setValue('app/sprite/Goal.png');
 		entity.trigger('change', [ entity.value ]);
 
 		setTimeout(function() {
