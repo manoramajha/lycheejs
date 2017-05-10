@@ -14,6 +14,12 @@ fi;
 
 LYCHEEJS_NODE="";
 PACKAGE_CMD="";
+CORE_FLAG="false";
+
+
+if [ "$1" == "--core" ]; then
+	CORE_FLAG="true";
+fi;
 
 
 if [ "$ARCH" == "x86_64" -o "$ARCH" == "amd64" ]; then
@@ -65,10 +71,18 @@ if [ "$OS" == "linux" ] || [ "$OS" == "osx" ] || [ "$OS" == "bsd" ]; then
 		echo -e " (L) Building lychee.js Libraries";
 
 		./libraries/fertilizer/bin/fertilizer.sh auto /libraries/lychee;
-		./libraries/fertilizer/bin/fertilizer.sh auto /libraries/breeder;
-		./libraries/fertilizer/bin/fertilizer.sh auto /libraries/fertilizer;
-		./libraries/fertilizer/bin/fertilizer.sh auto /libraries/harvester;
-		./libraries/fertilizer/bin/fertilizer.sh auto /libraries/strainer;
+
+		if [ "$CORE_FLAG" == "false" ]; then
+
+			./libraries/fertilizer/bin/fertilizer.sh */dist /libraries/breeder;
+			./libraries/fertilizer/bin/fertilizer.sh */dist /libraries/fertilizer;
+			./libraries/fertilizer/bin/fertilizer.sh */dist /libraries/harvester;
+			./libraries/fertilizer/bin/fertilizer.sh */dist /libraries/strainer;
+
+			./libraries/fertilizer/bin/fertilizer.sh */dist /libraries/ranger;
+			./libraries/fertilizer/bin/fertilizer.sh */dist /libraries/studio;
+
+		fi;
 
 		echo -e " (I) SUCCESS\n";
 
