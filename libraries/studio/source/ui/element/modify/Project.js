@@ -2,6 +2,7 @@
 lychee.define('studio.ui.element.modify.Project').requires([
 	'studio.data.Project',
 	'lychee.ui.entity.Input',
+	'lychee.ui.entity.Label',
 	'lychee.ui.entity.List',
 	'lychee.ui.entity.Switch',
 	'lychee.ui.entity.Texture'
@@ -11,6 +12,7 @@ lychee.define('studio.ui.element.modify.Project').requires([
 
 	const _Element = lychee.import('lychee.ui.Element');
 	const _Input   = lychee.import('lychee.ui.entity.Input');
+	const _Label   = lychee.import('lychee.ui.entity.Label');
 	const _List    = lychee.import('lychee.ui.entity.List');
 	const _Project = lychee.import('studio.data.Project');
 	const _Switch  = lychee.import('lychee.ui.entity.Switch');
@@ -61,8 +63,7 @@ lychee.define('studio.ui.element.modify.Project').requires([
 		 * INITIALIZATION
 		 */
 
-		this.setEntity('identifier', new _Input({
-			type:  _Input.TYPE.text,
+		this.setEntity('identifier', new _Label({
 			value: '/projects/boilerplate'
 		}));
 
@@ -94,16 +95,6 @@ lychee.define('studio.ui.element.modify.Project').requires([
 			}
 		}));
 
-
-		this.getEntity('identifier').bind('change', function(value) {
-
-			if (this.value !== null) {
-				this.value.setIdentifier(value);
-			}
-
-			this.setOptions([ 'Save' ]);
-
-		}, this);
 
 		this.getEntity('icon').bind('change', function(value) {
 
