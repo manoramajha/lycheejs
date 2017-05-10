@@ -3,7 +3,7 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.query('ui > project > select > 2');
+		let entity = this.main.state.query('ui > project > select > search');
 		entity.setValue('/projects/immune');
 		entity.trigger('change', [ entity.value ]);
 
@@ -27,7 +27,7 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.query('ui > asset > select > 0');
+		let entity = this.main.state.query('ui > asset > select > search');
 		entity.setValue('ui/entity/Test.png');
 		entity.trigger('change', [ entity.value ]);
 

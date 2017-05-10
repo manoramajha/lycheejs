@@ -14,7 +14,7 @@ lychee.define('studio.net.Server').requires([
 	 * IMPLEMENTATION
 	 */
 
-	let Composite = function(data) {
+	let Composite = function(data, main) {
 
 		let settings = Object.assign({
 		}, data);
@@ -33,6 +33,35 @@ lychee.define('studio.net.Server').requires([
 		this.bind('connect', function(remote) {
 
 			remote.addService(new _Stash(remote));
+
+			let service = remote.getService('stash');
+			if (service !== null) {
+
+				service.bind('sync', function(data) {
+
+					let root  = lychee.ROOT.project;
+					let stash = main.stash;
+
+					if (stash !== null) {
+
+						lychee.ROOT.project = lychee.ROOT.lychee;
+
+						for (let id in data.assets) {
+
+							let asset = lychee.deserialize(data.assets[id]);
+							if (asset !== null) {
+								stash.write(id, asset);
+							}
+
+						}
+
+						lychee.ROOT.project = root;
+
+					}
+
+				}, this);
+
+			}
 
 		}, this);
 

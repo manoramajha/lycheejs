@@ -189,13 +189,14 @@ lychee.define('studio.state.Asset').includes([
 			let url     = project.identifier + '/source/' + select.value;
 			let asset   = modify.value || null;
 
-			console.log(select, modify);
-
 			if (asset !== null) {
 
 				if (action === 'save') {
 
-					console.log('Saving asset!', url, asset);
+					let stash = this.main.stash || null;
+					if (stash !== null) {
+						stash.write(url, asset);
+					}
 
 				}
 

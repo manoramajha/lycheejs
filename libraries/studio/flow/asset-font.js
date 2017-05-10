@@ -3,7 +3,7 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.query('ui > project > select > 2');
+		let entity = this.main.state.query('ui > project > select > search');
 		entity.setValue('/projects/immune');
 		entity.trigger('change', [ entity.value ]);
 
@@ -27,7 +27,7 @@
 
 	flow.then(function(oncomplete) {
 
-		let entity = this.main.state.query('ui > asset > select > 0');
+		let entity = this.main.state.query('ui > asset > select > search');
 		entity.setValue('ui/entity/Test.fnt');
 		entity.trigger('change', [ entity.value ]);
 
@@ -44,7 +44,7 @@
 		entity.trigger('change', [ entity.value ]);
 
 		entity = this.main.state.query('ui > asset > modify > size');
-		entity.setValue(100);
+		entity.setValue(64);
 		entity.trigger('change', [ entity.value ]);
 
 		entity = this.main.state.query('ui > asset > modify > style');
@@ -65,6 +65,17 @@
 
 		let entity = this.main.state.query('ui > asset > preview');
 		entity.trigger('relayout');
+
+		setTimeout(function() {
+			oncomplete(true);
+		}, 500);
+
+	});
+
+	flow.then(function(oncomplete) {
+
+		let entity = this.main.state.query('ui > asset > preview > @options-next');
+		entity.trigger('touch');
 
 		oncomplete(true);
 
