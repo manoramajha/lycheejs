@@ -216,7 +216,7 @@ lycheejs-harvester start development;
 
 **3) Integration**
 
-<img src="./guides/asset/quickstart-collaborators.png" align="right" width="320px">
+<img src="./guides/asset/quickstart-collaborators.png" align="right" width="340px">
 
 The lychee.js Project is tightly integrated with our
 Artificial Intelligence, which is represented by the account

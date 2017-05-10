@@ -40,12 +40,12 @@ lychee.define('studio.ui.element.modify.Project').requires([
 		let settings = Object.assign({}, data);
 
 
-		this.project = null;
+		this.value = null;
 
 
-		this.setProject(settings.project);
+		this.setValue(settings.value);
 
-		delete settings.project;
+		delete settings.value;
 
 
 		settings.label   = 'Modify';
@@ -97,9 +97,8 @@ lychee.define('studio.ui.element.modify.Project').requires([
 
 		this.getEntity('identifier').bind('change', function(value) {
 
-			let project = this.project;
-			if (project !== null) {
-				project.setIdentifier(value);
+			if (this.value !== null) {
+				this.value.setIdentifier(value);
 			}
 
 			this.setOptions([ 'Save' ]);
@@ -108,9 +107,8 @@ lychee.define('studio.ui.element.modify.Project').requires([
 
 		this.getEntity('icon').bind('change', function(value) {
 
-			let project = this.project;
-			if (project !== null) {
-				project.setIcon(value);
+			if (this.value !== null) {
+				this.value.setIcon(value);
 			}
 
 			this.setOptions([ 'Save' ]);
@@ -119,9 +117,8 @@ lychee.define('studio.ui.element.modify.Project').requires([
 
 		this.getEntity('harvester').bind('change', function(value) {
 
-			let project = this.project;
-			if (project !== null) {
-				project.setHarvester(value === 'on');
+			if (this.value !== null) {
+				this.value.setHarvester(value === 'on');
 			}
 
 			this.setOptions([ 'Save' ]);
@@ -130,10 +127,9 @@ lychee.define('studio.ui.element.modify.Project').requires([
 
 		this.getEntity('platforms').bind('change', function(value) {
 
-			let project = this.project;
-			if (project !== null) {
+			if (this.value !== null) {
 
-				project.setPlatforms(value);
+				this.value.setPlatforms(value);
 
 				if (value.node === false) {
 					this.getEntity('harvester').setValue('off');
@@ -170,22 +166,22 @@ lychee.define('studio.ui.element.modify.Project').requires([
 		 * CUSTOM API
 		 */
 
-		setProject: function(project) {
+		setValue: function(value) {
 
-			project = project instanceof _Project ? project : null;
-
-
-			if (project !== null) {
-
-				this.project = project;
-
-				this.getEntity('identifier').setValue(project.identifier);
-				this.getEntity('harvester').setValue(project.harvester === true ? 'on' : 'off');
-				this.getEntity('platforms').setValue(project.platforms);
+			value = value instanceof _Project ? value : null;
 
 
-				if (project.icon.buffer !== null) {
-					this.getEntity('icon').setValue(project.icon);
+			if (value !== null) {
+
+				this.value = value;
+
+				this.getEntity('identifier').setValue(value.identifier);
+				this.getEntity('harvester').setValue(value.harvester === true ? 'on' : 'off');
+				this.getEntity('platforms').setValue(value.platforms);
+
+
+				if (value.icon.buffer !== null) {
+					this.getEntity('icon').setValue(value.icon);
 				} else {
 					this.getEntity('icon').setValue(_TEXTURE);
 				}

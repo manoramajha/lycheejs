@@ -162,6 +162,13 @@ lychee.define('studio.state.Asset').includes([
 
 		}
 
+
+		let notice = this.query('ui > notice');
+		if (notice !== null) {
+			notice.setLabel('Asset opened.');
+			notice.setState('active');
+		}
+
 	};
 
 	const _on_modify_change = function(value) {
@@ -183,19 +190,24 @@ lychee.define('studio.state.Asset').includes([
 
 		let select = this.query('ui > asset > select');
 		let modify = this.query('ui > asset > modify');
-		if (modify !== null) {
+		let notice = this.query('ui > notice');
 
-			let project = this.main.project;
-			let url     = project.identifier + '/source/' + select.value;
-			let asset   = modify.value || null;
+		if (select !== null && modify !== null) {
 
-			if (asset !== null) {
+			if (action === 'save') {
 
-				if (action === 'save') {
+				let project = this.main.project;
+				let stash   = this.main.stash || null;
+				let url     = project.identifier + '/source/' + select.value;
+				let asset   = modify.value || null;
 
-					let stash = this.main.stash || null;
-					if (stash !== null) {
-						stash.write(url, asset);
+				if (asset !== null && stash !== null) {
+
+					stash.write(url, asset);
+
+					if (notice !== null) {
+						notice.setLabel('Asset saved.');
+						notice.setState('active');
 					}
 
 				}

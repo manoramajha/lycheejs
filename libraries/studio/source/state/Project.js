@@ -18,6 +18,105 @@ lychee.define('studio.state.Project').includes([
 
 
 	/*
+	 * HELPERS
+	 */
+
+	const _on_sync = function(data) {
+
+		let select = this.query('ui > project > select');
+		if (select !== null) {
+
+			let filtered = Array.from(select.data);
+
+			data.map(function(project) {
+				return project.identifier;
+			}).forEach(function(value) {
+
+				if (filtered.indexOf(value) === -1) {
+					filtered.push(value);
+				}
+
+			});
+
+			filtered = filtered.filter(function(value) {
+				return value !== '/libraries/harvester';
+			});
+
+			select.setData(filtered);
+
+		}
+
+	};
+
+	const _on_select_change = function(value) {
+
+		if (/^\/libraries|projects\//g.test(value) === false) {
+			value = '/projects/' + value.split('/').pop();
+		}
+
+
+		let cache  = _CACHE[value] || null;
+		let modify = this.query('ui > project > modify');
+		let notice = this.query('ui > notice');
+
+		if (cache === null) {
+
+			cache = _CACHE[value] = new _Project(value);
+
+			cache.onload = function() {
+
+				this.main.setProject(cache);
+
+
+				if (modify !== null) {
+					modify.setValue(cache);
+					modify.setVisible(true);
+				}
+
+				if (notice !== null) {
+					notice.setLabel('Project opened.');
+					notice.setState('active');
+				}
+
+			}.bind(this);
+
+			cache.load();
+
+		} else {
+
+			if (modify !== null) {
+				modify.setValue(cache);
+				modify.setVisible(true);
+			}
+
+			if (notice !== null) {
+				notice.setLabel('Project opened.');
+				notice.setState('active');
+			}
+
+		}
+
+	};
+
+	const _on_modify_change = function(action) {
+
+		// TODO: Save project
+
+		if (action === 'save') {
+
+			let notice = this.query('ui > notice');
+			if (notice !== null) {
+				notice.setLabel('Project saved.');
+				notice.setState('active');
+			}
+
+		}
+
+	};
+
+
+
+	/*
 	 * IMPLEMENTATION
 	 */
 
@@ -72,124 +171,28 @@ lychee.define('studio.state.Project').includes([
 
 			let select = this.query('ui > project > select');
 			if (select !== null) {
-
-				let api = this.api;
-				if (api !== null) {
-
-					let library_service = api.getService('library');
-					let project_service = api.getService('project');
-
-					if (library_service !== null) {
-
-						library_service.bind('sync', function(data) {
-
-							if (data instanceof Array) {
-
-								let filtered = [].slice.call(this.data);
-
-								data.map(function(library) {
-									return library.identifier;
-								}).forEach(function(value) {
-
-									if (filtered.indexOf(value) === -1) {
-										filtered.push(value);
-									}
-
-								});
-
-								filtered = filtered.filter(function(value) {
-									return value !== '/libraries/harvester';
-								});
-
-								this.setData(filtered);
-
-							}
-
-						}, select);
-
-					}
-
-
-					if (project_service !== null) {
-
-						project_service.bind('sync', function(data) {
-
-							if (data instanceof Array) {
-
-								let filtered = [].slice.call(this.data);
-
-								data.map(function(project) {
-									return project.identifier;
-								}).forEach(function(value) {
-
-									if (filtered.indexOf(value) === -1) {
-										filtered.push(value);
-									}
-
-								});
-
-								this.setData(filtered);
-
-							}
-
-						}, select);
-
-					}
-
-				}
-
-
-				select.bind('change', function(value) {
-
-					if (/^\/libraries|projects\//g.test(value) === false) {
-						value = '/projects/' + value.split('/').pop();
-					}
-
-
-					let project = new _Project(value);
-
-					project.onload = function() {
-
-						this.main.setProject(project);
-
-
-						let modify = this.query('ui > project > modify');
-						if (modify !== null) {
-							modify.setProject(project);
-							modify.setVisible(true);
-						}
-
-						let notice = this.query('ui > notice');
-						if (notice !== null) {
-							notice.setLabel('Project opened.');
-							notice.setState('active');
-						}
-
-					}.bind(this);
-
-					project.load();
-
-				}, this);
-
+				select.bind('change', _on_select_change, this);
 			}
 
 
 			let modify = this.query('ui > project > modify');
 			if (modify !== null) {
+				modify.bind('change', _on_modify_change, this);
+			}
 
-				modify.bind('change', function(action) {
 
-					if (action === 'save') {
+			let api = this.api;
+			if (api !== null) {
 
-						let notice = this.query('ui > notice');
-						if (notice !== null) {
-							notice.setLabel('Project saved.');
-							notice.setState('active');
-						}
+				let library_service = api.getService('library');
+				if (library_service !== null) {
+					library_service.bind('sync', _on_sync, this);
+				}
 
-					}
-
-				}, this);
+				let project_service = api.getService('project');
+				if (project_service !== null) {
+					project_service.bind('sync', _on_sync, this);
+				}
 
 			}
 

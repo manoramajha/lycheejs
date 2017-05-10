@@ -1,6 +1,7 @@
 
 lychee.define('studio.ui.element.modify.Font').requires([
 	'studio.codec.FONT',
+//	'studio.ui.entity.input.Font',
 	'lychee.ui.entity.Input',
 	'lychee.ui.entity.Select',
 	'lychee.ui.entity.Slider'
@@ -9,6 +10,7 @@ lychee.define('studio.ui.element.modify.Font').requires([
 ]).exports(function(lychee, global, attachments) {
 
 	const _Element = lychee.import('lychee.ui.Element');
+	const _Font    = lychee.import('studio.ui.entity.input.Font');
 	const _Input   = lychee.import('lychee.ui.entity.Input');
 	const _Select  = lychee.import('lychee.ui.entity.Select');
 	const _Slider  = lychee.import('lychee.ui.entity.Slider');
