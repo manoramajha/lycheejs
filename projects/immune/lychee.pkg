@@ -73,7 +73,10 @@
 			"app": {
 				"entity": {
 					"Cell": [
-						"js"
+						"immune.fnt",
+						"js",
+						"neutral.fnt",
+						"virus.fnt"
 					],
 					"Unit": [
 						"attack.snd",

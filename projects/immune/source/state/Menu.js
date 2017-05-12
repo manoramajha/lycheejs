@@ -132,6 +132,13 @@ lychee.define('game.state.Menu').requires([
 
 			}
 
+
+			let immune = this.query('game > immune');
+			let virus  = this.query('game > virus');
+
+			immune.health = 20;
+			virus.health  = 20;
+
 		},
 
 		serialize: function() {

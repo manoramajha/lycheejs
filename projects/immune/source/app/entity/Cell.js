@@ -10,8 +10,13 @@ lychee.define('game.app.entity.Cell').requires([
 	let   _id      = 0;
 	const _COLORS  = {
 		immune:  '#32afe5',
-		virus:   '#d0494b',
-		neutral: '#efefef'
+		neutral: '#efefef',
+		virus:   '#d0494b'
+	};
+	const _FONTS   = {
+		immune:  attachments["immune.fnt"],
+		neutral: attachments["neutral.fnt"],
+		virus:   attachments["virus.fnt"]
 	};
 
 
@@ -189,6 +194,8 @@ lychee.define('game.app.entity.Cell').requires([
 			let x     = position.x + offsetX;
 			let y     = position.y + offsetY;
 			let color = _COLORS[team] || _COLORS.neutral;
+			let font  = _FONTS[team]  || _FONTS.neutral;
+			let text  = '' + Math.min(100, this.health / this.__health * 100).toFixed(2) + '%';
 
 
 			renderer.drawCircle(
@@ -198,6 +205,15 @@ lychee.define('game.app.entity.Cell').requires([
 				color,
 				false,
 				radius / 10
+			);
+
+
+			renderer.drawText(
+				x,
+				y,
+				text,
+				font,
+				true
 			);
 
 
