@@ -112,17 +112,17 @@ lychee.define('game.state.Menu').requires([
 
 
 						entity            = this.query('game > immune');
-						entity.radius     = dim / 6;
+						entity.radius     = (dim / 6) | 0;
 						entity.position.x = -1 / 2 * width  + entity.radius + dim / 16;
 						entity.position.y = -1 / 2 * height + entity.radius + dim / 16;
 
 						entity            = this.query('game > virus');
-						entity.radius     = dim / 6;
+						entity.radius     = (dim / 6) | 0;
 						entity.position.x = 1 / 2 * width  - entity.radius - dim / 16;
 						entity.position.y = 1 / 2 * height - entity.radius - dim / 16;
 
 						entity            = this.query('game > neutral');
-						entity.radius     = dim / 10;
+						entity.radius     = (dim / 8) | 0;
 						entity.position.x = -1 / 4 * dim;
 						entity.position.y =  1 / 4 * dim;
 

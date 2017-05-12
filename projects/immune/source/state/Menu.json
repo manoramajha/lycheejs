@@ -119,7 +119,7 @@
 						"arguments": [
 							{
 								"team": "neutral",
-								"radius": 300,
+								"radius": 120,
 								"position": {
 									"x": -256,
 									"y": 256
