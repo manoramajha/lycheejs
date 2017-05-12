@@ -104,8 +104,8 @@ lychee.define('studio.ui.element.modify.Font').requires([
 		}));
 
 		this.setEntity('outline', new _Slider({
-			max:   4,
-			min:   1,
+			max:   8,
+			min:   0,
 			step:  1,
 			type:  _Slider.TYPE.horizontal,
 			value: 1
