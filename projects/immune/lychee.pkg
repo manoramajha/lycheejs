@@ -100,6 +100,9 @@
 				}
 			},
 			"state": {
+				"Game": [
+					"js"
+				],
 				"Menu": [
 					"js",
 					"json"
