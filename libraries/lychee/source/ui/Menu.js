@@ -39,12 +39,12 @@ lychee.define('lychee.ui.Menu').requires([
 		this.options = [ 'Settings' ];
 		this.helpers = [];
 		this.state   = 'default';
+		this.states  = { 'default': null, 'active': null };
 		this.value   = 'Settings';
 
 		this.__boundary = 0;
 		this.__focus    = null;
 		this.__helpers  = [];
-		this.__states   = { 'default': null, 'active': null };
 
 
 		this.setState(settings.state);
@@ -521,7 +521,7 @@ lychee.define('lychee.ui.Menu').requires([
 			id = typeof id === 'string' ? id : null;
 
 
-			if (id !== null && this.__states[id] !== undefined) {
+			if (id !== null && id !== this.state && this.states[id] !== undefined) {
 
 				if (id === 'active') {
 

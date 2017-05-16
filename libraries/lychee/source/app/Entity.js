@@ -91,30 +91,15 @@ lychee.define('lychee.app.Entity').exports(function(lychee, global, attachments)
 		this.effects   = [];
 		this.shape     = Composite.SHAPE.rectangle;
 		this.state     = 'default';
+		this.states    = { 'default': null };
 		this.position  = { x: 0, y: 0, z: 0 };
 		this.velocity  = { x: 0, y: 0, z: 0 };
-
-		this.__states  = { 'default': null };
-
-
-		if (settings.states instanceof Object) {
-
-			this.__states = { 'default': null };
-
-			for (let id in settings.states) {
-
-				if (settings.states.hasOwnProperty(id)) {
-					this.__states[id] = settings.states[id];
-				}
-
-			}
-
-		}
 
 
 		this.setAlpha(settings.alpha);
 		this.setCollision(settings.collision);
 		this.setShape(settings.shape);
+		this.setStates(settings.states);
 		this.setState(settings.state);
 		this.setPosition(settings.position);
 		this.setVelocity(settings.velocity);
@@ -166,7 +151,7 @@ lychee.define('lychee.app.Entity').exports(function(lychee, global, attachments)
 			if (this.collision !== Composite.COLLISION.none) settings.collision = this.collision;
 			if (this.shape !== Composite.SHAPE.rectangle)    settings.shape     = this.shape;
 			if (this.state !== 'default')                    settings.state     = this.state;
-			if (Object.keys(this.__states).length > 1)       settings.states    = this.__states;
+			if (Object.keys(this.states).length > 1)         settings.states    = this.states;
 
 
 			if (this.position.x !== 0 || this.position.y !== 0 || this.position.z !== 0) {
@@ -505,8 +490,37 @@ lychee.define('lychee.app.Entity').exports(function(lychee, global, attachments)
 
 		},
 
-		getStateMap: function() {
-			return this.__states[this.state];
+		setStates: function(states) {
+
+			states = states instanceof Object ? states : null;
+
+
+			if (states !== null) {
+
+				this.states = {
+					'default': null
+				};
+
+				for (let id in states) {
+
+					if (states.hasOwnProperty(id)) {
+
+						let state = states[id];
+						if (state instanceof Object) {
+							this.states[id] = states[id];
+						}
+
+					}
+
+				}
+
+				return true;
+
+			}
+
+
+			return false;
+
 		},
 
 		setState: function(id) {
@@ -514,7 +528,7 @@ lychee.define('lychee.app.Entity').exports(function(lychee, global, attachments)
 			id = typeof id === 'string' ? id : null;
 
 
-			if (id !== null && this.__states[id] !== undefined) {
+			if (id !== null && this.states[id] !== undefined) {
 
 				this.state = id;
 

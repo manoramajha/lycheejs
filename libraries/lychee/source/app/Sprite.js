@@ -274,8 +274,8 @@ lychee.define('lychee.app.Sprite').includes([
 
 					if (map instanceof Array) {
 
-						let statemap = this.getStateMap();
-						if (statemap !== null && statemap instanceof Object) {
+						let statemap = this.states[this.state] || null;
+						if (statemap !== null) {
 
 							this.clearAnimation();
 
