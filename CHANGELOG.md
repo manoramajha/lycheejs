@@ -26,6 +26,8 @@ and `fixed`.
 - **Changed**: lychee.js Harvester synchronizes platform tags.
 - **Added**: lychee.js Helper supports bash autocompletion.
 - **Added**: Integration of `nidium` platform.
+- Changed: lychee.app.Entity supports proper `setStates()` method.
+- Changed: lychee.ui.Entity supports proper `setStates()` method.
 - Changed: lychee.app.State `query()` handles invalid queries correctly.
 - Changed: lychee.Renderer `drawBuffer()` handles `map` and rotations.
 - Changed: lychee.net.protocol.WS detects fragments dynamically.
