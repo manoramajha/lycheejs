@@ -172,7 +172,7 @@ lychee.define('studio.codec.SPRITE').tags({
 
 		settings.textures.forEach(function(texture, index) {
 
-			let state   = texture.url.toLowerCase().split('_')[0].split('.')[0];
+			let state   = texture.url.split('/').pop().toLowerCase().split('_')[0].split('.')[0];
 			let mapx    = (index % atlas.frames)       * atlas.frame.width;
 			let mapy    = ((index / atlas.frames) | 0) * atlas.frame.height;
 			let renderx = mapx + (atlas.frame.width  / 2) - (texture.width  / 2);
@@ -208,7 +208,7 @@ lychee.define('studio.codec.SPRITE').tags({
 
 		settings.textures.forEach(function(texture) {
 
-			let state = texture.url.toLowerCase().split('_')[0].split('.')[0];
+			let state = texture.url.split('/').pop().toLowerCase().split('_')[0].split('.')[0];
 			if (states[state] === undefined) {
 
 				states[state] = {
