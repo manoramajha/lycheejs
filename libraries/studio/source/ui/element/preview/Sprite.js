@@ -128,6 +128,18 @@ lychee.define('studio.ui.element.preview.Sprite').requires([
 
 		},
 
+		update: function(clock, delta) {
+
+			_Element.prototype.update.call(this, clock, delta);
+
+
+			let sprites = this.__sprites;
+			for (let s = 0, sl = sprites.length; s < sl; s++) {
+				sprites[s].update(clock, delta);
+			}
+
+		},
+
 
 
 		/*
