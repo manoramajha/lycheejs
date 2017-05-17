@@ -54,7 +54,77 @@ cd /opt/lycheejs;
 <script>
 (function(global, version, message, main) {
 
-	let host = (function(location) {
+	const $ = function(name) {
+
+		let tmp  = name.split(/\.|\[|\]/g).filter(v => v !== '');
+		let el   = global.document.createElement(tmp[0]);
+		let wrap = { _el: el };
+
+		tmp[1] && (el.className = tmp[1]);
+
+		wrap.html     = a => (el.innerHTML = a, wrap);
+		wrap.append   = a => ((a._el && el.appendChild(a._el)) || el.appendChild(a), wrap);
+		wrap.appendTo = b => ((b._el && b._el.appendChild(el)) || b.appendChild(el), wrap);
+		wrap.onclick  = c => (el.onclick = _ => (c(), false), wrap);
+		wrap.set      = o => {
+			for (let i in o) (typeof wrap[i] === 'function' && wrap[i](o[i])) || el.setAttribute(i, o[i]);
+			return wrap;
+		};
+
+		return wrap;
+
+	};
+
+	const _render = function(project, mask) {
+
+		let article = $('article').set({
+			'data-id': project.identifier
+		}).append(
+			$('label').set({
+				html: project.identifier.split('/').pop()
+			})
+		).append(
+			$('img').set({
+				src: project.identifier + '/icon.png'
+			})
+		);
+
+
+		if (mask & 0b100) {
+			article.append(
+				$('a.button').set({
+					href:    'lycheejs://edit=' + project.identifier,
+					html:    'Edit',
+					onclick: _ => location.href = 'lycheejs://edit=' + project.identifier
+				})
+			);
+		}
+
+		if (mask & 0b010) {
+			article.append(
+				$('a.button').set({
+					href:    'lycheejs://file=' + project.identifier,
+					html:    'File',
+					onclick: _ => location.href = 'lycheejs://file=' + project.identifier
+				})
+			);
+		}
+
+		if (mask & 0b001) {
+			article.append(
+				$('a.button').set({
+					href:    project.identifier + '/index.html',
+					html:    'Open',
+					onclick: _ => global.open(project.identifier + '/index.html')
+				})
+			);
+		}
+
+		return article;
+
+	};
+
+	const HOST = (function(location) {
 
 		if (typeof location.hostname === 'string') {
 			return location.hostname;
@@ -98,63 +168,27 @@ cd /opt/lycheejs;
 
 	if (main !== null) {
 
-		let config = new Config('http://' + host + ':4848/api/project/index');
+		let config1 = new Config('http://' + HOST + ':4848/api/library/index');
+		let config2 = new Config('http://' + HOST + ':4848/api/project/index');
 
-		config.onload = function(result) {
+		config1.onload = function(result) {
 
 			if (result === true && this.buffer instanceof Array) {
-
-				let projects = this.buffer.map(function(project) {
-
-					let article  = document.createElement('article');
-					let label    = document.createElement('label');
-					let img      = document.createElement('img');
-					let btn_edit = document.createElement('button');
-					let btn_file = document.createElement('button');
-					let btn_open = document.createElement('button');
-
-
-					article.setAttribute('data-id', project.identifier);
-
-					label.innerHTML = project.identifier.split('/').pop();
-					img.src = project.identifier + '/icon.png';
-
-					article.appendChild(label);
-					article.appendChild(img);
-					article.appendChild(btn_edit);
-					article.appendChild(btn_file);
-					article.appendChild(btn_open);
-
-					btn_edit.innerHTML = 'Edit';
-					btn_edit.onclick = function() {
-						document.location.href = 'lycheejs://edit='+ project.identifier;
-					};
-
-					btn_file.innerHTML = 'File';
-					btn_file.onclick = function() {
-						document.location.href = 'lycheejs://file='+ project.identifier;
-					};
-
-					btn_open.innerHTML = 'Open';
-					btn_open.onclick = function() {
-						window.open(project.identifier + '/index.html');
-					};
-
-
-					return article;
-
-				});
-
-
-				projects.forEach(function(article) {
-					main.appendChild(article);
-				});
-
+				this.buffer.map(p => _render(p, /ranger|studio/g.test(p.identifier) ? 0b011 : 0b010)).forEach(a => a.appendTo(main));
 			}
 
 		};
 
-		config.load();
+		config2.onload = function(result) {
+
+			if (result === true && this.buffer instanceof Array) {
+				this.buffer.map(p => _render(p, 0b111)).forEach(a => a.appendTo(main));
+			}
+
+		};
+
+		config1.load();
+		config2.load();
 
 	}
 

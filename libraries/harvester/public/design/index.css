@@ -37,7 +37,8 @@ body > article div {
 	text-align: center;
 }
 
-body > article div button {
+body > article div button,
+body > article div a.button {
 	width: 160px;
 	margin: 0px 16px;
 }
@@ -135,11 +136,13 @@ article img:after {
 	z-index: 2;
 }
 
-article button {
+article button,
+article a.button {
 	display: inline-block;
 	position: static;
 	width: 64px;
 	height: 32px;
+	line-height: 32px;
 	margin: 0px 8px;
 	color: #ffffff;
 	background: #545454;
@@ -156,12 +159,15 @@ article button {
 }
 
 article button:focus,
-article button:hover {
+article button:hover,
+article a.button:focus,
+article a.button:hover {
 	background: #32afe5;
 	transition: all 300ms ease-out;
 }
 
-article button:active {
+article button:active,
+article a.button:active {
 	background: #32afe5;
 	transition: all 0ms;
 }
