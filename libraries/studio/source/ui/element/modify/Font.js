@@ -31,6 +31,10 @@ lychee.define('studio.ui.element.modify.Font').requires([
 			let value    = _FONT.encode(settings);
 			if (value !== null) {
 
+				if (this.value !== null) {
+					value.url = this.value.url;
+				}
+
 				this.value = value;
 				this.trigger('change', [ this.value ]);
 

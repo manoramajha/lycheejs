@@ -38,8 +38,15 @@ lychee.define('studio.ui.element.modify.Sprite').requires([
 
 
 			if (value !== null) {
+
+				if (this.value !== null) {
+					value.config.url  = this.value.config.url;
+					value.texture.url = this.value.texture.url;
+				}
+
 				this.value = value;
 				this.trigger('change', [ this.value ]);
+
 			}
 
 

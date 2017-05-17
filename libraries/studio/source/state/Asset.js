@@ -29,6 +29,19 @@ lychee.define('studio.state.Asset').includes([
 	 * HELPERS
 	 */
 
+	const _validate_asset = function(asset) {
+
+		return (
+			asset instanceof Config
+			|| asset instanceof Font
+			|| asset instanceof Music
+			|| asset instanceof Sound
+			|| asset instanceof Texture
+			|| asset instanceof Stuff
+		);
+
+	};
+
 	const _update_view = function(type, asset) {
 
 		let layer   = this.query('ui > asset');
@@ -196,18 +209,36 @@ lychee.define('studio.state.Asset').includes([
 
 			if (action === 'save') {
 
-				let project = this.main.project;
-				let stash   = this.main.stash || null;
-				let url     = project.identifier + '/source/' + select.value;
-				let asset   = modify.value || null;
+				let stash = this.main.stash || null;
+				let asset = modify.value || null;
 
-				if (asset !== null && stash !== null) {
+				if (stash !== null) {
 
-					stash.write(url, asset);
+					if (_validate_asset(asset) === true) {
 
-					if (notice !== null) {
-						notice.setLabel('Asset saved.');
-						notice.setState('active');
+						stash.write(asset.url, asset);
+
+						if (notice !== null) {
+							notice.setLabel('Asset saved.');
+							notice.setState('active');
+						}
+
+					} else if (asset instanceof Object) {
+
+						for (let id in asset) {
+
+							let subasset = asset[id];
+							if (_validate_asset(subasset) === true) {
+								stash.write(subasset.url, subasset);
+							}
+
+						}
+
+						if (notice !== null) {
+							notice.setLabel('Assets saved.');
+							notice.setState('active');
+						}
+
 					}
 
 				}
