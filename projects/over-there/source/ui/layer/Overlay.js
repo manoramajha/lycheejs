@@ -118,7 +118,7 @@ lychee.define('app.ui.layer.Overlay').requires([
 
 		setEntity: function(entity) {
 
-			entity = lychee.interfaceof(entity, _Entity) ? entity : null;
+			entity = lychee.interfaceof(_Entity, entity) ? entity : null;
 
 
 			if (entity !== null) {
