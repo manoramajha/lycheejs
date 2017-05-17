@@ -84,12 +84,12 @@ lychee.define('lychee.app.Sprite').includes([
 				settings.map = {};
 
 
-				for (let stateId in this.__map) {
+				for (let state in this.__map) {
 
-					settings.map[stateId] = [];
+					settings.map[state] = [];
 
 
-					let frames = this.__map[stateId];
+					let frames = this.__map[state];
 					for (let f = 0, fl = frames.length; f < fl; f++) {
 
 						let frame  = frames[f];
@@ -101,7 +101,7 @@ lychee.define('lychee.app.Sprite').includes([
 						if (frame.h !== 0) sframe.h = frame.h;
 
 
-						settings.map[stateId].push(sframe);
+						settings.map[state].push(sframe);
 
 					}
 
@@ -137,7 +137,7 @@ lychee.define('lychee.app.Sprite').includes([
 				}
 
 
-				let map = this.getMap();
+				let map = this.__map[this.state][this.frame] || null;
 				if (map !== null) {
 
 					x1 = position.x + offsetX - map.w / 2;
@@ -330,20 +330,6 @@ lychee.define('lychee.app.Sprite').includes([
 
 		},
 
-		getMap: function() {
-
-			let state = this.state;
-			let frame = this.frame;
-
-			if (this.__map[state] instanceof Array && this.__map[state][frame] !== undefined) {
-				return this.__map[state][frame];
-			}
-
-
-			return null;
-
-		},
-
 		setMap: function(map) {
 
 			map = map instanceof Object ? map : null;
@@ -353,12 +339,12 @@ lychee.define('lychee.app.Sprite').includes([
 
 			if (map !== null) {
 
-				for (let stateId in map) {
+				for (let state in map) {
 
-					let frames = map[stateId];
+					let frames = map[state];
 					if (frames instanceof Array) {
 
-						this.__map[stateId] = [];
+						this.__map[state] = [];
 
 
 						for (let f = 0, fl = frames.length; f < fl; f++) {
@@ -372,7 +358,7 @@ lychee.define('lychee.app.Sprite').includes([
 								frame.h = typeof frame.h === 'number' ? frame.h : 0;
 
 
-								this.__map[stateId].push(frame);
+								this.__map[state].push(frame);
 
 							}
 

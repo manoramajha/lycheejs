@@ -87,12 +87,12 @@ lychee.define('lychee.ui.Sprite').includes([
 				settings.map = {};
 
 
-				for (let stateId in this.__map) {
+				for (let state in this.__map) {
 
-					settings.map[stateId] = [];
+					settings.map[state] = [];
 
 
-					let frames = this.__map[stateId] || null;
+					let frames = this.__map[state] || null;
 					if (frames !== null) {
 
 						for (let f = 0, fl = frames.length; f < fl; f++) {
@@ -106,7 +106,7 @@ lychee.define('lychee.ui.Sprite').includes([
 							if (frame.h !== 0) sframe.h = frame.h;
 
 
-							settings.map[stateId].push(sframe);
+							settings.map[state].push(sframe);
 
 						}
 
@@ -147,7 +147,7 @@ lychee.define('lychee.ui.Sprite').includes([
 				}
 
 
-				let map = this.getMap();
+				let map = this.__map[this.state][this.frame] || null;
 				if (map !== null) {
 
 					x1 = position.x + offsetX - map.w / 2;
@@ -267,6 +267,54 @@ lychee.define('lychee.ui.Sprite').includes([
 
 		},
 
+		setMap: function(map) {
+
+			map = map instanceof Object ? map : null;
+
+
+			let valid = false;
+
+			if (map !== null) {
+
+				for (let state in map) {
+
+					let frames = map[state];
+					if (frames instanceof Array) {
+
+						this.__map[state] = [];
+
+
+						for (let f = 0, fl = frames.length; f < fl; f++) {
+
+							let frame = frames[f];
+							if (frame instanceof Object) {
+
+								frame.x = typeof frame.x === 'number' ? frame.x : 0;
+								frame.y = typeof frame.y === 'number' ? frame.y : 0;
+								frame.w = typeof frame.w === 'number' ? frame.w : 0;
+								frame.h = typeof frame.h === 'number' ? frame.h : 0;
+
+
+								this.__map[state].push(frame);
+
+							}
+
+						}
+
+
+						valid = true;
+
+					}
+
+				}
+
+			}
+
+
+			return valid;
+
+		},
+
 		setState: function(id) {
 
 			id = typeof id === 'string' ? id : null;
@@ -333,68 +381,6 @@ lychee.define('lychee.ui.Sprite').includes([
 			this.texture = texture;
 
 			return true;
-
-		},
-
-		getMap: function() {
-
-			let state = this.state;
-			let frame = this.frame;
-
-			if (this.__map[state] instanceof Array && this.__map[state][frame] !== undefined) {
-				return this.__map[state][frame];
-			}
-
-
-			return null;
-
-		},
-
-		setMap: function(map) {
-
-			map = map instanceof Object ? map : null;
-
-
-			let valid = false;
-
-			if (map !== null) {
-
-				for (let stateId in map) {
-
-					let frames = map[stateId];
-					if (frames instanceof Array) {
-
-						this.__map[stateId] = [];
-
-
-						for (let f = 0, fl = frames.length; f < fl; f++) {
-
-							let frame = frames[f];
-							if (frame instanceof Object) {
-
-								frame.x = typeof frame.x === 'number' ? frame.x : 0;
-								frame.y = typeof frame.y === 'number' ? frame.y : 0;
-								frame.w = typeof frame.w === 'number' ? frame.w : 0;
-								frame.h = typeof frame.h === 'number' ? frame.h : 0;
-
-
-								this.__map[stateId].push(frame);
-
-							}
-
-						}
-
-
-						valid = true;
-
-					}
-
-				}
-
-			}
-
-
-			return valid;
 
 		}
 
