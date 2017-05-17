@@ -23,7 +23,7 @@ lychee.define('studio.ui.element.preview.Sprite').requires([
 
 		this.value = null;
 
-		this.__sprite = new _Sprite();
+		this.__sprites = [];
 
 
 		settings.label   = 'Preview';
@@ -36,16 +36,6 @@ lychee.define('studio.ui.element.preview.Sprite').requires([
 		this.setValue(settings.value);
 
 		settings = null;
-
-
-
-		/*
-		 * INITIALIZATION
-		 */
-
-		this.bind('relayout', function() {
-			// TODO: Reset offset
-		}, this);
 
 	};
 
@@ -70,8 +60,6 @@ lychee.define('studio.ui.element.preview.Sprite').requires([
 
 			if (this.visible === false) return;
 
-			_Element.prototype.render.call(this, renderer, offsetX, offsetY);
-
 
 			let alpha    = this.alpha;
 			let position = this.position;
@@ -81,22 +69,56 @@ lychee.define('studio.ui.element.preview.Sprite').requires([
 			let hheight  = (this.height - 2) / 2;
 
 
-			// if (this.__isDirty === true) {
-			// 	_render_buffer.call(this, renderer);
-			// }
-
-
 			if (alpha !== 1) {
 				renderer.setAlpha(alpha);
 			}
 
-			if (this.__buffer !== null) {
 
-				renderer.drawBuffer(
-					x - hwidth  + 16,
-					y - hheight + 80,
-					this.__buffer
+			_Element.prototype.render.call(this, renderer, offsetX, offsetY);
+
+
+			let sprites  = this.__sprites;
+			let offset_x = -1 * hwidth  + 16;
+			let offset_y = -1 * hheight + 96;
+			let bb_y     = 0;
+
+			for (let s = 0, sl = sprites.length; s < sl; s++) {
+
+				let sprite = sprites[s];
+				let shape  = sprite.shape;
+
+				let bb_x = 0;
+
+				if (shape === _Sprite.SHAPE.rectangle || shape === _Sprite.SHAPE.cuboid) {
+
+					bb_x = sprite.width;
+					bb_y = Math.max(bb_y, sprite.height);
+
+				} else {
+
+					bb_x = sprite.radius * 2;
+					bb_y = Math.max(bb_y, sprite.radius * 2);
+
+				}
+
+
+				sprite.render(
+					renderer,
+					x + offset_x + bb_x / 2,
+					y + offset_y + bb_y / 2
 				);
+
+
+				offset_x += bb_x + 16;
+
+				if (offset_x >= hwidth - 16) {
+					offset_x = -1 * hwidth + 16;
+					offset_y += bb_y;
+				}
+
+				if (offset_y >= hheight - 64) {
+					break;
+				}
 
 			}
 
@@ -134,38 +156,54 @@ lychee.define('studio.ui.element.preview.Sprite').requires([
 				let s_map     = buffer.map instanceof Object      ? buffer.map    : null;
 
 
-				if (s_texture !== null) {
-					this.__sprite.setTexture(s_texture);
+				if (s_states !== null) {
+
+					this.__sprites = Object.keys(s_states).map(function(state) {
+
+						let sprite = new _Sprite();
+
+						if (s_texture !== null) {
+							sprite.setTexture(s_texture);
+						}
+
+						if (s_states !== null && s_map !== null) {
+							sprite.setStates(s_states);
+							sprite.setMap(s_map);
+							sprite.setState(state);
+						}
+
+						if (s_shape !== null) {
+
+							if (lychee.enumof(_Entity.SHAPE, s_shape) === true) {
+								sprite.setShape(s_shape);
+							}
+
+						}
+
+						if (s_width !== null) {
+							sprite.width = s_width;
+						}
+
+						if (s_height !== null) {
+							sprite.height = s_height;
+						}
+
+						if (s_depth !== null) {
+							sprite.depth = s_depth;
+						}
+
+						if (s_radius !== null) {
+							sprite.radius = s_radius;
+						}
+
+
+						return sprite;
+
+					});
+
 				}
 
-				if (s_states !== null && s_map !== null) {
-					this.__sprite.setStates(s_states);
-					this.__sprite.setMap(s_map);
-				}
 
-				if (s_shape !== null) {
-
-					if (lychee.enumof(_Entity.SHAPE, s_shape) === true) {
-						this.__sprite.setShape(s_shape);
-					}
-
-				}
-
-				if (s_width !== null) {
-					this.__sprite.width = s_width;
-				}
-
-				if (s_height !== null) {
-					this.__sprite.height = s_height;
-				}
-
-				if (s_depth !== null) {
-					this.__sprite.depth = s_depth;
-				}
-
-				if (s_radius !== null) {
-					this.__sprite.radius = s_radius;
-				}
 
 
 				return true;
