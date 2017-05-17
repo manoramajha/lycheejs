@@ -27,8 +27,8 @@ lychee.define('lychee.ui.Sprite').includes([
 			loop:     false
 		};
 		this.__map = {
-			'default': null,
-			'active':  null
+			'default': [],
+			'active':  []
 		};
 
 

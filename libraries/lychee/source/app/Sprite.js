@@ -26,7 +26,9 @@ lychee.define('lychee.app.Sprite').includes([
 			duration: 0,
 			loop:     false
 		};
-		this.__map = {};
+		this.__map = {
+			'default': []
+		};
 
 
 		this.setAnimation(settings.animation);
