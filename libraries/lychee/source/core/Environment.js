@@ -1069,12 +1069,16 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 		},
 
-		define: function(definition) {
+		define: function(definition, inject) {
 
-			let filename = Composite.__FILENAME || null;
-			if (filename !== null) {
+			definition = definition instanceof lychee.Definition ? definition : null;
+			inject     = inject === true;
 
-				if (definition instanceof lychee.Definition) {
+
+			if (definition !== null) {
+
+				let filename = Composite.__FILENAME || null;
+				if (inject === false && filename !== null) {
 
 					let oldPackageId = definition.packageId;
 					let newPackageId = null;
@@ -1142,32 +1146,35 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 					}
 
+				} else {
+
+					// XXX: Direct injection has no auto-mapping
+
+				}
+
+
+				if (_validate_definition.call(this, definition) === true) {
+
+					if (this.debug === true) {
+						let info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
+						this.global.console.log('lychee-Environment (' + this.id + '): Mapping "' + definition.id + '" ' + info);
+					}
+
+					this.definitions[definition.id] = definition;
+
+
+					return true;
+
 				}
 
 			}
 
 
-			if (_validate_definition.call(this, definition) === true) {
-
-				if (this.debug === true) {
-					let info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
-					this.global.console.log('lychee-Environment (' + this.id + '): Mapping "' + definition.id + '" ' + info);
-				}
-
-				this.definitions[definition.id] = definition;
+			let info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
+			this.global.console.error('lychee-Environment (' + this.id + '): Invalid Definition "' + definition.id + '" ' + info);
 
 
-				return true;
-
-			} else {
-
-				let info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
-				this.global.console.error('lychee-Environment (' + this.id + '): Invalid Definition "' + definition.id + '" ' + info);
-
-
-				return false;
-
-			}
+			return false;
 
 		},
 
